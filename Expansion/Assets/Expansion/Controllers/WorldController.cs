@@ -25,17 +25,17 @@ public class WorldController : MonoBehaviour {
                 tileController.Tile = tileData;
 
                 GameObject waterObject = new GameObject();
-                waterObject.AddComponent<SpriteRenderer>().sprite = spriteMan.GetSpriteByName("Irrigation");
+                waterObject.AddComponent<SpriteRenderer>().sprite = spriteMan.GetSpriteByName(Contants.IRRIGATION_SPRITE);
                 waterObject.transform.parent = tileObject.transform;
                 waterObject.transform.localPosition = Vector3.zero;
 
                 GameObject fenceObject = new GameObject();
-                fenceObject.AddComponent<SpriteRenderer>().sprite = spriteMan.GetSpriteByName("Fence");
+                fenceObject.AddComponent<SpriteRenderer>().sprite = spriteMan.GetSpriteByName(Contants.FENCE_SPRITE);
                 fenceObject.transform.parent = tileObject.transform;
                 fenceObject.transform.localPosition = Vector3.zero;
 
                 GameObject grassObject = new GameObject();
-                grassObject.AddComponent<SpriteRenderer>().sprite = spriteMan.GetSpriteByName("Grass");
+                grassObject.AddComponent<SpriteRenderer>().sprite = spriteMan.GetSpriteByName(Contants.GRASS_SPRITE);
                 grassObject.transform.parent = tileObject.transform;
                 grassObject.transform.localPosition = Vector3.zero;
             }
