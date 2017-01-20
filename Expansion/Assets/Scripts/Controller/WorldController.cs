@@ -10,10 +10,11 @@ public class WorldController : MonoBehaviour
 
     //References
     private World World;
+    private TileView[,] tileViews;
 
     //State Stuff
-    private BaseTile HighlightedTile = null;
-    private BaseTile ActivatedTile = null;
+    private TileView HighlightedTile = null;
+    private TileView ActivatedTile = null;
 
     void Start ()
     {
@@ -21,6 +22,7 @@ public class WorldController : MonoBehaviour
         Instance = this;
 
         World = new World(Width, Height);
+        tileViews = new TileView[Width, Height];
 
 
         //TODO: World initialization will need to be done elsewhere and differently.
@@ -32,15 +34,12 @@ public class WorldController : MonoBehaviour
                 SetViewAsWorldChild(CreateTileView(tileData));
             }
         }
+    }
 
-        for (int x = 0; x < World.Width; x++)
-        {
-            for (int y = 0; y < World.Height; y++)
-            {
-                var tileData = World.GetTileAt(x, y);
-                SetViewAsWorldChild(CreateTileView(tileData));
-            }
-        }
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 
     private TileView CreateTileView(BaseTile tileArg)
@@ -51,17 +50,15 @@ public class WorldController : MonoBehaviour
             tileView = new GardenTileView((GardenTile)tileArg);
         }
 
-        tileArg.RegisterForTileDisposed(() =>
-        {
-            OnTileDisposed(tileView);
-        });
-
+        tileViews[tileArg.X, tileArg.Y] = tileView;
         return tileView;
     }
-    
-    // Update is called once per frame
-    void Update () {
-        
+
+    private void DestroyTileViewAt(int x, int y)
+    {
+        var tileView = GetTileViewAt(x, y);
+        if (tileView != null)
+            Destroy(tileView.BaseLayer);
     }
 
     private void SetViewAsWorldChild(TileView view)
@@ -69,18 +66,13 @@ public class WorldController : MonoBehaviour
         view.BaseLayer.transform.SetParent(this.transform);
     }
 
-    private void OnTileDisposed(TileView tileView)
-    {
-        Destroy(tileView.BaseLayer);
-    }
-
     public void OnMouseOverWorldCoordinateChanged(int newX, int newY)
     {
         if (HighlightedTile != null)
-            HighlightedTile.SetHighlighted(false);
-        HighlightedTile = World.GetTileAt(newX, newY);
+            HighlightedTile.IsHighlighted = false;
+        HighlightedTile = GetTileViewAt(newX, newY);
         if (HighlightedTile != null)
-            HighlightedTile.SetHighlighted(true);
+            HighlightedTile.IsHighlighted = true;
     }
 
     public void OnWorldCoordinateActivated(int X, int Y)
@@ -88,15 +80,15 @@ public class WorldController : MonoBehaviour
         var currentActiveTile = ActivatedTile;
         //Deactivate the current active tile if ther is one.  Either we are clicking on an already active tile or a new active tile.
         if (ActivatedTile != null)
-            ActivatedTile.SetActive(false);
+            ActivatedTile.IsActivated = false;
         //Get the new active tile.
-        ActivatedTile = World.GetTileAt(X, Y);
+        ActivatedTile = GetTileViewAt(X, Y);
         if (ActivatedTile != null)
         {
             //If this is not the same tile activate the new one.
             if (currentActiveTile != ActivatedTile)
             {
-                ActivatedTile.SetActive(true);
+                ActivatedTile.IsActivated = true;
             }
             //If it is the same tile we already deactivated it so now we just need to call highlight on this tile.
             else
@@ -110,6 +102,17 @@ public class WorldController : MonoBehaviour
     {
         var doubleClickTile = World.GetTileAt(X, Y);
         ((GardenTile)doubleClickTile).IsIrrigated = false;
-        doubleClickTile.TileDataChanged(doubleClickTile);
+    }
+
+    private TileView GetTileViewAt(int x, int y)
+    {
+        try
+        {
+            return tileViews[x, y];
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

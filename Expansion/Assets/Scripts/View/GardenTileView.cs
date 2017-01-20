@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GardenTileView : TileView
 {
@@ -32,19 +33,18 @@ public class GardenTileView : TileView
         FenceLayer.transform.parent = BaseLayer.transform;
         FenceLayer.transform.localPosition = Vector3.zero;
 
-        OnTileChanged(tile);
+        OnTileModelDataChanged(tile, new EventArgs());
     }
 
-    public override void OnTileChanged(BaseTile tile)
+    public override void OnTileModelDataChanged(object sender, EventArgs e)
     {
-        GardenTile gTile = tile as GardenTile;
+        GardenTile gTile = sender as GardenTile;
         if (gTile == null)
         {
-            throw new System.Exception("Tile mismatch for GardenView.  Tile was: " + tile.GetType());
+            throw new System.Exception("Tile mismatch for GardenView.  Tile was: " + sender.GetType());
         }
         
         WaterLayer.GetComponent<SpriteRenderer>().enabled = gTile.IsIrrigated;
         FenceLayer.GetComponent<SpriteRenderer>().enabled = gTile.HasFence;
-
     }
 }

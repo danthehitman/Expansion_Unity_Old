@@ -1,13 +1,52 @@
-﻿public class GardenTile : BaseTile {
+﻿public class GardenTile : BaseTile
+{
+    private bool hasFence;
+    private bool isIrrigated;
+    private bool isPlanted;
 
-    public bool HasFence { get; set; }
-    public bool IsIrrigated { get; set; }
-    public bool IsPlanted { get; set; }
-
-    public GardenTile(World world, int X, int Y)
+    public bool HasFence
     {
-        this.World = World;
-        this.X = X;
-        this.Y = Y;
+        get
+        {
+            return hasFence;
+        }
+
+        set
+        {
+            hasFence = value;
+            OnTileDataChanged();
+        }
+    }
+
+    public bool IsIrrigated
+    {
+        get
+        {
+            return isIrrigated;
+        }
+
+        set
+        {
+            isIrrigated = value;
+            OnTileDataChanged();
+        }
+    }
+
+    public bool IsPlanted
+    {
+        get
+        {
+            return isPlanted;
+        }
+
+        set
+        {
+            isPlanted = value;
+            OnTileDataChanged();
+        }
+    }
+
+    public GardenTile(World world, int x, int y): base(world,x,y)
+    {
     }
 }
