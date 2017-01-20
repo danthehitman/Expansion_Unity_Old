@@ -16,6 +16,7 @@ public class WorldController : MonoBehaviour
     private TileView HighlightedTile = null;
     private TileView ActivatedTile = null;
 
+    // Initialize the game world.
     void Start ()
     {
         //Hacky singleton within monobehaviour.  Not sure I love this.
@@ -24,14 +25,13 @@ public class WorldController : MonoBehaviour
         World = new World(Width, Height);
         tileViews = new TileView[Width, Height];
 
-
-        //TODO: World initialization will need to be done elsewhere and differently.
+        //Loop through all of the tiles in the world and create view tiles for them.
         for (int x = 0; x < World.Width; x++)
         {
             for (int y = 0; y < World.Height; y++)
             {
                 var tileData = World.GetTileAt(x, y);
-                SetViewAsWorldChild(CreateTileView(tileData));
+                SetTileViewAsWorldChild(CreateTileView(tileData));
             }
         }
     }
@@ -61,15 +61,17 @@ public class WorldController : MonoBehaviour
             Destroy(tileView.BaseLayer);
     }
 
-    private void SetViewAsWorldChild(TileView view)
+    private void SetTileViewAsWorldChild(TileView view)
     {
         view.BaseLayer.transform.SetParent(this.transform);
     }
 
     public void OnMouseOverWorldCoordinateChanged(int newX, int newY)
     {
+        //If we have a highlighted tile remove the highlight.
         if (HighlightedTile != null)
             HighlightedTile.IsHighlighted = false;
+        //Try to get a tile view at the coordinates and if we find one we highlight it.
         HighlightedTile = GetTileViewAt(newX, newY);
         if (HighlightedTile != null)
             HighlightedTile.IsHighlighted = true;
@@ -100,6 +102,7 @@ public class WorldController : MonoBehaviour
 
     public void OnWorldCoordinateDoubleClick(int X, int Y)
     {
+        //Test code for both double click and testing the events on the models.
         var doubleClickTile = World.GetTileAt(X, Y);
         ((GardenTile)doubleClickTile).IsIrrigated = false;
     }

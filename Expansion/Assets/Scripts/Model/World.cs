@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-public class World {
-
-    BaseTile[,] tiles;
-
-    int width;
-    int height;
+public class World
+{
+    private BaseTile[,] tiles;
+    private int width;
+    private int height;
 
     public int Width
     {
@@ -46,8 +45,13 @@ public class World {
 
     public BaseTile GetTileAt(int x, int y)
     {
-        if (x > width-1 || y > height-1 || x < 0 || y < 0)
+        try
+        {
+            return tiles[x, y];
+        }
+        catch
+        {
             return null;
-        return tiles[x, y];
+        }
     }
 }
