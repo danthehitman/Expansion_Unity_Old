@@ -4,21 +4,26 @@ public class WorldController : MonoBehaviour
 {
     public static WorldController Instance;
 
+    //Properties
     public int Width = 100;
     public int Height = 100;
 
-    World World;
+    //References
+    private World World;
 
+    //State Stuff
     private BaseTile HighlightedTile = null;
     private BaseTile ActivatedTile = null;
 
-    // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         //Hacky singleton within monobehaviour.  Not sure I love this.
         Instance = this;
 
         World = new World(Width, Height);
 
+
+        //TODO: World initialization will need to be done elsewhere and differently.
         for (int x = 0; x < World.Width; x++)
         {
             for (int y = 0; y < World.Height; y++)
@@ -43,7 +48,7 @@ public class WorldController : MonoBehaviour
         TileView tileView = null;
         if (tileArg is GardenTile)
         {
-            tileView = new GardenView((GardenTile)tileArg);
+            tileView = new GardenTileView((GardenTile)tileArg);
         }
 
         tileArg.RegisterForTileDisposed(() =>

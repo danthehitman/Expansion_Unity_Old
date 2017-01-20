@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GardenView : TileView
+public class GardenTileView : TileView
 {
     private GameObject FenceLayer;
     private GameObject WaterLayer;
@@ -8,7 +8,7 @@ public class GardenView : TileView
     private GameObject SeedLayer;
 
     // Use this for initialization
-    public GardenView (GardenTile tile): base(tile)
+    public GardenTileView (GardenTile tile): base(tile)
     {
         BaseLayer = new GameObject();
         var baseRenderer = BaseLayer.AddComponent<SpriteRenderer>();
