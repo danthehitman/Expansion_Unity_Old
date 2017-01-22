@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class MouseManager : MonoBehaviour
-{ 
+public class InputManager : MonoBehaviour
+{
     private Vector3 MouseLastPosition;
     private int LastWorldX;
     private int LastWorldY;
@@ -13,6 +14,35 @@ public class MouseManager : MonoBehaviour
     
     // Update is called once per frame
     void Update () {
+        HandleMouseUpdates();
+        HandleKeyboardUpdates();
+    }
+
+    private void HandleKeyboardUpdates()
+    {
+        List<MoveDirectionEnum> directions = new List<MoveDirectionEnum>();
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            directions.Add(MoveDirectionEnum.Up);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            directions.Add(MoveDirectionEnum.Left);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            directions.Add(MoveDirectionEnum.Down);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            directions.Add(MoveDirectionEnum.Right);
+        }
+        WorldController.Instance.OnMovementKeyPressed(directions);
+    }
+
+    private void HandleMouseUpdates()
+    {
         var mouseCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x);
         int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y);
@@ -34,9 +64,12 @@ public class MouseManager : MonoBehaviour
 
             LastLeftClickTime = Time.time;
         }
-        
+
         CheckForOverWorldTileChangeAndNotify(currentXFloor, currentYFloor);
         SetLastMousePosition();
+
+        Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * 2;
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 10f);
     }
 
     //Check to see if we are over a different tile than we were in the last update.

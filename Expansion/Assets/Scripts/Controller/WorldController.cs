@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
     public static WorldController Instance;
+    public PlayerController PlayerController;
 
     //Properties
     public int Width = 100;
@@ -19,10 +21,15 @@ public class WorldController : MonoBehaviour
     // Initialize the game world.
     void Start ()
     {
+
         //Hacky singleton within monobehaviour.  Not sure I love this.
         Instance = this;
 
         World = new World(Width, Height);
+
+        var playerEntity = new PlayerEntity();
+        PlayerController = new PlayerController(playerEntity, World);
+
         tileViews = new TileView[Width, Height];
 
         //Loop through all of the tiles in the world and create view tiles for them.
@@ -105,6 +112,12 @@ public class WorldController : MonoBehaviour
         //Test code for both double click and testing the events on the models.
         var doubleClickTile = World.GetTileAt(X, Y);
         ((GardenTile)doubleClickTile).IsIrrigated = false;
+    }
+
+    public void OnMovementKeyPressed(List<MoveDirectionEnum> directions)
+    {
+        if (directions.Count > 0)
+            PlayerController.MovePlayer(directions);
     }
 
     private TileView GetTileViewAt(int x, int y)
