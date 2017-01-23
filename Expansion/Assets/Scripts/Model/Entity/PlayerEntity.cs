@@ -140,8 +140,8 @@
 
     public PlayerEntity()
     {
-        X = 0;
-        Y = 0;
+        X = 1;
+        Y = 1;
         Health = 100;
         Hunger = 0;
         Thirst = 0;

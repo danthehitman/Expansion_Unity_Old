@@ -11,8 +11,7 @@ public class GardenTileView : TileView
     // Use this for initialization
     public GardenTileView (GardenTile tile): base(tile)
     {
-        BaseLayer = new GameObject();
-        var baseRenderer = BaseLayer.AddComponent<SpriteRenderer>();
+        var baseRenderer = BaseLayer.GetComponent<SpriteRenderer>();
         BaseLayer.name = "GardenTile_" + tile.X + "_" + tile.Y;
         baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.GRASS_SPRITE);
         BaseLayer.transform.position = new Vector3(tile.X, tile.Y, 0);

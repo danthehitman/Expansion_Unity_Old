@@ -30,19 +30,19 @@ public class PlayerController
             {
                 case MoveDirectionEnum.Left:
                     x -= 0.01f;
-                    absX = Mathf.FloorToInt(x);
+                    absX = Mathf.FloorToInt(x - 0.1f);
                     break;
                 case MoveDirectionEnum.Right:
                     x += 0.01f;
-                    absX = Mathf.CeilToInt(x);
+                    absX = Mathf.FloorToInt(x + 0.1f);
                     break;
                 case MoveDirectionEnum.Up:
                     y += 0.01f;
-                    absY = Mathf.CeilToInt(y);
+                    absY = Mathf.FloorToInt(y + 0.2f);
                     break;
                 case MoveDirectionEnum.Down:
                     y -= 0.01f;
-                    absY = Mathf.FloorToInt(y);
+                    absY = Mathf.FloorToInt(y - 0.2f);
                     break;
             }
         }

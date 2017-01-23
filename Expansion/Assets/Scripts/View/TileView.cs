@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class TileView {
     public GameObject BaseLayer;
+    public GameObject RiverLayer;
 
     private bool isHighlighted;
     private bool isActivated;
@@ -37,6 +38,8 @@ public abstract class TileView {
 
     public TileView(BaseTile tile)
     {
+        BaseLayer = new GameObject();
+        BaseLayer.AddComponent<SpriteRenderer>();
         tile.RegisterForTileChanged(OnTileModelDataChanged);
     }
 
@@ -44,12 +47,13 @@ public abstract class TileView {
 
     public void OnTileHighlightChanged(bool highlighted)
     {
-        if (!isActivated)
+        if (!isActivated && BaseLayer != null)
             BaseLayer.GetComponent<SpriteRenderer>().color = highlighted? Color.gray : Color.white;
     }
 
     public void OnTileActivationChanged(bool activated)
     {
-        BaseLayer.GetComponent<SpriteRenderer>().color = activated ? Color.black : Color.white;
+        if (BaseLayer != null)
+            BaseLayer.GetComponent<SpriteRenderer>().color = activated ? Color.black : Color.white;
     }
 }
