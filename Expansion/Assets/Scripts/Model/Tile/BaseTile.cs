@@ -26,7 +26,7 @@ public abstract class BaseTile
 
     public BaseTile(World world, int x, int y)
     {
-        World = World;
+        World = world;
         X = x;
         Y = y;
     }
@@ -46,5 +46,27 @@ public abstract class BaseTile
         var handler = TileDataChanged;
         if (handler != null)
             handler(this, new EventArgs());
+    }
+
+    public void OnNeighborTileDataChanged()
+    {
+        OnTileDataChanged();
+    }
+
+    public BaseTile GetTileAtDirection(TileDirectionEnum direction)
+    {
+        switch (direction)
+        {
+            case TileDirectionEnum.Left:
+                return World.GetTileAt(X - 1, Y);
+            case TileDirectionEnum.Right:
+                return World.GetTileAt(X + 1, Y);
+            case TileDirectionEnum.Up:
+                return World.GetTileAt(X, Y + 1);
+            case TileDirectionEnum.Down:
+                return World.GetTileAt(X, Y - 1);
+            default:
+                return null;
+        }
     }
 }

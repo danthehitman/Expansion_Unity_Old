@@ -18,5 +18,14 @@
     public const string PLAYER_TORSO_1 = "Torso1";
     public const string PLAYER_TORSO_2 = "Torso2";
 
+    public const string TILE_RIVER_BEND = "RiverBendSE";
+    public const string TILE_RIVER_CROSS = "RiverCross";
+    public const string TILE_RIVER_HOR = "RiverHor";
+    public const string TILE_RIVER_TERM_HOR = "RiverTermHorE";
+    public const string TILE_RIVER_TERM_VERT = "RiverTermVertN";
+    public const string TILE_RIVER_T = "RiverTN";
+    public const string TILE_RIVER_VERT = "RiverVert";
+
     public const string PLAYER_SORTING_LAYER = "Player";
+    public const string TILE_SORTING_LAYER = "Tile";
 }

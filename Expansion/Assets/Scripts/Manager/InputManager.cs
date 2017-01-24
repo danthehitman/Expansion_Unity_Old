@@ -20,23 +20,23 @@ public class InputManager : MonoBehaviour
 
     private void HandleKeyboardUpdates()
     {
-        List<MoveDirectionEnum> directions = new List<MoveDirectionEnum>();
+        List<TileDirectionEnum> directions = new List<TileDirectionEnum>();
 
         if (Input.GetKey(KeyCode.W))
         {
-            directions.Add(MoveDirectionEnum.Up);
+            directions.Add(TileDirectionEnum.Up);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            directions.Add(MoveDirectionEnum.Left);
+            directions.Add(TileDirectionEnum.Left);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            directions.Add(MoveDirectionEnum.Down);
+            directions.Add(TileDirectionEnum.Down);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            directions.Add(MoveDirectionEnum.Right);
+            directions.Add(TileDirectionEnum.Right);
         }
         WorldController.Instance.OnMovementKeyPressed(directions);
     }
@@ -44,8 +44,8 @@ public class InputManager : MonoBehaviour
     private void HandleMouseUpdates()
     {
         var mouseCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x);
-        int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y);
+        int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x + 0.5f);
+        int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y + 0.5f);
 
         //Handle screen drag.
         if (Input.GetMouseButton(2))
@@ -82,7 +82,7 @@ public class InputManager : MonoBehaviour
     private void SetLastMousePosition()
     {
         MouseLastPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        LastWorldX = Mathf.FloorToInt(MouseLastPosition.x);
-        LastWorldY = Mathf.FloorToInt(MouseLastPosition.y);
+        LastWorldX = Mathf.FloorToInt(MouseLastPosition.x + 0.5f);
+        LastWorldY = Mathf.FloorToInt(MouseLastPosition.y + 0.5f);
     }
 }

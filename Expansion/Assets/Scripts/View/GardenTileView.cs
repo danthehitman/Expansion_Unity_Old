@@ -37,6 +37,7 @@ public class GardenTileView : TileView
 
     public override void OnTileModelDataChanged(object sender, EventArgs e)
     {
+        base.OnTileModelDataChanged(sender, e);
         GardenTile gTile = sender as GardenTile;
         if (gTile == null)
         {

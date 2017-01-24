@@ -14,7 +14,7 @@ public class PlayerController
         this.world = world;
     }
 
-    public void MovePlayer(List<MoveDirectionEnum> directions)
+    public void MovePlayer(List<TileDirectionEnum> directions)
     {
         if (directions.Count < 1)
             return;
@@ -28,21 +28,21 @@ public class PlayerController
         {
             switch (direction)
             {
-                case MoveDirectionEnum.Left:
+                case TileDirectionEnum.Left:
                     x -= 0.01f;
-                    absX = Mathf.FloorToInt(x - 0.1f);
+                    absX = Mathf.FloorToInt(x +0.5f - 0.1f);
                     break;
-                case MoveDirectionEnum.Right:
+                case TileDirectionEnum.Right:
                     x += 0.01f;
-                    absX = Mathf.FloorToInt(x + 0.1f);
+                    absX = Mathf.FloorToInt(x + 0.5f + 0.1f);
                     break;
-                case MoveDirectionEnum.Up:
+                case TileDirectionEnum.Up:
                     y += 0.01f;
-                    absY = Mathf.FloorToInt(y + 0.2f);
+                    absY = Mathf.FloorToInt(y + 0.5f + 0.2f);
                     break;
-                case MoveDirectionEnum.Down:
+                case TileDirectionEnum.Down:
                     y -= 0.01f;
-                    absY = Mathf.FloorToInt(y - 0.2f);
+                    absY = Mathf.FloorToInt(y + 0.5f - 0.2f);
                     break;
             }
         }

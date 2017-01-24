@@ -21,11 +21,11 @@ public class WorldController : MonoBehaviour
     // Initialize the game world.
     void Start ()
     {
-
         //Hacky singleton within monobehaviour.  Not sure I love this.
         Instance = this;
 
         World = new World(Width, Height);
+        World.InitializeWorld();
 
         var playerEntity = new PlayerEntity();
         PlayerController = new PlayerController(playerEntity, World);
@@ -111,16 +111,16 @@ public class WorldController : MonoBehaviour
     {
         //Test code for both double click and testing the events on the models.
         var doubleClickTile = World.GetTileAt(X, Y);
-        ((GardenTile)doubleClickTile).IsIrrigated = false;
+        ((GardenTile)doubleClickTile).HasRiver = !((GardenTile)doubleClickTile).HasRiver;
     }
 
-    public void OnMovementKeyPressed(List<MoveDirectionEnum> directions)
+    public void OnMovementKeyPressed(List<TileDirectionEnum> directions)
     {
         if (directions.Count > 0)
             PlayerController.MovePlayer(directions);
     }
 
-    private TileView GetTileViewAt(int x, int y)
+    public TileView GetTileViewAt(int x, int y)
     {
         try
         {

@@ -27,20 +27,21 @@ public class World
     {
         this.width = width;
         this.height = height;
+    }
 
+    public void InitializeWorld()
+    {
         tiles = new BaseTile[width, height];
 
-        List<int[]> riverTiles = new List<int[]>();
-        riverTiles.Add(new int[] { 0, 0 });
-        riverTiles.Add(new int[] { 0, 1 });
-        riverTiles.Add(new int[] { 0, 2 });
-        riverTiles.Add(new int[] { 1, 0 });
-        riverTiles.Add(new int[] { 2, 0 });
-        riverTiles.Add(new int[] { 2, 1 });
-        riverTiles.Add(new int[] { 2, 2 });
-        riverTiles.Add(new int[] { 0, 0 });
-        riverTiles.Add(new int[] { 1, 2 });
-        riverTiles.Add(new int[] { 3, 3 });
+        List<string> riverTiles = new List<string>();
+        riverTiles.Add("0,0");
+        riverTiles.Add("0,1");
+        riverTiles.Add("0,2");
+        riverTiles.Add("1,0");
+        riverTiles.Add("2,0");
+        riverTiles.Add("2,1");
+        riverTiles.Add("2,2");
+        riverTiles.Add("1,2");
 
         for (int x = 0; x < width; x++)
         {
@@ -50,7 +51,7 @@ public class World
                 //tile.HasFence = true;
                 //tile.IsIrrigated = true;
                 tiles[x, y] = tile;
-                if (riverTiles.Contains(new int[] {x,y}))
+                if (riverTiles.Contains(x + "," + y))
                 {
                     tile.HasRiver = true;
                 }

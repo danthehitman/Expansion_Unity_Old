@@ -1,4 +1,4 @@
-﻿public enum MoveDirectionEnum
+﻿public enum TileDirectionEnum
 {
     Left,
     Right,
