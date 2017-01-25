@@ -1,15 +1,19 @@
 ﻿using System;
+using System.ComponentModel;
 
-public abstract class BaseTile
+public abstract class BaseTile : INotifyPropertyChanged
 {
     private bool hasRiver;
 
     public EventHandler TileDataChanged;
 
+    public event PropertyChangedEventHandler PropertyChanged;
+
     public World World { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
 
+    public const string HasRiverPropertyName = "HasRiver";
     public bool HasRiver
     {
         get
@@ -20,7 +24,7 @@ public abstract class BaseTile
         set
         {
             hasRiver = value;
-            OnTileDataChanged();
+            OnPropertyChanged(HasRiverPropertyName);
         }
     }
 
@@ -31,26 +35,16 @@ public abstract class BaseTile
         Y = y;
     }
 
-    public void RegisterForTileChanged(EventHandler onTileChangedHandler)
+    protected void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        TileDataChanged += onTileChangedHandler;
-    }
-
-    public void UnRegisterForTileChanged(EventHandler onTileChangedHandler)
-    {
-        TileDataChanged -= onTileChangedHandler;
-    }
-
-    protected void OnTileDataChanged()
-    {
-        var handler = TileDataChanged;
+        PropertyChangedEventHandler handler = PropertyChanged;
         if (handler != null)
-            handler(this, new EventArgs());
+            handler(this, e);
     }
 
-    public void OnNeighborTileDataChanged()
+    protected void OnPropertyChanged(string propertyName)
     {
-        OnTileDataChanged();
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
     }
 
     public BaseTile GetTileAtDirection(TileDirectionEnum direction)

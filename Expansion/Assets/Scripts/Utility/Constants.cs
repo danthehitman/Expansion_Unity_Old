@@ -5,7 +5,7 @@
     public const string GRASS_SPRITE = "Grass";
     public const string IRRIGATION_SPRITE = "Irrigation";
     public const string ROWS_SPRITE = "Rows";
-    public const string S_SPRITE = "Seeds";
+    public const string SEEDS_SPRITE = "Seeds";
 
     public const string PLAYER_HEAD = "Head";
     public const string PLAYER_FACE_1 = "Face1";
@@ -25,7 +25,10 @@
     public const string TILE_RIVER_TERM_VERT = "RiverTermVertN";
     public const string TILE_RIVER_T = "RiverTN";
     public const string TILE_RIVER_VERT = "RiverVert";
+    public const string TILE_RIVER_SINGLE = "RiverSingle";
 
     public const string PLAYER_SORTING_LAYER = "Player";
     public const string TILE_SORTING_LAYER = "Tile";
+
+    public const string ALL_PROPERTIES_PROPERTY_NAME = "All";
 }

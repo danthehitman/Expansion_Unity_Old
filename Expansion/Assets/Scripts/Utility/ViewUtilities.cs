@@ -23,7 +23,8 @@ public static class ViewUtilities
         var renderer = NewObject.AddComponent<SpriteRenderer>();
         renderer.enabled = spriteEnabled;
         renderer.sortingOrder = sortOrder;
-        renderer.sortingLayerName = sortingLayerName;
+        if(sortingLayerName != null)
+            renderer.sortingLayerName = sortingLayerName;
         NewObject.name = objectName;
         renderer.sprite = SpriteManager.Instance.GetSpriteByName(spriteName);
         NewObject.transform.parent = parent.transform;

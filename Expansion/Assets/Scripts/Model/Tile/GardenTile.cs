@@ -4,6 +4,7 @@
     private bool isIrrigated;
     private bool isPlanted;
 
+    public const string HasFencePropertyName = "HasFence";
     public bool HasFence
     {
         get
@@ -14,10 +15,11 @@
         set
         {
             hasFence = value;
-            OnTileDataChanged();
+            OnPropertyChanged(HasFencePropertyName);
         }
     }
 
+    public const string IsIrrigatedPropertyName = "IsIrrigated";
     public bool IsIrrigated
     {
         get
@@ -28,10 +30,11 @@
         set
         {
             isIrrigated = value;
-            OnTileDataChanged();
+            OnPropertyChanged(IsIrrigatedPropertyName);
         }
     }
 
+    public const string IsPlantedPropertyName = "IsPlanted";
     public bool IsPlanted
     {
         get
@@ -42,7 +45,7 @@
         set
         {
             isPlanted = value;
-            OnTileDataChanged();
+            OnPropertyChanged(IsPlantedPropertyName);
         }
     }
 

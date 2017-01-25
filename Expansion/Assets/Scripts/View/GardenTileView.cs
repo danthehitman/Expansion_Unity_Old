@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using UnityEngine;
 
 public class GardenTileView : TileView
@@ -14,28 +14,14 @@ public class GardenTileView : TileView
         var baseRenderer = BaseLayer.GetComponent<SpriteRenderer>();
         BaseLayer.name = "GardenTile_" + tile.X + "_" + tile.Y;
         baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.GRASS_SPRITE);
-        BaseLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
 
-        WaterLayer = new GameObject();
-        var waterRenderer = WaterLayer.AddComponent<SpriteRenderer>();
-        waterRenderer.enabled = false;
-        waterRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.IRRIGATION_SPRITE);
-        waterRenderer.sortingOrder = 1;
-        WaterLayer.transform.parent = BaseLayer.transform;
-        WaterLayer.transform.localPosition = Vector3.zero;
+        WaterLayer = ViewUtilities.GenerateViewObject(Constants.IRRIGATION_SPRITE, Constants.IRRIGATION_SPRITE, BaseLayer, 1, null, false);
+        FenceLayer = ViewUtilities.GenerateViewObject(Constants.FENCE_SPRITE, Constants.FENCE_SPRITE, BaseLayer, 2, null, false);
 
-        FenceLayer = new GameObject();
-        var fenceRender = FenceLayer.AddComponent<SpriteRenderer>();
-        fenceRender.enabled = false;
-        fenceRender.sprite = SpriteManager.Instance.GetSpriteByName(Constants.FENCE_SPRITE);
-        fenceRender.sortingOrder = 2;
-        FenceLayer.transform.parent = BaseLayer.transform;
-        FenceLayer.transform.localPosition = Vector3.zero;
-
-        OnTileModelDataChanged(tile, new EventArgs());
+        OnTileModelDataChanged(tile, new PropertyChangedEventArgs("All"));
     }
 
-    public override void OnTileModelDataChanged(object sender, EventArgs e)
+    public override void OnTileModelDataChanged(object sender, PropertyChangedEventArgs e)
     {
         base.OnTileModelDataChanged(sender, e);
         GardenTile gTile = sender as GardenTile;
@@ -43,8 +29,9 @@ public class GardenTileView : TileView
         {
             throw new System.Exception("Tile mismatch for GardenView.  Tile was: " + sender.GetType());
         }
-        
-        WaterLayer.GetComponent<SpriteRenderer>().enabled = gTile.IsIrrigated;
-        FenceLayer.GetComponent<SpriteRenderer>().enabled = gTile.HasFence;
+        if (e.PropertyName == GardenTile.IsIrrigatedPropertyName || e.PropertyName == Constants.ALL_PROPERTIES_PROPERTY_NAME)
+            WaterLayer.GetComponent<SpriteRenderer>().enabled = gTile.IsIrrigated;
+        if (e.PropertyName == GardenTile.HasFencePropertyName || e.PropertyName == Constants.ALL_PROPERTIES_PROPERTY_NAME)
+            FenceLayer.GetComponent<SpriteRenderer>().enabled = gTile.HasFence;
     }
 }
