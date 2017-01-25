@@ -10,8 +10,9 @@
     private float gardeningSkill;
     private float foragingSkill;
     private float huntingSkill;
-    private float BuildingSkill;
+    private float buildingSkill;
 
+    public const string XPropertyName = "X";
     public float X
     {
         get
@@ -22,10 +23,11 @@
         set
         {
             x = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(XPropertyName);
         }
     }
 
+    public const string YPropertyName = "Y";
     public float Y
     {
         get
@@ -36,10 +38,11 @@
         set
         {
             y = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(YPropertyName);
         }
     }
 
+    public const string HealthPropertyName = "Health";
     public int Health
     {
         get
@@ -50,10 +53,11 @@
         set
         {
             health = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(HealthPropertyName);
         }
     }
 
+    public const string HungerPropertyName = "Hunger";
     public int Hunger
     {
         get
@@ -64,10 +68,11 @@
         set
         {
             hunger = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(HungerPropertyName);
         }
     }
 
+    public const string ThirstPropertyName = "Thirst";
     public int Thirst
     {
         get
@@ -78,10 +83,11 @@
         set
         {
             thirst = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(ThirstPropertyName);
         }
     }
 
+    public const string FatiguePropertyName = "Fatigue";
     public int Fatigue
     {
         get
@@ -92,10 +98,11 @@
         set
         {
             fatigue = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(FatiguePropertyName);
         }
     }
 
+    public const string GardeningSkillPropertyName = "GardeningSkill";
     public float GardeningSkill
     {
         get
@@ -106,10 +113,11 @@
         set
         {
             gardeningSkill = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(GardeningSkillPropertyName);
         }
     }
 
+    public const string ForagingSkillPropertyName = "ForagingSkill";
     public float ForagingSkill
     {
         get
@@ -120,10 +128,11 @@
         set
         {
             foragingSkill = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(ForagingSkillPropertyName);
         }
     }
 
+    public const string HuntingSkillPropertyName = "HuntingSkill";
     public float HuntingSkill
     {
         get
@@ -134,7 +143,22 @@
         set
         {
             huntingSkill = value;
-            OnEntityDataChanged();
+            OnPropertyChanged(HuntingSkillPropertyName);
+        }
+    }
+
+    public const string BuildingSkillPropertyName = "BuildingSkill";
+    public float BuildingSkill
+    {
+        get
+        {
+            return buildingSkill;
+        }
+
+        set
+        {
+            buildingSkill = value;
+            OnPropertyChanged(BuildingSkillPropertyName);
         }
     }
 
@@ -148,10 +172,12 @@
         Fatigue = 0;
     }
 
+
+    //TODO: Need to have a specific  position changed event?
     public void SetPosition(float x, float y)
     {
         this.x = x;
         this.y = y;
-        OnEntityDataChanged();
+        OnPropertyChanged(Constants.ALL_PROPERTIES_PROPERTY_NAME);
     }
 }

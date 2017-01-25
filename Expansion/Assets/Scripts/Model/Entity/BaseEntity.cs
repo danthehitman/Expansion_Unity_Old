@@ -1,23 +1,21 @@
 ﻿using System;
+using System.ComponentModel;
 
-public abstract class BaseEntity
+public abstract class BaseEntity : INotifyPropertyChanged
 {
     public EventHandler EntityDataChanged;
 
-    public void RegisterForEntityChanged(EventHandler onEntityChangedHandler)
-    {
-        EntityDataChanged += onEntityChangedHandler;
-    }
+    public event PropertyChangedEventHandler PropertyChanged;
 
-    public void UnRegisterForEntityChanged(EventHandler onEntityChangedHandler)
+    protected void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        EntityDataChanged -= onEntityChangedHandler;
-    }
-
-    protected void OnEntityDataChanged()
-    {
-        var handler = EntityDataChanged;
+        PropertyChangedEventHandler handler = PropertyChanged;
         if (handler != null)
-            handler(this, new EventArgs());
+            handler(this, e);
+    }
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using UnityEngine;
 
 public class PlayerView
@@ -16,12 +16,12 @@ public class PlayerView
         ViewUtilities.GenerateViewObject(Constants.PLAYER_FACE_1, Constants.PLAYER_FACE_1, PlayerObject, 2, Constants.PLAYER_SORTING_LAYER, true);
         ViewUtilities.GenerateViewObject(Constants.PLAYER_SHORT_HAIR, Constants.PLAYER_SHORT_HAIR, PlayerObject, 3, Constants.PLAYER_SORTING_LAYER, true);
 
-        player.RegisterForEntityChanged(OnEntityModelDataChanged);
+        player.PropertyChanged += OnEntityModelDataChanged;
 
-        OnEntityModelDataChanged(player, new EventArgs());
+        OnEntityModelDataChanged(player, new PropertyChangedEventArgs(Constants.ALL_PROPERTIES_PROPERTY_NAME));
     }
 
-    public void OnEntityModelDataChanged(object sender, EventArgs e)
+    public void OnEntityModelDataChanged(object sender, PropertyChangedEventArgs e)
     {
         var player = sender as PlayerEntity;
         if (player != null)
