@@ -32,6 +32,14 @@ public static class ViewUtilities
         return NewObject;
     }
 
+    public static GameObject GenerateViewObject(string spriteName, string objectName, GameObject parent, int sortOrder, string sortingLayerName,
+        Vector3 position, bool spriteEnabled = false)
+    {
+        var NewObject = GenerateViewObject(spriteName, objectName, parent, sortOrder, sortingLayerName, spriteEnabled);
+        NewObject.transform.localPosition = position;
+        return NewObject;
+    }
+
     public static GameObject GenerateContainerViewObject(string objectName, int x, int y, string sortingLayerName, GameObject parent = null)
     {
         var NewObject = new GameObject();

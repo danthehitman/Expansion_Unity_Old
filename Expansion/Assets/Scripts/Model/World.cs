@@ -1,11 +1,32 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
-public class World
+public class World : INotifyPropertyChanged
 {
+    private const int HOURS_IN_DAY = 24;
     private BaseTile[,] tiles;
     private int width;
-    private int height; 
+    private int height;
+    private int second;
+    private int minute;
+    private int hour;
+    private int day;
+    private int month;
+    private int year;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        PropertyChangedEventHandler handler = PropertyChanged;
+        if (handler != null)
+            handler(this, e);
+    }
+
+    protected void OnPropertyChanged(string propertyName)
+    {
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+    }
 
     public int Width
     {
@@ -21,6 +42,104 @@ public class World
         {
             return height;
         }
+    }
+
+    public const string DayPropertyName = "Day";
+    public int Day
+    {
+        get
+        {
+            return day;
+        }
+
+        set
+        {
+            day = value;
+            OnPropertyChanged(DayPropertyName);
+        }
+    }
+
+    public const string MonthPropertyName = "Month";
+    public int Month
+    {
+        get
+        {
+            return month;
+        }
+
+        set
+        {
+            month = value;
+            OnPropertyChanged(MonthPropertyName);
+        }
+    }
+
+    public const string YearPropertyName = "Year";
+    public int Year
+    {
+        get
+        {
+            return year;
+        }
+
+        set
+        {
+            year = value;
+            OnPropertyChanged(YearPropertyName);
+        }
+    }
+
+    public const string SecondPropertyName = "Second";
+    public int Second
+    {
+        get
+        {
+            return second;
+        }
+
+        set
+        {
+            second = value;
+            OnPropertyChanged(SecondPropertyName);
+        }
+    }
+
+    public const string HourPropertyName = "Hour";
+    public int Hour
+    {
+        get
+        {
+            return hour;
+        }
+
+        set
+        {
+            hour = value;
+            OnPropertyChanged(HourPropertyName);
+        }
+    }
+
+    public const string MinutePropertyName = "Minute";
+    public int Minute
+    {
+        get
+        {
+            return minute;
+        }
+
+        set
+        {
+            minute = value;
+            OnPropertyChanged(MinutePropertyName);
+        }
+    }
+
+    public void AddMinute()
+    {
+        if (Minute < 60 * HOURS_IN_DAY)
+            Minute++;
+        else
+            Minute = 0;
     }
 
     public World(int width = 100, int height = 100)

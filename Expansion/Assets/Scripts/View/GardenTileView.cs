@@ -13,7 +13,7 @@ public class GardenTileView : TileView
     {
         var baseRenderer = BaseLayer.GetComponent<SpriteRenderer>();
         BaseLayer.name = "GardenTile_" + tile.X + "_" + tile.Y;
-        baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.GRASS_SPRITE);
+        baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND);
 
         WaterLayer = ViewUtilities.GenerateViewObject(Constants.IRRIGATION_SPRITE, Constants.IRRIGATION_SPRITE, BaseLayer, 1, null, false);
         FenceLayer = ViewUtilities.GenerateViewObject(Constants.FENCE_SPRITE, Constants.FENCE_SPRITE, BaseLayer, 2, null, false);

@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
+    public float updateInterval = .1f;
+    private double lastInterval;
+    private int frames = 0;
+    private float fps;
+
     public static WorldController Instance;
     public PlayerController PlayerController;
 
@@ -11,7 +16,7 @@ public class WorldController : MonoBehaviour
     public int Height = 100;
 
     //References
-    private World World;
+    public World World;
     private TileView[,] tileViews;
 
     //State Stuff
@@ -21,6 +26,9 @@ public class WorldController : MonoBehaviour
     // Initialize the game world.
     void Start ()
     {
+        lastInterval = Time.realtimeSinceStartup;
+        frames = 0;
+
         //Hacky singleton within monobehaviour.  Not sure I love this.
         Instance = this;
 
@@ -42,11 +50,22 @@ public class WorldController : MonoBehaviour
             }
         }
     }
-
-    // Update is called once per frame
+    void OnGUI()
+    {
+        GUILayout.Label("" + fps.ToString("f2"));
+    }
     void Update()
     {
-
+        ++frames;
+        float timeNow = Time.realtimeSinceStartup;
+        if (timeNow > lastInterval + updateInterval)
+        {
+            World.AddMinute();
+            fps = World.Minute;
+            //fps = (float)(frames / (timeNow - lastInterval));
+            frames = 0;
+            lastInterval = timeNow;
+        }
     }
 
     private TileView CreateTileView(BaseTile tileArg)

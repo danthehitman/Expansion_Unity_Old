@@ -92,6 +92,23 @@ public abstract class TileView {
                 var rightTile = baseTile.GetTileAtDirection(TileDirectionEnum.Right);
                 var rightRiver = rightTile != null && rightTile.RiverTileConnection != null &&
                     rightTile.RiverTileConnection.ConnectedLeft && baseTile.RiverTileConnection.ConnectedRight;
+                
+                //TODO: Useful?
+                var connectionCount = 0;
+                if (upRiver) connectionCount++;
+                if (downRiver) connectionCount++;
+                if (leftRiver) connectionCount++;
+                if (rightRiver) connectionCount++;
+
+                //Check if we are on a boundary and if we want to connect that direction.
+                if (upTile == null && baseTile.RiverTileConnection.ConnectedUp)
+                    upRiver = true;
+                else if (leftTile == null && baseTile.RiverTileConnection.ConnectedLeft)
+                    leftRiver = true;
+                else if (rightTile == null && baseTile.RiverTileConnection.ConnectedRight)
+                    rightRiver = true;
+                else if (downTile == null && baseTile.RiverTileConnection.ConnectedDown)
+                    downRiver = true;
 
                 riverSprite.SetOrientedSprite(leftRiver, rightRiver, upRiver, downRiver);
             }
