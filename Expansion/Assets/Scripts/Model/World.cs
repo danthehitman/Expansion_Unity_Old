@@ -6,8 +6,8 @@ public class World : INotifyPropertyChanged
 {
     private const int HOURS_IN_DAY = 24;
     private BaseTile[,] tiles;
-    private int width;
-    private int height;
+    private readonly int width;
+    private readonly int height;
     private int second;
     private int minute;
     private int hour;
@@ -52,7 +52,7 @@ public class World : INotifyPropertyChanged
             return day;
         }
 
-        set
+        private set
         {
             day = value;
             OnPropertyChanged(DayPropertyName);
@@ -67,7 +67,7 @@ public class World : INotifyPropertyChanged
             return month;
         }
 
-        set
+        private set
         {
             month = value;
             OnPropertyChanged(MonthPropertyName);
@@ -82,7 +82,7 @@ public class World : INotifyPropertyChanged
             return year;
         }
 
-        set
+        private set
         {
             year = value;
             OnPropertyChanged(YearPropertyName);
@@ -97,7 +97,7 @@ public class World : INotifyPropertyChanged
             return second;
         }
 
-        set
+        private set
         {
             second = value;
             OnPropertyChanged(SecondPropertyName);
@@ -112,7 +112,7 @@ public class World : INotifyPropertyChanged
             return hour;
         }
 
-        set
+        private set
         {
             hour = value;
             OnPropertyChanged(HourPropertyName);
@@ -127,7 +127,7 @@ public class World : INotifyPropertyChanged
             return minute;
         }
 
-        set
+        private set
         {
             minute = value;
             OnPropertyChanged(MinutePropertyName);
@@ -136,10 +136,45 @@ public class World : INotifyPropertyChanged
 
     public void AddMinute()
     {
-        if (Minute < 60 * HOURS_IN_DAY)
+        if (Minute < 60)
             Minute++;
         else
+        {
             Minute = 0;
+            AddHour();
+        }
+    }
+
+    public void AddSecond()
+    {
+        if (Second < 60)
+            Second++;
+        else
+        {
+            Second = 0;
+            AddMinute();
+        }
+    }
+
+    public void AddHour()
+    {
+        if (Hour < HOURS_IN_DAY)
+            Hour++;
+        else
+        {
+            Hour = 0;
+            AddDay();
+        }
+    }
+
+    public void AddDay()
+    {
+        Day++;
+    }
+
+    public int GetMinuteInDay()
+    {
+        return Hour*60 + Minute;
     }
 
     public World(int width = 100, int height = 100)

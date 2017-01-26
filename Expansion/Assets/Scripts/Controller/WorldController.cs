@@ -52,7 +52,11 @@ public class WorldController : MonoBehaviour
     }
     void OnGUI()
     {
-        GUILayout.Label("" + fps.ToString("f2"));
+        GUILayout.Label("FPS" + fps.ToString("f2"));
+        GUILayout.Label("Seconds" + World.Second.ToString("f2"));
+        GUILayout.Label("Minutes" + World.Minute.ToString("f2"));
+        GUILayout.Label("Hours" + World.Hour.ToString("f2"));
+        GUILayout.Label("Days" + World.Day.ToString("f2"));
     }
     void Update()
     {
@@ -62,7 +66,7 @@ public class WorldController : MonoBehaviour
         {
             World.AddMinute();
             fps = World.Minute;
-            //fps = (float)(frames / (timeNow - lastInterval));
+            fps = (float)(frames / (timeNow - lastInterval));
             frames = 0;
             lastInterval = timeNow;
         }
