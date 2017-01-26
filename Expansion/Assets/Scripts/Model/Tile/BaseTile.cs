@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 public abstract class BaseTile : INotifyPropertyChanged
 {
-    private bool hasRiver;
+    private TileConnection riverTileConnection;
 
     public EventHandler TileDataChanged;
 
@@ -13,18 +13,18 @@ public abstract class BaseTile : INotifyPropertyChanged
     public int X { get; set; }
     public int Y { get; set; }
 
-    public const string HasRiverPropertyName = "HasRiver";
-    public bool HasRiver
+    public const string RiverTileConectionName = "RiverTileConnection";
+    public TileConnection RiverTileConnection
     {
         get
         {
-            return hasRiver;
+            return riverTileConnection;
         }
 
         set
         {
-            hasRiver = value;
-            OnPropertyChanged(HasRiverPropertyName);
+            riverTileConnection = value;
+            OnPropertyChanged(RiverTileConectionName);
         }
     }
 
@@ -49,18 +49,6 @@ public abstract class BaseTile : INotifyPropertyChanged
 
     public BaseTile GetTileAtDirection(TileDirectionEnum direction)
     {
-        switch (direction)
-        {
-            case TileDirectionEnum.Left:
-                return World.GetTileAt(X - 1, Y);
-            case TileDirectionEnum.Right:
-                return World.GetTileAt(X + 1, Y);
-            case TileDirectionEnum.Up:
-                return World.GetTileAt(X, Y + 1);
-            case TileDirectionEnum.Down:
-                return World.GetTileAt(X, Y - 1);
-            default:
-                return null;
-        }
+        return World.GetTileAtDirection(X, Y, direction);
     }
 }

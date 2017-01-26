@@ -49,7 +49,7 @@ public abstract class TileView {
 
     public virtual void OnTileModelDataChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == BaseTile.HasRiverPropertyName || e.PropertyName == Constants.ALL_PROPERTIES_PROPERTY_NAME)
+        if (e.PropertyName == BaseTile.RiverTileConectionName || e.PropertyName == Constants.ALL_PROPERTIES_PROPERTY_NAME)
         {
             SetRiverTile();
             NotifyNeighbors();
@@ -76,23 +76,22 @@ public abstract class TileView {
     {
         if (baseTile != null)
         {
-            if (baseTile.HasRiver)
+            if (baseTile.RiverTileConnection != null)
             {
-                bool upRiver = false;
-                bool downRiver = false;
-                bool leftRiver = false;
-                bool rightRiver = false;
-
                 CreateRiverSprite();
 
                 var upTile = baseTile.GetTileAtDirection(TileDirectionEnum.Up);
-                upRiver = upTile != null ? upTile.HasRiver : false;
+                var upRiver = upTile != null && upTile.RiverTileConnection != null &&
+                    upTile.RiverTileConnection.ConnectedDown && baseTile.RiverTileConnection.ConnectedUp;
                 var downTile = baseTile.GetTileAtDirection(TileDirectionEnum.Down);
-                downRiver = downTile != null ? downTile.HasRiver : false;
+                var downRiver = downTile != null && downTile.RiverTileConnection != null &&
+                    downTile.RiverTileConnection.ConnectedUp && baseTile.RiverTileConnection.ConnectedDown;
                 var leftTile = baseTile.GetTileAtDirection(TileDirectionEnum.Left);
-                leftRiver = leftTile != null ? leftTile.HasRiver : false;
+                var leftRiver = leftTile != null && leftTile.RiverTileConnection != null &&
+                    leftTile.RiverTileConnection.ConnectedRight && baseTile.RiverTileConnection.ConnectedLeft;
                 var rightTile = baseTile.GetTileAtDirection(TileDirectionEnum.Right);
-                rightRiver = rightTile != null ? rightTile.HasRiver : false;
+                var rightRiver = rightTile != null && rightTile.RiverTileConnection != null &&
+                    rightTile.RiverTileConnection.ConnectedLeft && baseTile.RiverTileConnection.ConnectedRight;
 
                 riverSprite.SetOrientedSprite(leftRiver, rightRiver, upRiver, downRiver);
             }

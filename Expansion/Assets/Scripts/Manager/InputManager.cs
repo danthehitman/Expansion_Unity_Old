@@ -48,7 +48,7 @@ public class InputManager : MonoBehaviour
         int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y + 0.5f);
 
         //Handle screen drag.
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(1))
         {
             Vector3 diff = MouseLastPosition - mouseCurrentPosition;
             Camera.main.transform.Translate(diff);
@@ -69,7 +69,7 @@ public class InputManager : MonoBehaviour
         SetLastMousePosition();
 
         Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * 2;
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 10f);
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 20f);
     }
 
     //Check to see if we are over a different tile than we were in the last update.
