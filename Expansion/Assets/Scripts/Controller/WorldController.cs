@@ -110,8 +110,8 @@ public class WorldController : MonoBehaviour
     public void OnWorldCoordinateDoubleClick(int X, int Y)
     {
         //Test code for both double click and testing the events on the models.
-        var doubleClickTile = World.GetTileAt(X, Y);
-        ((GardenTile)doubleClickTile).HasRiver = !((GardenTile)doubleClickTile).HasRiver;
+        //var doubleClickTile = World.GetTileAt(X, Y);
+        //((GardenTile)doubleClickTile).HasRiver = !((GardenTile)doubleClickTile).HasRiver;
     }
 
     public void OnMovementKeyPressed(List<TileDirectionEnum> directions)
