@@ -50,23 +50,23 @@ public class PlayerView
         var world = sender as World;
         if (e.PropertyName == World.MinutePropertyName || e.PropertyName == Constants.ALL_PROPERTIES_PROPERTY_NAME)
         {
-            if (world.Minute <= 300 || world.Minute >= 1200)
+            if (world.GetMinuteInDay() <= 300 || world.GetMinuteInDay() >= 1200)
             {
                 ShadowRenderer.enabled = false;
             }
             else
             {
-                float hoursPercent = (float)(world.Minute - 300) / (float)(1200 - 300) * 100.0f;
+                float hoursPercent = (float)(world.GetMinuteInDay() - 300) / (float)(1200 - 300) * 100.0f;
                 float shadowValue = (float)(0 - 220) * hoursPercent / 100.0f + 0.0f;
                 
-                if (world.Minute > 300 && world.Minute < 720)
+                if (world.GetMinuteInDay() > 300 && world.GetMinuteInDay() < 720)
                 {
-                    var fadeValue = (float)(world.Minute - 300) / (float)(720 - 300);
+                    var fadeValue = (float)(world.GetMinuteInDay() - 300) / (float)(720 - 300);
                     ShadowRenderer.color = new Color(1f, 1f, 1f, fadeValue);
                 }
-                else if (world.Minute >= 720 && world.Minute < 1200)
+                else if (world.GetMinuteInDay() >= 720 && world.GetMinuteInDay() < 1200)
                 {
-                    var fadeValue = 1.0f - ((float)(world.Minute - 720) / (float)(1200 - 720));
+                    var fadeValue = 1.0f - ((float)(world.GetMinuteInDay() - 720) / (float)(1200 - 720));
                     ShadowRenderer.color = new Color(1f, 1f, 1f, fadeValue);
                 }
                 else

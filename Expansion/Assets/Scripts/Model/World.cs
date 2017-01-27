@@ -5,6 +5,7 @@ using UnityEngine;
 public class World : INotifyPropertyChanged
 {
     private const int HOURS_IN_DAY = 24;
+    private const int MINUTES_IN_DAY = 1440;
     private BaseTile[,] tiles;
     private readonly int width;
     private readonly int height;
@@ -84,6 +85,11 @@ public class World : INotifyPropertyChanged
             minute = value;
             OnPropertyChanged(MinutePropertyName);
         }
+    }
+
+    public int GetMinuteInDay()
+    {
+        return Minute % MINUTES_IN_DAY;
     }
 
     public void AddMinute()
