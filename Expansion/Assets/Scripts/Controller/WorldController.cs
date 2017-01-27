@@ -53,7 +53,6 @@ public class WorldController : MonoBehaviour
     void OnGUI()
     {
         GUILayout.Label("FPS" + fps.ToString("f2"));
-        GUILayout.Label("Seconds" + World.Second.ToString("f2"));
         GUILayout.Label("Minutes" + World.Minute.ToString("f2"));
         GUILayout.Label("Hours" + World.Hour.ToString("f2"));
         GUILayout.Label("Days" + World.Day.ToString("f2"));

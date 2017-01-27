@@ -8,12 +8,7 @@ public class World : INotifyPropertyChanged
     private BaseTile[,] tiles;
     private readonly int width;
     private readonly int height;
-    private int second;
     private int minute;
-    private int hour;
-    private int day;
-    private int month;
-    private int year;
 
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -44,78 +39,35 @@ public class World : INotifyPropertyChanged
         }
     }
 
-    public const string DayPropertyName = "Day";
     public int Day
     {
         get
         {
-            return day;
-        }
-
-        private set
-        {
-            day = value;
-            OnPropertyChanged(DayPropertyName);
+            return (Minute/60) / HOURS_IN_DAY;
         }
     }
-
-    public const string MonthPropertyName = "Month";
+    
     public int Month
     {
         get
         {
-            return month;
-        }
-
-        private set
-        {
-            month = value;
-            OnPropertyChanged(MonthPropertyName);
+            return Day / 30;
         }
     }
-
-    public const string YearPropertyName = "Year";
+    
     public int Year
     {
         get
         {
-            return year;
-        }
-
-        private set
-        {
-            year = value;
-            OnPropertyChanged(YearPropertyName);
+            return Month / 12;
         }
     }
-
-    public const string SecondPropertyName = "Second";
-    public int Second
-    {
-        get
-        {
-            return second;
-        }
-
-        private set
-        {
-            second = value;
-            OnPropertyChanged(SecondPropertyName);
-        }
-    }
-
-    public const string HourPropertyName = "Hour";
+    
     public int Hour
     {
         get
         {
-            return hour;
-        }
-
-        private set
-        {
-            hour = value;
-            OnPropertyChanged(HourPropertyName);
+            return Minute / 60;
         }
     }
 
@@ -136,45 +88,17 @@ public class World : INotifyPropertyChanged
 
     public void AddMinute()
     {
-        if (Minute < 60)
-            Minute++;
-        else
-        {
-            Minute = 0;
-            AddHour();
-        }
-    }
-
-    public void AddSecond()
-    {
-        if (Second < 60)
-            Second++;
-        else
-        {
-            Second = 0;
-            AddMinute();
-        }
+        Minute++;
     }
 
     public void AddHour()
     {
-        if (Hour < HOURS_IN_DAY)
-            Hour++;
-        else
-        {
-            Hour = 0;
-            AddDay();
-        }
+        Minute += 60;
     }
 
     public void AddDay()
     {
-        Day++;
-    }
-
-    public int GetMinuteInDay()
-    {
-        return Hour*60 + Minute;
+        Minute += (Minute*60)*HOURS_IN_DAY;
     }
 
     public World(int width = 100, int height = 100)
