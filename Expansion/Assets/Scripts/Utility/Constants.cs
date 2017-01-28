@@ -19,7 +19,8 @@
     public const string PLAYER_TORSO_2 = "Torso2";
     public const string PLAYER_SHADOW = "PlayerShadow";
 
-    public const string TILE_GRASSLAND = "Grassland";
+    public const string TILE_GRASSLAND = "GrasslandOverlap";
+    public const string TILE_SAND = "SandOverlap";
 
     public const string TILE_RIVER_BEND = "RiverBendSE";
     public const string TILE_RIVER_CROSS = "RiverCross";

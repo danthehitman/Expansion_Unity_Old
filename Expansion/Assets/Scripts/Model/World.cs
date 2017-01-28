@@ -11,6 +11,8 @@ public class World : INotifyPropertyChanged
     private readonly int width;
     private readonly int height;
     private int minute;
+    private IEnumerable<Marker> _markers;
+    private int key = 1;
 
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -108,8 +110,9 @@ public class World : INotifyPropertyChanged
         Minute += (Minute*60)*HOURS_IN_DAY;
     }
 
-    public World(int width = 100, int height = 100)
+    public World(int width = 100, int height = 100, int key = 1)
     {
+        this.key = key;
         this.width = width;
         this.height = height;
     }
@@ -135,6 +138,7 @@ public class World : INotifyPropertyChanged
         //        tiles[x, y] = tile;
         //    }
         //}
+        _markers = Marker.GetMarkers(width/2, height/2, key, WorldGenerationManager.Instance.TerrainTypes.Length);
         Dictionary<string, TileConnection> riversDictionary = new Dictionary<string, TileConnection>();
         for (int i = 0; i < riversCount; i++)
         {
@@ -145,7 +149,16 @@ public class World : INotifyPropertyChanged
         {
             for (int y = 0; y < height; y++)
             {
-                var tile = new GardenTile(this, x, y);
+                var terrain = SelectTerrain(x,y);
+                BaseTile tile = null;
+                if (terrain.Name == "Desert")
+                {
+                    tile = new GardenTile(this, x, y);
+                }
+                else if (terrain.Name == "Grassland")
+                {
+                    tile = new DesertTile(this, x, y);
+                }
 
                 //tile.RiverTileConnection = GetRiverTileConnection(x, y, rng);
                 var xyString = x+","+y;
@@ -155,6 +168,13 @@ public class World : INotifyPropertyChanged
         }
 
         Debug.Log("World created with " + width * height + " tiles.");
+    }
+
+    public TerrainType SelectTerrain(float x, float y)
+    {
+        //int index = RandomHelper.Range (x, y, Key, Sprites.Length);
+        var marker = Marker.Closest(_markers, new Vector2(x, y), key);
+        return WorldGenerationManager.Instance.TerrainTypes[marker.TerrainType];
     }
 
     private Dictionary<string,TileConnection> GenerateRiver(Dictionary<string, TileConnection> rivers, System.Random rng)

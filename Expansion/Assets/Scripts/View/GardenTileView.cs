@@ -7,16 +7,17 @@ public class GardenTileView : TileView
     private GameObject WaterLayer;
     private GameObject RowLayer;
     private GameObject SeedLayer;
+    private GameObject GrassLayer;
 
     // Use this for initialization
     public GardenTileView (GardenTile tile): base(tile)
     {
-        var baseRenderer = BaseLayer.GetComponent<SpriteRenderer>();
-        BaseLayer.name = "GardenTile_" + tile.X + "_" + tile.Y;
-        baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND);
+        HighlightLayer.name = "GardenTile_" + tile.X + "_" + tile.Y;
 
-        WaterLayer = ViewUtilities.GenerateViewObject(Constants.IRRIGATION_SPRITE, Constants.IRRIGATION_SPRITE, BaseLayer, 1, null, false);
-        FenceLayer = ViewUtilities.GenerateViewObject(Constants.FENCE_SPRITE, Constants.FENCE_SPRITE, BaseLayer, 2, null, false);
+        GrassLayer = ViewUtilities.GenerateViewObject(Constants.TILE_GRASSLAND, Constants.TILE_GRASSLAND, HighlightLayer, 0, null, true);
+        GrassLayer.GetComponent<SpriteRenderer>().transform.Rotate(0, 0, Random.Range(0, 360));
+        WaterLayer = ViewUtilities.GenerateViewObject(Constants.IRRIGATION_SPRITE, Constants.IRRIGATION_SPRITE, HighlightLayer, 1, null, false);
+        FenceLayer = ViewUtilities.GenerateViewObject(Constants.FENCE_SPRITE, Constants.FENCE_SPRITE, HighlightLayer, 2, null, false);
 
         OnTileModelDataChanged(tile, new PropertyChangedEventArgs("All"));
     }

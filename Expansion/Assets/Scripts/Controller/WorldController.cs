@@ -14,6 +14,7 @@ public class WorldController : MonoBehaviour
     //Properties
     public int Width = 100;
     public int Height = 100;
+    public int Key = 1;
 
     //References
     public World World;
@@ -32,7 +33,7 @@ public class WorldController : MonoBehaviour
         //Hacky singleton within monobehaviour.  Not sure I love this.
         Instance = this;
 
-        World = new World(Width, Height);
+        World = new World(Width, Height, Key);
         World.InitializeWorld();
 
         var playerEntity = new PlayerEntity();
@@ -78,6 +79,10 @@ public class WorldController : MonoBehaviour
         {
             tileView = new GardenTileView((GardenTile)tileArg);
         }
+        else if (tileArg is DesertTile)
+        {
+            tileView = new DesertTileView((DesertTile)tileArg);
+        }
 
         tileViews[tileArg.X, tileArg.Y] = tileView;
         return tileView;
@@ -87,12 +92,12 @@ public class WorldController : MonoBehaviour
     {
         var tileView = GetTileViewAt(x, y);
         if (tileView != null)
-            Destroy(tileView.BaseLayer);
+            Destroy(tileView.HighlightLayer);
     }
 
     private void SetTileViewAsWorldChild(TileView view)
     {
-        view.BaseLayer.transform.SetParent(this.transform);
+        view.HighlightLayer.transform.SetParent(this.transform);
     }
 
     public void OnMouseOverWorldCoordinateChanged(int newX, int newY)

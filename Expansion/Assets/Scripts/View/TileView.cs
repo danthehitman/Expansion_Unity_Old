@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public abstract class TileView {
-    public GameObject BaseLayer;
+    public GameObject HighlightLayer;
 
     private NeighborOrientedTileSprite riverSprite;
     private bool isHighlighted;
@@ -40,9 +40,15 @@ public abstract class TileView {
     public TileView(BaseTile tile)
     {
         baseTile = tile;
-        BaseLayer = new GameObject();
-        BaseLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
-        BaseLayer.AddComponent<SpriteRenderer>();
+        HighlightLayer = new GameObject();
+        HighlightLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
+        HighlightLayer.AddComponent<SpriteRenderer>();
+        var baseRenderer = HighlightLayer.GetComponent<SpriteRenderer>();
+        baseRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
+        baseRenderer.sortingOrder = 10;
+        baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND);
+        baseRenderer.color = new Color(1f, 1f, 1f, 0.1f);
+
         SetRiverTile();
         tile.PropertyChanged += OnTileModelDataChanged;
     }
@@ -122,14 +128,14 @@ public abstract class TileView {
 
     public void OnTileHighlightChanged(bool highlighted)
     {
-        if (!isActivated && BaseLayer != null)
-            BaseLayer.GetComponent<SpriteRenderer>().color = highlighted? Color.gray : Color.white;
+        if (!isActivated && HighlightLayer != null)
+            HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted? Color.gray : Color.clear;
     }
 
     public void OnTileActivationChanged(bool activated)
     {
-        if (BaseLayer != null)
-            BaseLayer.GetComponent<SpriteRenderer>().color = activated ? Color.black : Color.white;
+        if (HighlightLayer != null)
+            HighlightLayer.GetComponent<SpriteRenderer>().color = activated ? Color.black : Color.white;
     }
 
     private void CreateRiverSprite()
@@ -148,7 +154,7 @@ public abstract class TileView {
                     VertSprite = Constants.TILE_RIVER_VERT,
                     VertTermSprite = Constants.TILE_RIVER_TERM_VERT
                 },
-                2, "River", BaseLayer);
+                2, "River", HighlightLayer);
         }
     }
 
