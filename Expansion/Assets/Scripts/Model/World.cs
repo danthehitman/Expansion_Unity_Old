@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 
@@ -115,14 +116,40 @@ public class World : INotifyPropertyChanged
 
     public void InitializeWorld()
     {
+        System.Random rng = new System.Random();
+
+        var riversCount = rng.Next(1, 11);
+
+        //var xRange = Enumerable.Range(0, width);
+        //var yRange = Enumerable.Range(0, height);
+
         tiles = new BaseTile[width, height];
+
+        //foreach (int x in xRange.Shuffle(rng))
+        //{
+        //    foreach (int y in yRange.Shuffle(rng))
+        //    {
+        //        var tile = new GardenTile(this, x, y);
+
+        //        tile.RiverTileConnection = GetRiverTileConnection(x, y, rng);
+        //        tiles[x, y] = tile;
+        //    }
+        //}
+        Dictionary<string, TileConnection> riversDictionary = new Dictionary<string, TileConnection>();
+        for (int i = 0; i < riversCount; i++)
+        {
+            riversDictionary = GenerateRiver(riversDictionary, rng);
+        }
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 var tile = new GardenTile(this, x, y);
 
-                tile.RiverTileConnection = GetRiverTileConnection(x, y);
+                //tile.RiverTileConnection = GetRiverTileConnection(x, y, rng);
+                var xyString = x+","+y;
+                tile.RiverTileConnection = riversDictionary.ContainsKey(xyString) ? riversDictionary[xyString] : null;
                 tiles[x, y] = tile;
             }
         }
@@ -130,7 +157,150 @@ public class World : INotifyPropertyChanged
         Debug.Log("World created with " + width * height + " tiles.");
     }
 
-    private TileConnection GetRiverTileConnection(int x, int y)
+    private Dictionary<string,TileConnection> GenerateRiver(Dictionary<string, TileConnection> rivers, System.Random rng)
+    {
+        var riverX = 0;
+        var riverY = 0;
+        var startingSide = rng.Next(0, 5);
+        var direction = 0;
+        var directionChangeChance = 0.0f;
+        //determine the startig position and direction.
+        switch (startingSide)
+        {
+            case 0:
+                //left side
+                riverX = 0;
+                riverY = rng.Next(0, height -1);
+                direction = 2;
+                break;
+            case 1:
+                //top
+                riverX = rng.Next(0, width -1);
+                riverY = height;
+                direction = 3;
+                break;
+            case 2:
+                //right side
+                riverX = width;
+                riverY = rng.Next(0, height -1);
+                direction = 0;
+                break;
+            case 3:
+                //bottom
+                riverX = rng.Next(0, width -1);
+                riverY = 0;
+                direction = 1;
+                break;
+            case 4:
+                //center
+                riverX = width / 2 + rng.Next(0, width / 6);
+                riverY = height / 2 + rng.Next(0, height / 6);
+                direction = rng.Next(0, 4);
+                break;
+            default:
+                break;
+        }
+
+        var xyKey = riverX + "," + riverY;
+        //var build = true;
+        var previousDirection = direction;
+        var max = 300;
+        int current = 0;
+        bool skipAdd = false;
+        TileConnection currentConnection = null;
+        while (current < max)
+        {
+            current++;
+            xyKey = riverX + "," + riverY;
+
+            if (rng.NextDouble() <= directionChangeChance)
+            {
+                direction = rng.Next(0, 4);
+                directionChangeChance = 0.0f;
+            }
+            else
+            {
+                if (directionChangeChance < 1f)
+                    directionChangeChance += 0.05f;
+                else
+                    directionChangeChance = 0.0f;
+            }
+            if (rivers.ContainsKey(xyKey))
+            {
+                skipAdd = true;
+                currentConnection = rivers[xyKey];
+                setConnectedFrom(rivers[xyKey], previousDirection);               
+            }
+
+            switch (direction)
+            {
+                case 0:
+                    //left
+                    if (!skipAdd)
+                        rivers.Add(riverX + "," + riverY, setConnectedFrom(new TileConnection() { ConnectedLeft = true }, previousDirection));
+                    else
+                        currentConnection.ConnectedLeft = true;
+                    riverX--;
+                    break;
+                case 1:
+                    //up
+                    if (!skipAdd)
+                        rivers.Add(riverX + "," + riverY, setConnectedFrom(new TileConnection() { ConnectedUp = true }, previousDirection));
+                    else
+                        currentConnection.ConnectedUp = true;
+                    riverY++;
+                    break;
+                case 2:
+                    //right
+                    if (!skipAdd)
+                        rivers.Add(riverX + "," + riverY, setConnectedFrom(new TileConnection() { ConnectedRight = true }, previousDirection));
+                    else
+                        currentConnection.ConnectedRight = true;
+                    riverX++;
+                    break;
+                case 3:
+                    //down
+                    if (!skipAdd)
+                        rivers.Add(riverX + "," + riverY, setConnectedFrom(new TileConnection() { ConnectedDown = true }, previousDirection));
+                    else
+                        currentConnection.ConnectedDown = true;
+                    riverY--;
+                    break;
+            }
+            //if (riverX < 0 || riverX > width || riverY < 0 || riverY > height)
+            //    break;
+            previousDirection = direction;
+            skipAdd = false;
+        }
+
+        return rivers;
+    }
+
+    private static TileConnection setConnectedFrom(TileConnection tileConnection, int direction)
+    {
+        switch (direction)
+        {
+            case 0:
+                //left
+                tileConnection.ConnectedRight = true;
+                break;
+            case 1:
+                //up
+                tileConnection.ConnectedDown = true;
+                break;
+            case 2:
+                //right
+                tileConnection.ConnectedLeft = true;
+                break;
+            case 3:
+                //down
+                tileConnection.ConnectedUp = true;
+                break;
+        }
+        return tileConnection;
+    }
+
+    private TileConnection GetRiverTileConnection(int x, int y, System.Random rng)
     {
         bool hasRiver = false;
         bool connectUp = false;
@@ -158,21 +328,68 @@ public class World : INotifyPropertyChanged
         var riverRight = tileRight != null && tileRight.RiverTileConnection != null;
         if (riverRight) riverRightConnection = tileRight.RiverTileConnection.ConnectedLeft;
 
+
+        //If we have any connections around us
         if (riverUpConnection || riverDownConnection || riverLeftConnection || riverRightConnection)
         {
-            //If so we will connect to them some percentage of the time.
-            if (Random.value <= 0.75f)
+            //If so we will connect to at least one of them some percentage of the time.
+            if (rng.NextDouble() <= 1f)
             {
-                connectUp = riverUpConnection;
-                connectDown = riverDownConnection;
-                connectLeft = riverLeftConnection;
-                connectRight = riverRightConnection;
+                //connectUp = riverUpConnection;
+                //connectDown = riverDownConnection;
+                //connectLeft = riverLeftConnection;
+                //connectRight = riverRightConnection;
+
+                //if (!riverUp || !riverDown || !riverLeft || !riverRight)
+                //{
+                var connectionCount = 0;
+                var randomRange = Enumerable.Range(0, 4);
+                //If we are continuing on connect to the first one you find always.
+                var connectPercent = 1f;
+                //Connect to the second one less than half the time and then no more.
+                var reducePercent = 9f;
+                foreach (int i in randomRange.Shuffle(rng))
+                {
+                    if (i == 0 && riverUpConnection && rng.NextDouble() <= connectPercent)
+                    {
+                        connectUp = true;
+                        connectionCount++;
+                        connectPercent -= reducePercent;
+                    }
+                    else if (i == 1 && riverDownConnection && rng.NextDouble() <= connectPercent)
+                    {
+                        connectDown = true;
+                        connectionCount++;
+                        connectPercent -= reducePercent;
+                    }
+                    else if (i == 2 && riverLeftConnection && rng.NextDouble() <= connectPercent)
+                    {
+                        connectLeft = true;
+                        connectionCount++;
+                        connectPercent -= reducePercent;
+                    }
+                    else if (i == 3 && riverRightConnection && rng.NextDouble() <= connectPercent)
+                    {
+                        connectRight = true;
+                        connectionCount++;
+                        connectPercent -= reducePercent;
+                    }
+                }
+
+                //If there is at least 1 ungenerated tile around us we may connect to it.
                 if (tileUp == null || tileDown == null || tileLeft == null || tileRight == null)
                 {
                     //Continue the river some precentage of the time.
-                    var randomRange = Enumerable.Range(0, 4).OrderBy(r => Random.value);
-                    var connectPercent = 0.75f;
-                    var reducePercent = 0.2f;
+                    randomRange = Enumerable.Range(0, 4);
+
+                    //If we already have more than 1 connection we lower the chance of another.
+                    if (connectionCount < 4)
+                        connectPercent = 1f;
+                    else
+                        connectPercent = .3f;
+
+                    //Make 1 or two more depending on how many we have to start with.  This should eliminate cross rivers.
+                    reducePercent = .9f;
                     foreach (int i in randomRange)
                     {
                         if (i == 0 && tileUp == null && Random.value <= connectPercent)
@@ -200,40 +417,40 @@ public class World : INotifyPropertyChanged
                 hasRiver = true;
             }
         }
-        //I there are no tiles around us with connections we will create a new river with connections some percentage of the time.
-        else if (Random.value <= 0.05f)
+        //If there are no rivers around us we will spawn one some percentage of the time.
+        else if ((!riverUp && !riverDown && !riverLeft && !riverRight) && rng.NextDouble() <= .02f)
         {
             hasRiver = true;
-            if (tileUp == null || tileDown == null || tileLeft == null || tileRight == null)
-            {
-                //Continue the river some precentage of the time.
-                var randomRange = Enumerable.Range(0, 4).OrderBy(r => Random.value);
-                var connectPercent = 0.75f;
-                var reducePercent = 0.2f;
-                foreach (int i in randomRange)
+            //if ()
+            //{
+                //Always continue the river and sometimes add an additional connection.
+                var randomRange = Enumerable.Range(1, 4);
+                var connectPercent = 1f;
+                var reducePercent = 0.5f;
+                foreach (int i in randomRange.Shuffle(rng))
                 {
-                    if (i == 0 && tileUp == null && Random.value <= connectPercent)
+                    if (i == 1 && tileUp == null && rng.NextDouble() <= connectPercent)
                     {
                         connectUp = true;
                         connectPercent -= reducePercent;
                     }
-                    else if (i == 1 && tileDown == null && Random.value <= connectPercent)
+                    else if (i == 2 && tileDown == null && rng.NextDouble() <= connectPercent)
                     {
                         connectDown = true;
                         connectPercent -= reducePercent;
                     }
-                    else if (i == 2 && tileLeft == null && Random.value <= connectPercent)
+                    else if (i == 3 && tileLeft == null && rng.NextDouble() <= connectPercent)
                     {
                         connectLeft = true;
                         connectPercent -= reducePercent;
                     }
-                    else if (i == 3 && tileRight == null && Random.value <= connectPercent)
+                    else if (i == 4 && tileRight == null && rng.NextDouble() <= connectPercent)
                     {
                         connectRight = true;
                         connectPercent -= reducePercent;
                     }
                 }
-            }
+            //}
         }
         return hasRiver == false
             ? null

@@ -148,7 +148,7 @@ public abstract class TileView {
                     VertSprite = Constants.TILE_RIVER_VERT,
                     VertTermSprite = Constants.TILE_RIVER_TERM_VERT
                 },
-                2, BaseLayer);
+                2, "River", BaseLayer);
         }
     }
 

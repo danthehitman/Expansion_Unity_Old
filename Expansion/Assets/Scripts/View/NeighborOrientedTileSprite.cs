@@ -9,10 +9,11 @@ public class NeighborOrientedTileSprite
 
     public GameObject TileGameObject { get; set; }
 
-    public NeighborOrientedTileSprite(OrientedSpriteNames names, int sortOrder, GameObject parentObject = null)
+    public NeighborOrientedTileSprite(OrientedSpriteNames names, int sortOrder, string name, GameObject parentObject = null)
     {
         spriteNames = names;
         TileGameObject = new GameObject();
+        TileGameObject.name = name;
         renderer = TileGameObject.AddComponent<SpriteRenderer>();
         renderer.enabled = true;
         renderer.sortingOrder = sortOrder;

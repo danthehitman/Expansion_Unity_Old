@@ -69,7 +69,7 @@ public class InputManager : MonoBehaviour
         SetLastMousePosition();
 
         Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * 2;
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 20f);
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 50f);
     }
 
     //Check to see if we are over a different tile than we were in the last update.
