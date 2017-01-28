@@ -58,22 +58,23 @@ public class PlayerView
             {
                 float hoursPercent = (float)(world.GetMinuteInDay() - 300) / (float)(1200 - 300) * 100.0f;
                 float shadowValue = (float)(0 - 220) * hoursPercent / 100.0f + 0.0f;
-                
+                float fadeValue = 0;
                 if (world.GetMinuteInDay() > 300 && world.GetMinuteInDay() < 720)
                 {
-                    var fadeValue = (float)(world.GetMinuteInDay() - 300) / (float)(720 - 300);
-                    ShadowRenderer.color = new Color(1f, 1f, 1f, fadeValue);
+                    fadeValue = (float)(world.GetMinuteInDay() - 300) / (float)(720 - 300);
+                    ShadowRenderer.color = new Color(1f, 1f, 1f, Mathf.Clamp(fadeValue, 0.2f, 1f));
                 }
                 else if (world.GetMinuteInDay() >= 720 && world.GetMinuteInDay() < 1200)
                 {
-                    var fadeValue = 1.0f - ((float)(world.GetMinuteInDay() - 720) / (float)(1200 - 720));
-                    ShadowRenderer.color = new Color(1f, 1f, 1f, fadeValue);
+                    fadeValue = 1.0f - ((float)(world.GetMinuteInDay() - 720) / (float)(1200 - 720));
+                    ShadowRenderer.color = new Color(1f, 1f, 1f, Mathf.Clamp(fadeValue, 0.2f, 1f));
                 }
                 else
                     ShadowRenderer.color = new Color(1f, 1f, 1f, 1f);
 
                 ShadowRenderer.enabled = true;
-                ShadowRenderer.transform.eulerAngles = new Vector3(0, 0, shadowValue);
+                ShadowRenderer.transform.eulerAngles = new Vector3(0, 0, -shadowValue);
+                ShadowRenderer.transform.localScale = new Vector3(1- fadeValue, 1 - fadeValue, 1f);
             }
         }
     }

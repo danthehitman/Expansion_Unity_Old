@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class WorldController : MonoBehaviour
 {
-    public float updateInterval = .1f;
+    public float UpdateInterval = .1f;
+    public int WorldSpeed = 1;
     private double lastInterval;
     private int frames = 0;
     private float fps;
@@ -62,9 +63,9 @@ public class WorldController : MonoBehaviour
     {
         ++frames;
         float timeNow = Time.realtimeSinceStartup;
-        if (timeNow > lastInterval + updateInterval)
+        if (timeNow > lastInterval + UpdateInterval)
         {
-            World.AddMinute();
+            World.AddMinute(WorldSpeed);
             fps = World.Minute;
             fps = (float)(frames / (timeNow - lastInterval));
             frames = 0;

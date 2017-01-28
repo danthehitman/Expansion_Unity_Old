@@ -95,9 +95,9 @@ public class World : INotifyPropertyChanged
         return Minute % MINUTES_IN_DAY;
     }
 
-    public void AddMinute()
+    public void AddMinute(int toAdd = 1)
     {
-        Minute++;
+        Minute += toAdd;
     }
 
     public void AddHour()
