@@ -117,7 +117,15 @@ public class World : INotifyPropertyChanged
         this.height = height;
     }
 
-    public void InitializeWorld()
+    public void InitializeWorldComplex()
+    {
+        System.Random rng = new System.Random();
+        WrappingWorldGenerator worldGen = new WrappingWorldGenerator(this, height, width);
+        tiles = worldGen.Tiles;
+        Debug.Log("World created with " + width * height + " tiles.");
+    }
+
+    public void InitializeWorldSimple()
     {
         System.Random rng = new System.Random();
 
@@ -158,6 +166,10 @@ public class World : INotifyPropertyChanged
                 else if (terrain.Name == "Grassland")
                 {
                     tile = new DesertTile(this, x, y);
+                }
+                else if (terrain.Name == "Mountain")
+                {
+                    tile = new MountainTile(this, x, y);
                 }
 
                 //tile.RiverTileConnection = GetRiverTileConnection(x, y, rng);

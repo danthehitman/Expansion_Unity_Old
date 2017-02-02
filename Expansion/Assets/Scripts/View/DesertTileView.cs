@@ -10,8 +10,8 @@ public class DesertTileView : TileView
     {
         HighlightLayer.name = "DesertTile_" + tile.X + "_" + tile.Y;
 
-        GrassLayer = ViewUtilities.GenerateViewObject(Constants.TILE_SAND, Constants.TILE_SAND, HighlightLayer, 0, null, true);
-        GrassLayer.GetComponent<SpriteRenderer>().transform.Rotate(0, 0, Random.Range(0, 360));
+        GrassLayer = ViewUtilities.GenerateViewObject(Constants.TILE_DESERT, Constants.TILE_DESERT, HighlightLayer, 0, null, true);
+        //GrassLayer.GetComponent<SpriteRenderer>().transform.Rotate(0, 0, Random.Range(0, 360));
 
         OnTileModelDataChanged(tile, new PropertyChangedEventArgs("All"));
     }

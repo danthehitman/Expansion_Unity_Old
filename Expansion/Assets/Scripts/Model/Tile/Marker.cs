@@ -19,6 +19,8 @@ public class Marker
                 markers[markerIndex++] = new Marker()
                 {
                     TerrainType = RandomHelper.Range(x + iX, y + iY, key, terrainTypeLength),
+                    //TODO: Need to understand how to effect the aspects of the randomness and the edges here so we 
+                    // can have think mountain ranges and large expansive deserts etc... or visa versa
                     Location = new Vector2((int)(x + iX) << 4, (int)(y + iY) << 4)
                 };
             }

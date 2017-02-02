@@ -23,7 +23,7 @@ public class WorldGenerationManager
 
     private void AddTerrainTypes()
     {
-        TerrainTypes = new TerrainType[2];
+        TerrainTypes = new TerrainType[3];
         TerrainTypes[0] =new TerrainType()
         {
             IsAnimated = false,
@@ -37,8 +37,15 @@ public class WorldGenerationManager
             IsAnimated = false,
             Name = "Desert",
             Navigable = true,
-            Tiles = new Sprite[] { SpriteManager.Instance.GetSpriteByName(Constants.TILE_SAND) }
+            Tiles = new Sprite[] { SpriteManager.Instance.GetSpriteByName(Constants.TILE_DESERT) }
+        };
+
+        TerrainTypes[2] = new TerrainType()
+        {
+            IsAnimated = false,
+            Name = "Mountain",
+            Navigable = true,
+            Tiles = new Sprite[] { SpriteManager.Instance.GetSpriteByName(Constants.TILE_MOUNTAIN) }
         };
     }
-
 }

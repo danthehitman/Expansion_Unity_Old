@@ -35,7 +35,7 @@ public class WorldController : MonoBehaviour
         Instance = this;
 
         World = new World(Width, Height, Key);
-        World.InitializeWorld();
+        World.InitializeWorldComplex();
 
         var playerEntity = new PlayerEntity();
         PlayerController = new PlayerController(playerEntity, World);
@@ -75,19 +75,31 @@ public class WorldController : MonoBehaviour
 
     private TileView CreateTileView(BaseTile tileArg)
     {
-        TileView tileView = null;
-        if (tileArg is GardenTile)
-        {
-            tileView = new GardenTileView((GardenTile)tileArg);
-        }
-        else if (tileArg is DesertTile)
-        {
-            tileView = new DesertTileView((DesertTile)tileArg);
-        }
+        TileView tileView = new TileView(tileArg);        
 
         tileViews[tileArg.X, tileArg.Y] = tileView;
         return tileView;
     }
+
+    //private TileView CreateTileView(BaseTile tileArg)
+    //{
+    //    TileView tileView = null;
+    //    if (tileArg is GardenTile)
+    //    {
+    //        tileView = new GardenTileView((GardenTile)tileArg);
+    //    }
+    //    else if (tileArg is DesertTile)
+    //    {
+    //        tileView = new DesertTileView((DesertTile)tileArg);
+    //    }
+    //    else if (tileArg is MountainTile)
+    //    {
+    //        tileView = new MountainTileView((MountainTile)tileArg);
+    //    }
+
+    //    tileViews[tileArg.X, tileArg.Y] = tileView;
+    //    return tileView;
+    //}
 
     private void DestroyTileViewAt(int x, int y)
     {

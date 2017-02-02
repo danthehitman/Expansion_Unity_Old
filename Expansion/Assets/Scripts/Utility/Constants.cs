@@ -19,8 +19,20 @@
     public const string PLAYER_TORSO_2 = "Torso2";
     public const string PLAYER_SHADOW = "PlayerShadow";
 
-    public const string TILE_GRASSLAND = "GrasslandOverlap";
-    public const string TILE_SAND = "SandOverlap";
+    public const string TILE_GRASSLAND = "Grassland";
+    public const string TILE_DESERT = "Desert";
+    public const string TILE_MOUNTAIN = "Mountain";
+    public const string TILE_SAVANNA = "Savanna";
+    public const string TILE_ICE = "Ice";
+    public const string TILE_TUNDRA = "Tundra";
+    public const string TILE_WOODLAND = "Woodland";
+    public const string TILE_BOREAL_FOREST = "BorealForest";
+    public const string TILE_SEASONAL_FOREST = "SeasonalForest";
+    public const string TILE_TEMPERATE_RAINFOREST = "TemperateRainforest";
+    public const string TILE_TROPICAL_RAINFOREST = "TropicalRainforest";
+    public const string TILE_DEEP_WATER = "DeepWater";
+    public const string TILE_SHALLOW_WATER = "ShallowWater";
+    public const string TILE_RIVER = "River";
 
     public const string TILE_RIVER_BEND = "RiverBendSE";
     public const string TILE_RIVER_CROSS = "RiverCross";

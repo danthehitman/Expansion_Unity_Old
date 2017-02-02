@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using UnityEngine;
 
-public abstract class TileView {
+public class TileView {
     public GameObject HighlightLayer;
 
     private NeighborOrientedTileSprite riverSprite;
@@ -45,9 +45,14 @@ public abstract class TileView {
         HighlightLayer.AddComponent<SpriteRenderer>();
         var baseRenderer = HighlightLayer.GetComponent<SpriteRenderer>();
         baseRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
-        baseRenderer.sortingOrder = 10;
-        baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND);
-        baseRenderer.color = new Color(1f, 1f, 1f, 0.1f);
+        baseRenderer.sortingOrder = 1;
+        baseRenderer.sprite = ViewUtilities.GetTileSprite(tile);
+        baseRenderer.name = baseRenderer.sprite.name;
+
+        //TODO: Need something other than the grasstile here for this.  Right now the bas tile is used for highlighting so maybe just
+        // an empty sprite or figure out a different way to do it.
+        //baseRenderer.sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND);
+        //baseRenderer.color = new Color(1f, 1f, 1f, 0.0f);
 
         SetRiverTile();
         tile.PropertyChanged += OnTileModelDataChanged;
@@ -129,7 +134,7 @@ public abstract class TileView {
     public void OnTileHighlightChanged(bool highlighted)
     {
         if (!isActivated && HighlightLayer != null)
-            HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted? Color.gray : Color.clear;
+            HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted? Color.gray : Color.white;
     }
 
     public void OnTileActivationChanged(bool activated)

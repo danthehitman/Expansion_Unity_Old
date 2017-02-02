@@ -15,7 +15,7 @@ public class GardenTileView : TileView
         HighlightLayer.name = "GardenTile_" + tile.X + "_" + tile.Y;
 
         GrassLayer = ViewUtilities.GenerateViewObject(Constants.TILE_GRASSLAND, Constants.TILE_GRASSLAND, HighlightLayer, 0, null, true);
-        GrassLayer.GetComponent<SpriteRenderer>().transform.Rotate(0, 0, Random.Range(0, 360));
+        //GrassLayer.GetComponent<SpriteRenderer>().transform.Rotate(0, 0, Random.Range(0, 360));
         WaterLayer = ViewUtilities.GenerateViewObject(Constants.IRRIGATION_SPRITE, Constants.IRRIGATION_SPRITE, HighlightLayer, 1, null, false);
         FenceLayer = ViewUtilities.GenerateViewObject(Constants.FENCE_SPRITE, Constants.FENCE_SPRITE, HighlightLayer, 2, null, false);
 

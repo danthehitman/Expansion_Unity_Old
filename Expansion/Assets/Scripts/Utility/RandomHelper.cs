@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class RandomHelper
+﻿public class RandomHelper
 {
 
     public static int Range(float x, float y, int key, int range)
@@ -10,6 +7,7 @@ public class RandomHelper
     }
     public static int Range(int x, int y, int key, int range)
     {
+        //TODO: Look into a better perlin function?
         uint hash = (uint)key;
         hash ^= (uint)x;
         hash *= 0x51d7348d;
