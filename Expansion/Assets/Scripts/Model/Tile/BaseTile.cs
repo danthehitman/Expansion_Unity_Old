@@ -4,33 +4,29 @@ using System.ComponentModel;
 
 public class BaseTile : INotifyPropertyChanged
 {
-    public HeightType HeightType;
-    public HeatType HeatType;
-    public MoistureType MoistureType;
-    public BiomeType BiomeType;
+    public HeightType HeightType { get; set; }
+    public HeatType HeatType { get; set; }
+    public MoistureType MoistureType { get; set; }
+    public BiomeType BiomeType { get; set; }
 
-    public float Cloud1Value { get; set; }
-    public float Cloud2Value { get; set; }
     public float HeightValue { get; set; }
     public float HeatValue { get; set; }
     public float MoistureValue { get; set; }
-    public int Bitmask;
-    public int BiomeBitmask;
 
-    public BaseTile Left;
-    public BaseTile Right;
-    public BaseTile Top;
-    public BaseTile Bottom;
+    public int Bitmask { get; set; }
+    public int BiomeBitmask { get; set; }
 
-    public bool Collidable;
-    public bool FloodFilled;
+    public BaseTile Left { get; set; }
+    public BaseTile Right { get; set; }
+    public BaseTile Top { get; set; }
+    public BaseTile Bottom { get; set; }
 
-    public List<River> Rivers = new List<River>();
+    public bool Collidable { get; set; }
+    public bool FloodFilled { get; set; }
+
+    public List<River> Rivers { get; set; }
 
     public int RiverSize { get; set; }
-
-
-    private TileConnection riverTileConnection;
 
     public EventHandler TileDataChanged;
 
@@ -40,26 +36,12 @@ public class BaseTile : INotifyPropertyChanged
     public int X { get; set; }
     public int Y { get; set; }
 
-    public const string RiverTileConectionName = "RiverTileConnection";
-    public TileConnection RiverTileConnection
-    {
-        get
-        {
-            return riverTileConnection;
-        }
-
-        set
-        {
-            riverTileConnection = value;
-            OnPropertyChanged(RiverTileConectionName);
-        }
-    }
-
     public BaseTile(World world, int x, int y)
     {
         World = world;
         X = x;
         Y = y;
+        Rivers = new List<River>();
     }
 
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -72,11 +54,6 @@ public class BaseTile : INotifyPropertyChanged
     protected void OnPropertyChanged(string propertyName)
     {
         OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-    }
-
-    public BaseTile GetTileAtDirection(TileDirectionEnum direction)
-    {
-        return World.GetTileAtDirection(X, Y, direction);
     }
 
     public void UpdateBiomeBitmask()
@@ -297,51 +274,4 @@ public class BaseTile : INotifyPropertyChanged
             }
         }
     }
-}
-
-public enum HeightType
-{
-    DeepWater = 1,
-    ShallowWater = 2,
-    Shore = 3,
-    Sand = 4,
-    Grass = 5,
-    Forest = 6,
-    Rock = 7,
-    Snow = 8,
-    River = 9
-}
-
-public enum HeatType
-{
-    Coldest = 0,
-    Colder = 1,
-    Cold = 2,
-    Warm = 3,
-    Warmer = 4,
-    Warmest = 5
-}
-
-public enum MoistureType
-{
-    Wettest = 5,
-    Wetter = 4,
-    Wet = 3,
-    Dry = 2,
-    Dryer = 1,
-    Dryest = 0
-}
-
-public enum BiomeType
-{
-    Desert,
-    Savanna,
-    TropicalRainforest,
-    Grassland,
-    Woodland,
-    SeasonalForest,
-    TemperateRainforest,
-    BorealForest,
-    Tundra,
-    Ice
 }

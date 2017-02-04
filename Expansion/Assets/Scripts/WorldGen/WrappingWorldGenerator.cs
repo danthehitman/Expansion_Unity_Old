@@ -7,7 +7,7 @@ public class WrappingWorldGenerator : Generator  {
     protected ImplicitCombiner HeatMap;
     protected ImplicitFractal MoistureMap;
 
-    public WrappingWorldGenerator(World world, int height, int width) : base(world, height, width)
+    public WrappingWorldGenerator(World world, int height, int width, int seed) : base(world, height, width, seed)
     {
     }
 

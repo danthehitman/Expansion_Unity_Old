@@ -1,98 +1,67 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public abstract class Generator {
+public abstract class Generator
+{
+    protected int Seed;
 
     private World world;
+    private System.Random rng;
     protected int width = 100;
     protected int height = 100;
 
-    protected int Seed;
-
     // Adjustable variables for Unity Inspector
 
-    [Header("Height Map")]
-    [SerializeField]
-    protected int TerrainOctaves = 6;
-    [SerializeField]
-    protected double TerrainFrequency = 1.25;
-    [SerializeField]
-    protected float DeepWater = 0.2f;
-    [SerializeField]
-    protected float ShallowWater = 0.4f;	
-    [SerializeField]
-    protected float Sand = 0.5f;
-    [SerializeField]
-    protected float Grass = 0.7f;
-    [SerializeField]
-    protected float Forest = 0.8f;
-    [SerializeField]
-    protected float Rock = 0.9f;
-
-    //Less water, more mountains?
-    //[Header("Height Map")]
-    //[SerializeField]
+    //Original Config
+    //Height Map
     //protected int TerrainOctaves = 6;
-    //[SerializeField]
     //protected double TerrainFrequency = 1.25;
-    //[SerializeField]
     //protected float DeepWater = 0.2f;
-    //[SerializeField]
-    //protected float ShallowWater = 0.3f;
-    //[SerializeField]
-    //protected float Sand = 0.4f;
-    //[SerializeField]
-    //protected float Grass = 0.5f;
-    //[SerializeField]
-    //protected float Forest = 0.7f;
-    //[SerializeField]
+    //protected float ShallowWater = 0.4f;
+    //protected float Sand = 0.5f;
+    //protected float Grass = 0.7f;
+    //protected float Forest = 0.8f;
     //protected float Rock = 0.9f;
 
-    [Header("Heat Map")]
-    [SerializeField]
-    protected int HeatOctaves = 4;
-    [SerializeField]
+    //Less water, more mountains?
+    //Height Map
+    protected int TerrainOctaves = 6;
+    protected double TerrainFrequency = 1.25;
+    protected float DeepWater = 0.2f;
+    protected float ShallowWater = 0.3f;
+    protected float Sand = 0.4f;
+    protected float Grass = 0.5f;
+    protected float Forest = 0.7f;
+    protected float Rock = 0.9f;
+
+    //Heat Map
+    //Original
+    //protected int HeatOctaves = 4;
+    protected int HeatOctaves = 6;
     protected double HeatFrequency = 3.0;
-    [SerializeField]
     protected float ColdestValue = 0.05f;
-    [SerializeField]
     protected float ColderValue = 0.18f;
-    [SerializeField]
     protected float ColdValue = 0.4f;
-    [SerializeField]
     protected float WarmValue = 0.6f;
-    [SerializeField]
     protected float WarmerValue = 0.8f;
 
-    [Header("Moisture Map")]
-    [SerializeField]
+    //Moisture Map
     protected int MoistureOctaves = 4;
-    [SerializeField]
     protected double MoistureFrequency = 3.0;
-    [SerializeField]
     protected float DryerValue = 0.27f;
-    [SerializeField]
     protected float DryValue = 0.4f;
-    [SerializeField]
     protected float WetValue = 0.6f;
-    [SerializeField]
     protected float WetterValue = 0.8f;
-    [SerializeField]
     protected float WettestValue = 0.9f;
 
-    [Header("Rivers")]
-    [SerializeField]
-    protected int RiverCount = 40;
-    [SerializeField]
-    protected float MinRiverHeight = 0.6f;
-    [SerializeField]
-    protected int MaxRiverAttempts = 1000;
-    [SerializeField]
-    protected int MinRiverTurns = 18;
-    [SerializeField]
-    protected int MinRiverLength = 20;
-    [SerializeField]
-    protected int MaxRiverIntersections = 2;
+    //Rivers
+    private int RiverCount;
+    private int MinRiverTurns;
+    private float MinRiverHeight = 0.6f;
+    private int MinRiverLength;
+    private int MaxRiverIntersections = 2;
+    private int MaxRiverSize;
 
     protected MapData HeightData;
     protected MapData HeatData;
@@ -124,13 +93,25 @@ public abstract class Generator {
         { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
 
-    public Generator(World world, int height, int width)
+    public Generator(World world, int height, int width, int seed)
     {
         this.world = world;
         this.height = height;
         this.width = width;
+        RiverCount = (width / 32) * 8;
+        MinRiverTurns = (width / 256) * 10;
+        MinRiverLength = (width / 32) * 3;
+        MaxRiverSize = (width / 128);
 
-        Seed = UnityEngine.Random.Range(0, int.MaxValue);
+        Debug.Log("RiverCount: " + RiverCount + " MinRiverTurns: " + MinRiverTurns + " MinRiverLength: " +
+            MinRiverLength + " MaxRiverSize: " + MaxRiverSize);
+
+        //Generate a random seed if none is provided.
+        if (seed == -1)
+            Seed = Random.Range(0, int.MaxValue);
+        else
+            Seed = seed;
+        rng = new System.Random(Seed);
 
         //HeightMapRenderer = transform.Find ("HeightTexture").GetComponent<MeshRenderer> ();
         //HeatMapRenderer = transform.Find ("HeatTexture").GetComponent<MeshRenderer> ();
@@ -150,36 +131,26 @@ public abstract class Generator {
     protected abstract BaseTile GetRight(BaseTile tile);
 
     protected virtual void Generate()
-    {		
-        GetData ();
-        LoadTiles ();		
-        UpdateNeighbors ();
+    {
+        GetData();
+        LoadTiles();
+        UpdateNeighbors();
         
-        GenerateRivers ();
-        BuildRiverGroups ();
-        DigRiverGroups ();
-        AdjustMoistureMap ();
+        GenerateRivers();
+        BuildRiverGroups();
+        DigRiverGroups();
+        AdjustMoistureMap();
         
-        UpdateBitmasks ();
-        FloodFill ();
+        UpdateBitmasks();
+        FloodFill();
         
-        GenerateBiomeMap ();
+        GenerateBiomeMap();
         UpdateBiomeBitmask();
         
         //HeightMapRenderer.materials [0].mainTexture = TextureGenerator.GetHeightMapTexture (Width, Height, Tiles);
         //HeatMapRenderer.materials[0].mainTexture = TextureGenerator.GetHeatMapTexture (Width, Height, Tiles);
         //MoistureMapRenderer.materials[0].mainTexture = TextureGenerator.GetMoistureMapTexture (Width, Height, Tiles);
         //BiomeMapRenderer.materials[0].mainTexture = TextureGenerator.GetBiomeMapTexture (Width, Height, Tiles, ColdestValue, ColderValue, ColdValue);
-    }
-
-    void Update()
-    {
-        // Refresh with inspector values
-        if (Input.GetKeyDown (KeyCode.F5)) {
-            Seed = UnityEngine.Random.Range(0, int.MaxValue);
-            Initialize();
-            Generate();
-        }
     }
 
     private void UpdateBiomeBitmask()
@@ -284,7 +255,7 @@ public abstract class Generator {
             }
 
             if (longest != null)
-            {				
+            {
                 //Dig out longest path first
                 DigRiver (longest);
 
@@ -365,53 +336,55 @@ public abstract class Generator {
 
     private void GenerateRivers()
     {
-        int attempts = 0;
         int rivercount = RiverCount;
         Rivers = new List<River> ();
+        int attempts = 0;
 
-        // Generate some rivers
-        while (rivercount > 0 && attempts < MaxRiverAttempts) {
+        foreach (int x in Enumerable.Range(0, width).OrderBy(r => rng.Next()))
+        {
+            foreach (int y in Enumerable.Range(0, height).OrderBy(rr => rng.Next()))
+            {
+                BaseTile tile = Tiles[x, y];
+                attempts++;
+                // validate the tile
+                if (!tile.Collidable) continue;
+                if (tile.Rivers.Count > 0) continue;
 
-            // Get a random tile
-            int x = UnityEngine.Random.Range (0, width);
-            int y = UnityEngine.Random.Range (0, height);
-            BaseTile tile = Tiles[x,y];
-
-            // validate the tile
-            if (!tile.Collidable) continue;
-            if (tile.Rivers.Count > 0) continue;
-
-            if (tile.HeightValue > MinRiverHeight)
-            {				
-                // Tile is good to start river from
-                River river = new River(rivercount);
-
-                // Figure out the direction this river will try to flow
-                river.CurrentDirection = tile.GetLowestNeighbor (this);
-
-                // Recursively find a path to water
-                FindPathToWater(tile, river.CurrentDirection, ref river);
-
-                // Validate the generated river 
-                if (river.TurnCount < MinRiverTurns || river.Tiles.Count < MinRiverLength || river.Intersections > MaxRiverIntersections)
+                if (tile.HeightValue > MinRiverHeight)
                 {
-                    //Validation failed - remove this river
-                    for (int i = 0; i < river.Tiles.Count; i++)
+                    // Tile is good to start river from
+                    River river = new River(rivercount);
+
+                    // Figure out the direction this river will try to flow
+                    river.CurrentDirection = tile.GetLowestNeighbor(this);
+
+                    // Recursively find a path to water
+                    FindPathToWater(tile, river.CurrentDirection, ref river);
+
+                    // Validate the generated river 
+                    if (river.TurnCount < MinRiverTurns || river.Tiles.Count < MinRiverLength || river.Intersections > MaxRiverIntersections)
                     {
-                        BaseTile t = river.Tiles[i];
-                        t.Rivers.Remove (river);
+                        //Validation failed - remove this river
+                        for (int iii = 0; iii < river.Tiles.Count; iii++)
+                        {
+                            BaseTile t = river.Tiles[iii];
+                            t.Rivers.Remove(river);
+                        }
                     }
+                    else if (river.Tiles.Count >= MinRiverLength)
+                    {
+                        //Validation passed - Add river to list
+                        Rivers.Add(river);
+                        tile.Rivers.Add(river);
+                        rivercount--;
+                    }
+                    if (rivercount == 0)
+                        goto End;
                 }
-                else if (river.Tiles.Count >= MinRiverLength)
-                {
-                    //Validation passed - Add river to list
-                    Rivers.Add (river);
-                    tile.Rivers.Add (river);
-                    rivercount--;	
-                }
-            }		
-            attempts++;
+            }
         }
+        End:
+        Debug.Log(rivercount.ToString() + " : " + attempts);
     }
 
     // Dig river based on a parent river vein
@@ -435,7 +408,7 @@ public abstract class Generator {
 
         int counter = 0;
         int intersectionCount = river.Tiles.Count - intersectionID;
-        int size = UnityEngine.Random.Range(intersectionSize, 5);
+        int size = rng.Next(intersectionSize, 5);
         river.Length = river.Tiles.Count;  
 
         // randomize size change
@@ -450,22 +423,22 @@ public abstract class Generator {
         int fivemin = five / 3;
         
         // randomize length of each size
-        int count1 = UnityEngine.Random.Range (fivemin, five);  
+        int count1 = rng.Next(fivemin, five);  
         if (size < 4) {
             count1 = 0;
         }
-        int count2 = count1 + UnityEngine.Random.Range(fourmin, four);  
+        int count2 = count1 + rng.Next(fourmin, four);  
         if (size < 3) {
             count2 = 0;
             count1 = 0;
         }
-        int count3 = count2 + UnityEngine.Random.Range(threemin, three); 
+        int count3 = count2 + rng.Next(threemin, three); 
         if (size < 2) {
             count3 = 0;
             count2 = 0;
             count1 = 0;
         }
-        int count4 = count3 + UnityEngine.Random.Range (twomin, two); 
+        int count4 = count3 + rng.Next(twomin, two); 
 
         // Make sure we are not digging past the river path
         if (count4 > river.Length) {
@@ -486,7 +459,7 @@ public abstract class Generator {
             count2 = 0;
             count3 = 0;
         } else if (intersectionSize == 2) {
-            count3 = intersectionCount;		
+            count3 = intersectionCount;
             count1 = 0;
             count2 = 0;
         } else if (intersectionSize == 3) {
@@ -506,20 +479,27 @@ public abstract class Generator {
 
             BaseTile t = river.Tiles [i];
 
-            if (counter < count1) {
-                t.DigRiver (river, 4);				
-            } else if (counter < count2) {
-                t.DigRiver (river, 3);				
-            } else if (counter < count3) {
-                t.DigRiver (river, 2);				
-            } 
-            else if ( counter < count4) {
-                t.DigRiver (river, 1);
+            if (counter < count1 && MaxRiverSize > 3)
+            {
+                t.DigRiver(river, 4);
             }
-            else {
-                t.DigRiver (river, 0);
-            }			
-            counter++;			
+            else if (counter < count2 && MaxRiverSize > 2)
+            {
+                t.DigRiver(river, 3);
+            }
+            else if (counter < count3 && MaxRiverSize > 1)
+            {
+                t.DigRiver(river, 2);
+            }
+            else if (counter < count4 && MaxRiverSize > 0)
+            {
+                t.DigRiver(river, 1);
+            }
+            else
+            {
+                t.DigRiver(river, 0);
+            }
+            counter++;
         }
     }
 
@@ -529,7 +509,9 @@ public abstract class Generator {
         int counter = 0;
         
         // How wide are we digging this river?
-        int size = UnityEngine.Random.Range(1,5);
+        int size = rng.Next(1,5);
+        //DEF: Try this
+        //int size = 1;
         river.Length = river.Tiles.Count;  
 
         // randomize size change
@@ -544,22 +526,22 @@ public abstract class Generator {
         int fivemin = five / 3;
 
         // randomize lenght of each size
-        int count1 = UnityEngine.Random.Range (fivemin, five);             
+        int count1 = rng.Next(fivemin, five);             
         if (size < 4) {
             count1 = 0;
         }
-        int count2 = count1 + UnityEngine.Random.Range(fourmin, four); 
+        int count2 = count1 + rng.Next(fourmin, four); 
         if (size < 3) {
             count2 = 0;
             count1 = 0;
         }
-        int count3 = count2 + UnityEngine.Random.Range(threemin, three); 
+        int count3 = count2 + rng.Next(threemin, three); 
         if (size < 2) {
             count3 = 0;
             count2 = 0;
             count1 = 0;
         }
-        int count4 = count3 + UnityEngine.Random.Range (twomin, two);  
+        int count4 = count3 + rng.Next(twomin, two);  
         
         // Make sure we are not digging past the river path
         if (count4 > river.Length) {
@@ -578,28 +560,28 @@ public abstract class Generator {
         {
             BaseTile t = river.Tiles[i];
 
-            if (counter < count1) {
-                t.DigRiver (river, 4);				
+            if (counter < count1 && MaxRiverSize > 3) {
+                t.DigRiver(river, 4);
             }
-            else if (counter < count2) {
-                t.DigRiver (river, 3);				
+            else if (counter < count2 && MaxRiverSize > 2) {
+                t.DigRiver(river, 3);
             } 
-            else if (counter < count3) {
-                t.DigRiver (river, 2);				
+            else if (counter < count3 && MaxRiverSize > 1) {
+                t.DigRiver(river, 2);
             } 
-            else if ( counter < count4) {
-                t.DigRiver (river, 1);
+            else if ( counter < count4 && MaxRiverSize > 0) {
+                t.DigRiver(river, 1);
             }
             else {
                 t.DigRiver(river, 0);
-            }			
-            counter++;			
+            }
+            counter++;
         }
     }
     
     private void FindPathToWater(BaseTile tile, Direction direction, ref River river)
     {
-        if (tile.Rivers.Contains (river))
+        if (tile.Rivers.Contains(river))
             return;
 
         // check if there is already a river on this tile
@@ -609,10 +591,10 @@ public abstract class Generator {
         river.AddTile (tile);
 
         // get neighbors
-        BaseTile left = GetLeft (tile);
-        BaseTile right = GetRight (tile);
-        BaseTile top = GetTop (tile);
-        BaseTile bottom = GetBottom (tile);
+        BaseTile left = GetLeft(tile);
+        BaseTile right = GetRight(tile);
+        BaseTile top = GetTop(tile);
+        BaseTile bottom = GetBottom(tile);
         
         float leftValue = int.MaxValue;
         float rightValue = int.MaxValue;
@@ -804,18 +786,6 @@ public abstract class Generator {
                 else if (heatValue < WarmerValue) t.HeatType = HeatType.Warmer;
                 else t.HeatType = HeatType.Warmest;
 
-                //if (Clouds1 != null)
-                //{
-                //    t.Cloud1Value = Clouds1.Data[x, y];
-                //    t.Cloud1Value = (t.Cloud1Value - Clouds1.Min) / (Clouds1.Max - Clouds1.Min);
-                //}
-
-                //if (Clouds2 != null)
-                //{
-                //    t.Cloud2Value = Clouds2.Data[x, y];
-                //    t.Cloud2Value = (t.Cloud2Value - Clouds2.Min) / (Clouds2.Max - Clouds2.Min);
-                //}
-
                 Tiles[x,y] = t;
             }
         }
@@ -874,7 +844,7 @@ public abstract class Generator {
                         Lands.Add (group);
                 }
                 // Water
-                else {				
+                else {
                     TileGroup group = new TileGroup();
                     group.Type = TileGroupType.Water;
                     stack.Push(t);
