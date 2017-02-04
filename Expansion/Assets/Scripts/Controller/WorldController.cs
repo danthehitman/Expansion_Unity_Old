@@ -37,7 +37,13 @@ public class WorldController : MonoBehaviour
         World = new World(Width, Height, Key);
         World.InitializeWorldComplex();
 
+        var startTile = World.GetRandomTile();
+
         var playerEntity = new PlayerEntity();
+        playerEntity.EntityToTile(startTile);
+
+        CenterCameraOnTile(startTile);
+
         PlayerController = new PlayerController(playerEntity, World);
 
         tileViews = new TileView[Width, Height];
@@ -52,6 +58,7 @@ public class WorldController : MonoBehaviour
             }
         }
     }
+
     void OnGUI()
     {
         GUILayout.Label("FPS" + fps.ToString("f2"));
@@ -59,6 +66,7 @@ public class WorldController : MonoBehaviour
         GUILayout.Label("Hours" + World.Hour.ToString("f2"));
         GUILayout.Label("Days" + World.Day.ToString("f2"));
     }
+
     void Update()
     {
         ++frames;
@@ -170,5 +178,10 @@ public class WorldController : MonoBehaviour
         {
             return null;
         }
+    }
+
+    public void CenterCameraOnTile(BaseTile tile)
+    {
+        Camera.main.transform.Translate(new Vector3(tile.X, tile.Y, Camera.main.transform.position.z));
     }
 }

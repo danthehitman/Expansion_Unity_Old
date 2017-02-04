@@ -15,30 +15,30 @@ public abstract class Generator
 
     //Original Config
     //Height Map
-    //protected int TerrainOctaves = 6;
-    //protected double TerrainFrequency = 1.25;
-    //protected float DeepWater = 0.2f;
-    //protected float ShallowWater = 0.4f;
-    //protected float Sand = 0.5f;
-    //protected float Grass = 0.7f;
-    //protected float Forest = 0.8f;
-    //protected float Rock = 0.9f;
-
-    //Less water, more mountains?
-    //Height Map
     protected int TerrainOctaves = 6;
     protected double TerrainFrequency = 1.25;
     protected float DeepWater = 0.2f;
-    protected float ShallowWater = 0.3f;
-    protected float Sand = 0.4f;
-    protected float Grass = 0.5f;
-    protected float Forest = 0.7f;
+    protected float ShallowWater = 0.4f;
+    protected float Sand = 0.5f;
+    protected float Grass = 0.7f;
+    protected float Forest = 0.8f;
     protected float Rock = 0.9f;
+
+    //Less water, more mountains?
+    //Height Map
+    //protected int TerrainOctaves = 6;
+    //protected double TerrainFrequency = 1.25;
+    //protected float DeepWater = 0.2f;
+    //protected float ShallowWater = 0.3f;
+    //protected float Sand = 0.4f;
+    //protected float Grass = 0.5f;
+    //protected float Forest = 0.7f;
+    //protected float Rock = 0.9f;
 
     //Heat Map
     //Original
     //protected int HeatOctaves = 4;
-    protected int HeatOctaves = 6;
+    protected int HeatOctaves = 4;
     protected double HeatFrequency = 3.0;
     protected float ColdestValue = 0.05f;
     protected float ColderValue = 0.18f;
@@ -48,12 +48,23 @@ public abstract class Generator
 
     //Moisture Map
     protected int MoistureOctaves = 4;
-    protected double MoistureFrequency = 3.0;
+    //Bumping this up made a big difference for more grasslands and deserts
+    protected double MoistureFrequency = 4.0;
     protected float DryerValue = 0.27f;
     protected float DryValue = 0.4f;
     protected float WetValue = 0.6f;
     protected float WetterValue = 0.8f;
     protected float WettestValue = 0.9f;
+
+    //Original
+    //Moisture Map
+    //protected int MoistureOctaves = 4;
+    //protected double MoistureFrequency = 3.0;
+    //protected float DryerValue = 0.27f;
+    //protected float DryValue = 0.4f;
+    //protected float WetValue = 0.6f;
+    //protected float WetterValue = 0.8f;
+    //protected float WettestValue = 0.9f;
 
     //Rivers
     private int RiverCount;
@@ -83,22 +94,32 @@ public abstract class Generator
     protected MeshRenderer MoistureMapRenderer;
     protected MeshRenderer BiomeMapRenderer;
 
-    protected BiomeType[,] BiomeTable = new BiomeType[6,6] {   
+    protected BiomeType[,] BiomeTable = new BiomeType[6, 6] {   
         //COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
         { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
         { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
-        { BiomeType.Ice, BiomeType.Tundra, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //DRY
-        { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //WET
+        { BiomeType.Ice, BiomeType.Tundra, BiomeType.Woodland,     BiomeType.Grassland,            BiomeType.Savanna,             BiomeType.Savanna },             //DRY
+        { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.Woodland,            BiomeType.Grassland,             BiomeType.Savanna },             //WET
         { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
         { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
     };
+
+    //protected BiomeType[,] BiomeTable = new BiomeType[6,6] {   
+    //    //COLDEST        //COLDER          //COLD                  //HOT                          //HOTTER                       //HOTTEST
+    //    { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYEST
+    //    { BiomeType.Ice, BiomeType.Tundra, BiomeType.Grassland,    BiomeType.Desert,              BiomeType.Desert,              BiomeType.Desert },              //DRYER
+    //    { BiomeType.Ice, BiomeType.Tundra, BiomeType.Woodland,     BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //DRY
+    //    { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.Woodland,            BiomeType.Savanna,             BiomeType.Savanna },             //WET
+    //    { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.SeasonalForest,      BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest },  //WETTER
+    //    { BiomeType.Ice, BiomeType.Tundra, BiomeType.BorealForest, BiomeType.TemperateRainforest, BiomeType.TropicalRainforest,  BiomeType.TropicalRainforest }   //WETTEST
+    //};
 
     public Generator(World world, int height, int width, int seed)
     {
         this.world = world;
         this.height = height;
         this.width = width;
-        RiverCount = (width / 32) * 8;
+        RiverCount = (width / 32) * 3;
         MinRiverTurns = (width / 256) * 10;
         MinRiverLength = (width / 32) * 3;
         MaxRiverSize = (width / 128);

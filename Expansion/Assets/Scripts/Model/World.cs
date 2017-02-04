@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 public class World : INotifyPropertyChanged
@@ -11,7 +12,8 @@ public class World : INotifyPropertyChanged
     private readonly int height;
     private int minute;
     private IEnumerable<Marker> _markers;
-    private int key = 1;
+    private int key = -1;
+    private System.Random rng;
 
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -114,11 +116,11 @@ public class World : INotifyPropertyChanged
         this.key = key;
         this.width = width;
         this.height = height;
+        rng = new System.Random();
     }
 
     public void InitializeWorldComplex()
     {
-        System.Random rng = new System.Random();
         WrappingWorldGenerator worldGen = new WrappingWorldGenerator(this, height, width, this.key);
         tiles = worldGen.Tiles;
         Debug.Log("World created with " + width * height + " tiles.");
@@ -151,5 +153,24 @@ public class World : INotifyPropertyChanged
         {
             return null;
         }
+    }
+
+    public BaseTile GetRandomTile()
+    {
+        return GetTileAt(rng.Next(0, width), rng.Next(0, height));
+    }
+
+    public BaseTile GetRandomLandTile()
+    {
+        foreach (int x in Enumerable.Range(0, width).OrderBy(r => rng.Next()))
+        {
+            foreach (int y in Enumerable.Range(0, height).OrderBy(rr => rng.Next()))
+            {
+                var tile = GetTileAt(x, y);
+                if (tile != null && tile.Collidable)
+                    return tile;
+            }
+        }
+        return null;
     }
 }

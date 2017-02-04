@@ -22,22 +22,22 @@ namespace AccidentalNoise
 
         public override Double Get(Double x, Double y)
         {
-			return MathHelper.Gain(this.Gain.Get(x, y), this.Source.Get(x, y));
+            return MathHelper.Gain(this.Gain.Get(x, y), this.Source.Get(x, y));
         }
 
         public override Double Get(Double x, Double y, Double z)
         {
-			return MathHelper.Gain(this.Gain.Get(x, y, z), this.Source.Get(x, y, z));
+            return MathHelper.Gain(this.Gain.Get(x, y, z), this.Source.Get(x, y, z));
         }
 
         public override Double Get(Double x, Double y, Double z, Double w)
         {
-			return MathHelper.Gain(this.Gain.Get(x, y, z, w), this.Source.Get(x, y, z, w));
+            return MathHelper.Gain(this.Gain.Get(x, y, z, w), this.Source.Get(x, y, z, w));
         }
 
         public override Double Get(Double x, Double y, Double z, Double w, Double u, Double v)
         {
-			return MathHelper.Gain(this.Gain.Get(x, y, z, w, u, v), this.Source.Get(x, y, z, w, u, v));
+            return MathHelper.Gain(this.Gain.Get(x, y, z, w, u, v), this.Source.Get(x, y, z, w, u, v));
         }
     }
 }

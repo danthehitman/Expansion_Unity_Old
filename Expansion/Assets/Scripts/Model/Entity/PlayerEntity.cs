@@ -180,4 +180,9 @@
         this.y = y;
         OnPropertyChanged(Constants.ALL_PROPERTIES_PROPERTY_NAME);
     }
+
+    public void EntityToTile(BaseTile tile)
+    {
+        SetPosition(tile.X, tile.Y);
+    }
 }
