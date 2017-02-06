@@ -6,7 +6,9 @@ public class TileView
     public GameObject HighlightLayer;
     private bool isHighlighted;
     private bool isActivated;
-    private BaseTile baseTile;
+    private float tileGreyscale;
+
+    public BaseTile BaseTile { get; set; }
 
     public bool IsHighlighted
     {
@@ -38,7 +40,7 @@ public class TileView
 
     public TileView(BaseTile tile)
     {
-        baseTile = tile;
+        BaseTile = tile;
         HighlightLayer = new GameObject();
         HighlightLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
         HighlightLayer.AddComponent<SpriteRenderer>();
@@ -46,7 +48,23 @@ public class TileView
         baseRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
         baseRenderer.sortingOrder = 1;
         baseRenderer.sprite = ViewUtilities.GetTileSprite(tile);
-        baseRenderer.name = baseRenderer.sprite.name;
+        tileGreyscale = GetGreyscaleForTile();
+        if (tile.HeightType != HeightType.River)
+        {
+            baseRenderer.name = baseRenderer.sprite.name;
+            //float hoursPercent = (float)(world.GetMinuteInDay() - 300) / (float)(1*/200 - 300) * 100.0f;
+            //float shadowValue = (float)(0 - 220) * hoursPercent / 100.0f + 0.0f;
+            //HighlightLayer.GetComponent<SpriteRenderer>().color = new Color(tileGreyscale, tileGreyscale, tileGreyscale);
+        }
+        var BorderLayer = new GameObject();
+        BorderLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
+        BorderLayer.AddComponent<SpriteRenderer>();
+        var borderRenderer = BorderLayer.GetComponent<SpriteRenderer>();
+        borderRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
+        borderRenderer.sortingOrder = 5;
+        var texture = GetBorderTexture(BaseTile.HeightValue);
+        Sprite borderSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 32f);
+        borderRenderer.sprite = borderSprite;
 
         //TODO: Need something other than the grasstile here for this.  Right now the bas tile is used for highlighting so maybe just
         // an empty sprite or figure out a different way to do it.
@@ -77,15 +95,58 @@ public class TileView
         switch (direction)
         {
             case TileDirectionEnum.Left:
-                return WorldController.Instance.GetTileViewAt(baseTile.X - 1, baseTile.Y);
+                return WorldController.Instance.GetTileViewAt(BaseTile.X - 1, BaseTile.Y);
             case TileDirectionEnum.Right:
-                return WorldController.Instance.GetTileViewAt(baseTile.X + 1, baseTile.Y);
+                return WorldController.Instance.GetTileViewAt(BaseTile.X + 1, BaseTile.Y);
             case TileDirectionEnum.Up:
-                return WorldController.Instance.GetTileViewAt(baseTile.X, baseTile.Y + 1);
+                return WorldController.Instance.GetTileViewAt(BaseTile.X, BaseTile.Y + 1);
             case TileDirectionEnum.Down:
-                return WorldController.Instance.GetTileViewAt(baseTile.X, baseTile.Y - 1);
+                return WorldController.Instance.GetTileViewAt(BaseTile.X, BaseTile.Y - 1);
             default:
                 return null;
         }
+    }
+
+    private float GetGreyscaleForTile()
+    {
+        float result = 1.0f;
+        if (BaseTile.HeightType > HeightType.ShallowWater)
+        { 
+            result = (((float)(BaseTile.HeightValue - Generator.ShallowWater) / (float)(1.0f - Generator.ShallowWater))) * 100.0f;
+            result = 1.0f - ((float)(0.25f - 1.0f) * result / 100.0f + 0.25f);
+        }
+        else
+        {
+            result = ((float)(BaseTile.HeightValue - 0f) / (float)(Generator.ShallowWater - 0f));
+        }
+        return result;
+    }
+
+    private Texture2D GetBorderTexture(float greyScaleVal)
+    {
+        int width = 32, height = 32;
+        var texture = new Texture2D(width, height);
+        texture.filterMode = FilterMode.Point;
+        var pixels = new Color[width * height];
+
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                if (x == 0 || y == 0 || x == width -1 || y == width -1)
+                {
+                    pixels[x + y * width] = new Color(greyScaleVal, greyScaleVal, greyScaleVal, 1.0f);
+                }
+                else
+                {
+                    pixels[x + y * width] = new Color(0, 0, 0, 0);
+                }
+            }
+        }
+
+        texture.SetPixels(pixels);
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.Apply();
+        return texture;
     }
 }

@@ -15,14 +15,14 @@ public abstract class Generator
 
     //Original Config
     //Height Map
-    protected int TerrainOctaves = 6;
-    protected double TerrainFrequency = 1.25;
-    protected float DeepWater = 0.2f;
-    protected float ShallowWater = 0.4f;
-    protected float Sand = 0.5f;
-    protected float Grass = 0.7f;
-    protected float Forest = 0.8f;
-    protected float Rock = 0.9f;
+    public static int TerrainOctaves = 6;
+    public static double TerrainFrequency = 1.25;
+    public static float DeepWater = 0.2f;
+    public static float ShallowWater = 0.4f;
+    public static float Sand = 0.5f;
+    public static float Grass = 0.7f;
+    public static float Forest = 0.8f;
+    public static float Rock = 0.9f;
 
     //Less water, more mountains?
     //Height Map

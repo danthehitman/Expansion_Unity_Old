@@ -8,6 +8,7 @@ public class WorldController : MonoBehaviour
     private double lastInterval;
     private int frames = 0;
     private float fps;
+    private TileInfoView tileInfo;
 
     public static WorldController Instance;
     public PlayerController PlayerController;
@@ -37,7 +38,7 @@ public class WorldController : MonoBehaviour
         World = new World(Width, Height, Key);
         World.InitializeWorldComplex();
 
-        var startTile = World.GetRandomTile();
+        var startTile = World.GetRandomLandTile();
 
         var playerEntity = new PlayerEntity();
         playerEntity.EntityToTile(startTile);
@@ -57,6 +58,8 @@ public class WorldController : MonoBehaviour
                 SetTileViewAsWorldChild(CreateTileView(tileData));
             }
         }
+
+        tileInfo = GetComponent<TileInfoView>();
     }
 
     void OnGUI()
@@ -130,6 +133,13 @@ public class WorldController : MonoBehaviour
         HighlightedTile = GetTileViewAt(newX, newY);
         if (HighlightedTile != null)
             HighlightedTile.IsHighlighted = true;
+       HighlightedTileChanged(HighlightedTile == null ? null : HighlightedTile.BaseTile);
+    }
+
+    private void HighlightedTileChanged(BaseTile tile)
+    {
+        if (tileInfo != null)
+            tileInfo.UpdateInfo(tile);
     }
 
     public void OnWorldCoordinateActivated(int X, int Y)
