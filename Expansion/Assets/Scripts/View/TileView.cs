@@ -49,22 +49,29 @@ public class TileView
         baseRenderer.sortingOrder = 1;
         baseRenderer.sprite = ViewUtilities.GetTileSprite(tile);
         tileGreyscale = GetGreyscaleForTile();
+        baseRenderer.name = baseRenderer.sprite.name;
         if (tile.HeightType != HeightType.River)
         {
-            baseRenderer.name = baseRenderer.sprite.name;
+            if (tile.HeightType > HeightType.ShallowWater)
+            {
+                var BorderLayer = new GameObject();
+                BorderLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
+                BorderLayer.AddComponent<SpriteRenderer>();
+                var borderRenderer = BorderLayer.GetComponent<SpriteRenderer>();
+                borderRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
+                borderRenderer.sortingOrder = 5;
+                var texture = GetBorderTexture(BaseTile.HeightValue);
+                Sprite borderSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 32f);
+                borderRenderer.sprite = borderSprite;
+            }
+            else
+            {
+                HighlightLayer.GetComponent<SpriteRenderer>().color = new Color(tileGreyscale, tileGreyscale, tileGreyscale);
+            }
             //float hoursPercent = (float)(world.GetMinuteInDay() - 300) / (float)(1*/200 - 300) * 100.0f;
             //float shadowValue = (float)(0 - 220) * hoursPercent / 100.0f + 0.0f;
             //HighlightLayer.GetComponent<SpriteRenderer>().color = new Color(tileGreyscale, tileGreyscale, tileGreyscale);
         }
-        var BorderLayer = new GameObject();
-        BorderLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
-        BorderLayer.AddComponent<SpriteRenderer>();
-        var borderRenderer = BorderLayer.GetComponent<SpriteRenderer>();
-        borderRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
-        borderRenderer.sortingOrder = 5;
-        var texture = GetBorderTexture(BaseTile.HeightValue);
-        Sprite borderSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 32f);
-        borderRenderer.sprite = borderSprite;
 
         //TODO: Need something other than the grasstile here for this.  Right now the bas tile is used for highlighting so maybe just
         // an empty sprite or figure out a different way to do it.
@@ -81,7 +88,18 @@ public class TileView
     public void OnTileHighlightChanged(bool highlighted)
     {
         if (!isActivated && HighlightLayer != null)
-            HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted? Color.gray : Color.white;
+        {
+            if (BaseTile.HeightType > HeightType.ShallowWater)
+            {
+                HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted ? Color.gray : Color.white;
+            }
+            else
+            {
+                HighlightLayer.GetComponent<SpriteRenderer>().color = HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted ? Color.gray :
+                    new Color(tileGreyscale, tileGreyscale, tileGreyscale);
+            }
+        }
+
     }
 
     public void OnTileActivationChanged(bool activated)

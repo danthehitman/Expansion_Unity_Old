@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using UnityEngine;
 
-public class BaseTile : INotifyPropertyChanged
+public class BaseTile : INotifyPropertyChanged, IHasContext
 {
+    #region Terrain Information
     public HeightType HeightType { get; set; }
     public HeatType HeatType { get; set; }
     public MoistureType MoistureType { get; set; }
@@ -27,6 +29,9 @@ public class BaseTile : INotifyPropertyChanged
     public List<River> Rivers { get; set; }
 
     public int RiverSize { get; set; }
+    #endregion
+
+    public bool Explored { get; set; }
 
     public EventHandler TileDataChanged;
 
@@ -42,6 +47,17 @@ public class BaseTile : INotifyPropertyChanged
         X = x;
         Y = y;
         Rivers = new List<River>();
+
+        actions = new List<ContextAction>()
+        {
+            new ContextAction("Explore", ExploreTile)
+        };
+    }
+
+    public void ExploreTile()
+    {
+        Debug.Log("Explored tile.");
+        Explored = true;
     }
 
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -273,5 +289,11 @@ public class BaseTile : INotifyPropertyChanged
                 }
             }
         }
+    }
+
+    private IEnumerable<ContextAction> actions;
+    public IEnumerable<ContextAction> GetActions()
+    {
+        return actions;
     }
 }

@@ -53,6 +53,11 @@ public class InputManager : MonoBehaviour
             Vector3 diff = MouseLastPosition - mouseCurrentPosition;
             Camera.main.transform.Translate(diff);
         }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            WorldController.Instance.OnWorldCoordinateMenuClick(currentXFloor, currentYFloor);
+        }
         //Handle left click.
         if (Input.GetMouseButtonUp(0))
         {

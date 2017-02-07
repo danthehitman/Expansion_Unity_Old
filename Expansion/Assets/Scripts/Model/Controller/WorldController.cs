@@ -142,14 +142,14 @@ public class WorldController : MonoBehaviour
             tileInfo.UpdateInfo(tile);
     }
 
-    public void OnWorldCoordinateActivated(int X, int Y)
+    public void OnWorldCoordinateActivated(int x, int y)
     {
         var currentActiveTile = ActivatedTile;
         //Deactivate the current active tile if ther is one.  Either we are clicking on an already active tile or a new active tile.
         if (ActivatedTile != null)
             ActivatedTile.IsActivated = false;
         //Get the new active tile.
-        ActivatedTile = GetTileViewAt(X, Y);
+        ActivatedTile = GetTileViewAt(x, y);
         if (ActivatedTile != null)
         {
             //If this is not the same tile activate the new one.
@@ -160,16 +160,30 @@ public class WorldController : MonoBehaviour
             //If it is the same tile we already deactivated it so now we just need to call highlight on this tile.
             else
             {
-                OnMouseOverWorldCoordinateChanged(X, Y);
+                OnMouseOverWorldCoordinateChanged(x, y);
             }
         }
     }
 
-    public void OnWorldCoordinateDoubleClick(int X, int Y)
+    public void OnWorldCoordinateDoubleClick(int x, int y)
     {
         //Test code for both double click and testing the events on the models.
         //var doubleClickTile = World.GetTileAt(X, Y);
         //((GardenTile)doubleClickTile).HasRiver = !((GardenTile)doubleClickTile).HasRiver;
+    }
+
+    public void OnWorldCoordinateMenuClick(int x, int y)
+    {
+        if(HighlightedTile.BaseTile.X == x && HighlightedTile.BaseTile.Y == y)
+        {
+            ShowTileMenu(HighlightedTile.BaseTile);
+        }
+    }
+
+    private void ShowTileMenu(BaseTile baseTile)
+    {
+        var contextMenu = GameObject.FindObjectOfType<TileMenuView>();
+        contextMenu.ShowMenu(baseTile);
     }
 
     public void OnMovementKeyPressed(List<TileDirectionEnum> directions)
