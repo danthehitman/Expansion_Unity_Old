@@ -7,6 +7,12 @@ public class InputManager : MonoBehaviour
     private int LastWorldX;
     private int LastWorldY;
     private float LastLeftClickTime = 0;
+    private float LastRightClickDown = 0;
+
+    // Ìs panning the camera
+    private bool isPanning = false;
+    private float panningThreshold = .015f;
+    private Vector3 panningMouseStart = Vector3.zero;
 
     // Use this for initialization
     void Start () {
@@ -46,18 +52,29 @@ public class InputManager : MonoBehaviour
         var mouseCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x + 0.5f);
         int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y + 0.5f);
+        
+        if (Vector3.Distance(panningMouseStart, mouseCurrentPosition) > panningThreshold * Camera.main.orthographicSize)
+        {
+            isPanning = true;
+        }
 
         //Handle screen drag.
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(0) && isPanning)
         {
             Vector3 diff = MouseLastPosition - mouseCurrentPosition;
             Camera.main.transform.Translate(diff);
+        }
+
+        if (!Input.GetMouseButton(0))
+        {
+            isPanning = false;
         }
 
         if (Input.GetMouseButtonUp(1))
         {
             WorldController.Instance.OnWorldCoordinateMenuClick(currentXFloor, currentYFloor);
         }
+
         //Handle left click.
         if (Input.GetMouseButtonUp(0))
         {
@@ -75,6 +92,9 @@ public class InputManager : MonoBehaviour
 
         Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * 2;
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 200f);
+
+        if (isPanning)
+            WorldController.Instance.OnMapPanning();
     }
 
     //Check to see if we are over a different tile than we were in the last update.

@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TileMenuView : MonoBehaviour {
 
+    public BaseTile Tile { get; set; }
+
     // Use this for initialization
     void Start () {
-        
+        gameObject.SetActive(false);
     }
     
     // Update is called once per frame
@@ -18,15 +18,36 @@ public class TileMenuView : MonoBehaviour {
 
     public void ShowMenu(BaseTile baseTile)
     {
+        Tile = baseTile;
         gameObject.SetActive(true);
-        BuildInterface(baseTile.GetActions().ToList());
+        ClearInterface();
+        BuildInterface();
     }
 
-    private void BuildInterface(List<ContextAction> contextualActions)
+    public void HideMenu()
     {
-        gameObject.transform.position = Input.mousePosition + new Vector3(10, -10, 0);        
+        ClearInterface();
+        Tile = null;
+        gameObject.SetActive(false);
+    }
 
-        foreach (ContextAction action in contextualActions)
+    private void ClearInterface()
+    {
+        foreach(Transform child in transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+
+    private void BuildInterface()
+    {
+        var position = Camera.main.WorldToScreenPoint(new Vector3(Tile.X, Tile.Y, 0));
+        position.x += 10f;
+        position.y += 10f;
+
+        gameObject.transform.position = position;
+
+        foreach (ContextAction action in Tile.GetActions())
         {
             var button = CreateButton(action.DisplayText, action.TheAction);
             button.transform.SetParent(gameObject.transform);
@@ -40,7 +61,7 @@ public class TileMenuView : MonoBehaviour {
         button.AddComponent<RectTransform>();
         button.AddComponent<Button>();
         button.transform.position = gameObject.transform.position;
-        button.GetComponent<Button>().onClick.AddListener(()=>{ click.Invoke(); });
+        button.GetComponent<Button>().onClick.AddListener(()=>{ click(); });
         button.AddComponent<Text>();
         var rect = button.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
         var display = button.GetComponent<Text>();

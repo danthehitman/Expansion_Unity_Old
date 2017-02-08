@@ -26,9 +26,13 @@ public class WorldController : MonoBehaviour
     private TileView HighlightedTile = null;
     private TileView ActivatedTile = null;
 
+    private TileMenuView tileContextMenu = null;
+
     // Initialize the game world.
     void Start ()
     {
+        tileContextMenu = transform.Find("UIOverlay/ContextPanel").GetComponent<TileMenuView>();
+
         lastInterval = Time.realtimeSinceStartup;
         frames = 0;
 
@@ -163,6 +167,9 @@ public class WorldController : MonoBehaviour
                 OnMouseOverWorldCoordinateChanged(x, y);
             }
         }
+
+        if (ActivatedTile == null || ActivatedTile.BaseTile != tileContextMenu.Tile)
+            HideTileMenu();
     }
 
     public void OnWorldCoordinateDoubleClick(int x, int y)
@@ -180,10 +187,19 @@ public class WorldController : MonoBehaviour
         }
     }
 
+    public void OnMapPanning()
+    {
+        HideTileMenu();
+    }
+
     private void ShowTileMenu(BaseTile baseTile)
     {
-        var contextMenu = GameObject.FindObjectOfType<TileMenuView>();
-        contextMenu.ShowMenu(baseTile);
+        tileContextMenu.ShowMenu(baseTile);
+    }
+
+    private void HideTileMenu()
+    {
+        tileContextMenu.HideMenu();
     }
 
     public void OnMovementKeyPressed(List<TileDirectionEnum> directions)
