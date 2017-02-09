@@ -11,7 +11,7 @@ public class WorldController : MonoBehaviour
     private TileInfoView tileInfo;
 
     public static WorldController Instance;
-    public PlayerController PlayerController;
+    public EntityController EntityController;
 
     //Properties
     public int Width = 100;
@@ -21,6 +21,8 @@ public class WorldController : MonoBehaviour
     //References
     public World World;
     private TileView[,] tileViews;
+
+    public Transform ContextPanel = null;
 
     //State Stuff
     private TileView HighlightedTile = null;
@@ -32,6 +34,7 @@ public class WorldController : MonoBehaviour
     void Start ()
     {
         tileContextMenu = transform.Find("UIOverlay/ContextPanel").GetComponent<TileMenuView>();
+        ContextPanel = transform.Find("UIOverlay/ContextPanel");
 
         lastInterval = Time.realtimeSinceStartup;
         frames = 0;
@@ -49,7 +52,7 @@ public class WorldController : MonoBehaviour
 
         CenterCameraOnTile(startTile);
 
-        PlayerController = new PlayerController(playerEntity, World);
+        EntityController = new EntityController(playerEntity, World);
 
         tileViews = new TileView[Width, Height];
 
@@ -86,6 +89,8 @@ public class WorldController : MonoBehaviour
             frames = 0;
             lastInterval = timeNow;
         }
+
+        EntityController.UpdateEntities();
     }
 
     private TileView CreateTileView(BaseTile tileArg)
@@ -166,6 +171,12 @@ public class WorldController : MonoBehaviour
             {
                 OnMouseOverWorldCoordinateChanged(x, y);
             }
+            //EntityController.ActiveEntity.QueueJob(
+            //    new Job()
+            //    {
+            //        Position = new Vector3(ActivatedTile.BaseTile.X, ActivatedTile.BaseTile.Y, 0),
+                    
+            //    });
         }
 
         if (ActivatedTile == null || ActivatedTile.BaseTile != tileContextMenu.Tile)
@@ -181,7 +192,7 @@ public class WorldController : MonoBehaviour
 
     public void OnWorldCoordinateMenuClick(int x, int y)
     {
-        if(HighlightedTile.BaseTile.X == x && HighlightedTile.BaseTile.Y == y)
+        if(HighlightedTile != null && HighlightedTile.BaseTile.X == x && HighlightedTile.BaseTile.Y == y)
         {
             ShowTileMenu(HighlightedTile.BaseTile);
         }
@@ -205,7 +216,7 @@ public class WorldController : MonoBehaviour
     public void OnMovementKeyPressed(List<TileDirectionEnum> directions)
     {
         if (directions.Count > 0)
-            PlayerController.MovePlayer(directions);
+            EntityController.MoveEntity(directions);
     }
 
     public TileView GetTileViewAt(int x, int y)

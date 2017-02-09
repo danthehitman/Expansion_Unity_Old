@@ -2,5 +2,5 @@
 
 public interface IHasContext
 {
-    IEnumerable<ContextAction> GetActions();
+    IEnumerable<ContextAction> GetActions(BaseEntity entity);
 }

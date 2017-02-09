@@ -1,7 +1,5 @@
 ﻿public class PlayerEntity : BaseEntity
 {
-    private float x;
-    private float y;
     private int health;
     private int hunger;
     private int thirst;
@@ -10,37 +8,7 @@
     private float gardeningSkill;
     private float foragingSkill;
     private float huntingSkill;
-    private float buildingSkill;
-
-    public const string XPropertyName = "X";
-    public float X
-    {
-        get
-        {
-            return x;
-        }
-
-        set
-        {
-            x = value;
-            OnPropertyChanged(XPropertyName);
-        }
-    }
-
-    public const string YPropertyName = "Y";
-    public float Y
-    {
-        get
-        {
-            return y;
-        }
-
-        set
-        {
-            y = value;
-            OnPropertyChanged(YPropertyName);
-        }
-    }
+    private float buildingSkill;    
 
     public const string HealthPropertyName = "Health";
     public int Health
@@ -170,15 +138,6 @@
         Hunger = 0;
         Thirst = 0;
         Fatigue = 0;
-    }
-
-
-    //TODO: Need to have a specific  position changed event?
-    public void SetPosition(float x, float y)
-    {
-        this.x = x;
-        this.y = y;
-        OnPropertyChanged(Constants.ALL_PROPERTIES_PROPERTY_NAME);
     }
 
     public void EntityToTile(BaseTile tile)

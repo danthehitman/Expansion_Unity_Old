@@ -49,6 +49,12 @@ public class InputManager : MonoBehaviour
 
     private void HandleMouseUpdates()
     {
+        if (RectTransformUtility.RectangleContainsScreenPoint(
+            WorldController.Instance.ContextPanel as RectTransform, Input.mousePosition))
+        {
+            return;
+        }
+
         var mouseCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x + 0.5f);
         int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y + 0.5f);

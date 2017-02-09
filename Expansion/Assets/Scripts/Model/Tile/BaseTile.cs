@@ -47,17 +47,26 @@ public class BaseTile : INotifyPropertyChanged, IHasContext
         X = x;
         Y = y;
         Rivers = new List<River>();
-
-        actions = new List<ContextAction>()
-        {
-            new ContextAction("Explore", ExploreTile)
-        };
     }
 
-    public void ExploreTile()
+    public void CreateExploreTileJob(object arg = null)
     {
+        var entity = arg as BaseEntity;
+        if (entity != null)
+        {
+            Explored = true;
+            entity.QueueJob(new Job()
+            {
+                Position = new Vector3(X, Y, 0),
+                JobAction = ExploreTile
+            });
+        }
+    }
+
+    public void ExploreTile(object arg = null)
+    {
+        this.Explored = true;
         Debug.Log("Explored tile.");
-        Explored = true;
     }
 
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -291,9 +300,23 @@ public class BaseTile : INotifyPropertyChanged, IHasContext
         }
     }
 
-    private IEnumerable<ContextAction> actions;
-    public IEnumerable<ContextAction> GetActions()
+    //private IEnumerable<ContextAction> actions;
+    public IEnumerable<ContextAction> GetActions(BaseEntity entity)
     {
+        IEnumerable<ContextAction> result = null;
+        if (entity is PlayerEntity)
+            result = GetActionsForEntity(entity);
+        return result;
+    }
+
+    public List<ContextAction> GetActionsForEntity(BaseEntity entity)
+    {
+        var actions = new List<ContextAction>()
+        {
+            new ContextAction("Explore", () => { CreateExploreTileJob(entity); }),
+            new ContextAction("Do something else", () => { CreateExploreTileJob(entity); })
+        };
+
         return actions;
     }
 }
