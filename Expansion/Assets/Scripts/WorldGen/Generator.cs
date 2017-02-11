@@ -377,7 +377,7 @@ public abstract class Generator
                     River river = new River(rivercount);
 
                     // Figure out the direction this river will try to flow
-                    river.CurrentDirection = tile.GetLowestNeighbor(this);
+                    river.CurrentDirection = GetLowestNeighbor(tile);
 
                     // Recursively find a path to water
                     FindPathToWater(tile, river.CurrentDirection, ref river);
@@ -911,5 +911,23 @@ public abstract class Generator
         if (t != null && !t.FloodFilled && tile.Collidable == t.Collidable)
             stack.Push (t);
     }
-    
+
+    private Direction GetLowestNeighbor(BaseTile tile)
+    {
+        float left = GetHeightValue(tile.Left);
+        float right = GetHeightValue(tile.Right);
+        float bottom = GetHeightValue(tile.Bottom);
+        float top = GetHeightValue(tile.Top);
+
+        if (left < right && left < top && left < bottom)
+            return Direction.Left;
+        else if (right < left && right < top && right < bottom)
+            return Direction.Right;
+        else if (top < left && top < right && top < bottom)
+            return Direction.Top;
+        else if (bottom < top && bottom < right && bottom < left)
+            return Direction.Bottom;
+        else
+            return Direction.Bottom;
+    }
 }

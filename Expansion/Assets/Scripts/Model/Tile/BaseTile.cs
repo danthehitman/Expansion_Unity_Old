@@ -125,26 +125,7 @@ public class BaseTile : INotifyPropertyChanged, IHasContext
         if (Bottom != null && Bottom.Rivers.Count > 0 && Bottom.Rivers.Contains(river))
             count++;
         return count;
-    }
-
-    public Direction GetLowestNeighbor(Generator generator)
-    {
-        float left = generator.GetHeightValue(Left);
-        float right = generator.GetHeightValue(Right);
-        float bottom = generator.GetHeightValue(Bottom);
-        float top = generator.GetHeightValue(Top);
-
-        if (left < right && left < top && left < bottom)
-            return Direction.Left;
-        else if (right < left && right < top && right < bottom)
-            return Direction.Right;
-        else if (top < left && top < right && top < bottom)
-            return Direction.Top;
-        else if (bottom < top && bottom < right && bottom < left)
-            return Direction.Bottom;
-        else
-            return Direction.Bottom;
-    }
+    }    
 
     public void SetRiverPath(River river)
     {

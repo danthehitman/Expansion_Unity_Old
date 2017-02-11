@@ -73,7 +73,7 @@ public class WorldController : MonoBehaviour
         Debug.Log("StartX: " + startX + " StartY: " + startY + "startTile: " + startTile.X + "," + startTile.Y);
         
         var playerEntity = new PlayerEntity();
-        playerEntity.EntityToTile(startTile);
+        playerEntity.MoveEntityToTile(startTile);
 
         CenterCameraOnTile(startTile);
 
