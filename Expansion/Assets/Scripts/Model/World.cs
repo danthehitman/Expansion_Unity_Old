@@ -15,6 +15,9 @@ public class World : INotifyPropertyChanged
     private int key = -1;
     private System.Random rng;
 
+    public int RevealedWidth { get; set; }
+    public int RevealedHeight { get; set; }
+
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -160,11 +163,18 @@ public class World : INotifyPropertyChanged
         return GetTileAt(rng.Next(0, width), rng.Next(0, height));
     }
 
-    public BaseTile GetRandomLandTile()
+    public BaseTile GetRandomLandTile(bool revealedOnly = false)
     {
-        foreach (int x in Enumerable.Range(0, width).OrderBy(r => rng.Next()))
+        var boundsWidth = width;
+        var boundsHeight = height;
+        if (revealedOnly)
         {
-            foreach (int y in Enumerable.Range(0, height).OrderBy(rr => rng.Next()))
+            boundsWidth = RevealedWidth;
+            boundsHeight = RevealedHeight;
+        }
+        foreach (int x in Enumerable.Range(0, boundsWidth).OrderBy(r => rng.Next()))
+        {
+            foreach (int y in Enumerable.Range(0, boundsHeight).OrderBy(rr => rng.Next()))
             {
                 var tile = GetTileAt(x, y);
                 if (tile != null && tile.Collidable)
