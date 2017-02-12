@@ -7,6 +7,7 @@ public class Inventory : INotifyPropertyChanged
 {
     private List<Item> items;
     private List<Material> materials;
+    private int size;
 
     public const string ItemsPropertyName = "Items";
     public List<Item> Items
@@ -36,6 +37,13 @@ public class Inventory : INotifyPropertyChanged
             materials = value;
             OnPropertyChanged(MaterialsPropertyName);
         }
+    }
+
+    public Inventory(int sizeArg)
+    {
+        items = new List<Item>();
+        materials = new List<Material>();
+        size = sizeArg;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

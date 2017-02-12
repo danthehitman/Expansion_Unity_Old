@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface IHasInventory
 {
-    Iventory GetInventory();
+    Inventory GetInventory();
+    void AddItemToInventory(Item item);
+    void AddMaterialToInventory(Material material);
 }
