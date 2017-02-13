@@ -33,26 +33,33 @@ public class InventoryView
 
         //Create vertical scrollbar
         var vertScrollbar = UIHelper.GetRectImageGameObject(Height, 20, new Color(1f, 1f, 1f, 1f), "Scroll Vert");
+        var vertScrollbarRect = vertScrollbar.GetComponent<RectTransform>();
+        vertScrollbar.transform.SetParent(scrollRect.transform);
+        vertScrollbar.transform.position = scrollRect.transform.position;
+        vertScrollbarRect.anchorMin = new Vector2(1,0);
+        vertScrollbarRect.anchorMax = new Vector2(1,1);
+        vertScrollbarRect.sizeDelta = new Vector2(1f, 20f);
         var scrollbar = vertScrollbar.AddComponent<Scrollbar>();
         var slideArea = new GameObject().AddComponent<RectTransform>();
-        slideArea.offsetMax = new Vector2(10, 10);
-        slideArea.offsetMin = new Vector2(-10, -10);
         slideArea.gameObject.name = "Slide Area";
         slideArea.gameObject.transform.SetParent(vertScrollbar.transform);
+        slideArea.offsetMax = new Vector2(0, 10);
+        slideArea.offsetMin = new Vector2(0, -10);
+        slideArea.anchorMin = new Vector2(.5f, .5f);
+        slideArea.anchorMax = new Vector2(.5f, .5f);
+        slideArea.sizeDelta = new Vector2(Height, 1f);
         var slideHandle = UIHelper.GetRectImageGameObject(32, 32, new Color(0f, 0f, 0f, .95f), "Slide Handle");
         var slideHandleRect = slideHandle.GetComponent<RectTransform>();
+        slideHandle.transform.SetParent(slideArea.transform);
+        slideHandle.transform.position = slideArea.transform.position;
 
         //offsetMin bottom/left
         slideHandleRect.offsetMin = new Vector2(-10, -10);
         //offsetMax top/right
         slideHandleRect.offsetMax = new Vector2(10, 10);
-
-        slideHandle.transform.SetParent(slideArea.transform);
         scrollbar.targetGraphic = slideHandle.GetComponent<Image>();
         scrollbar.handleRect = slideHandle.GetComponent<RectTransform>();
         scrollbar.SetDirection(Scrollbar.Direction.BottomToTop, true);
-        vertScrollbar.transform.SetParent(scrollRect.transform);
-        vertScrollbar.transform.position = scrollRect.transform.position;
         scrollRect.verticalScrollbar = scrollbar;
 
         scrollRect.scrollSensitivity = 50;
