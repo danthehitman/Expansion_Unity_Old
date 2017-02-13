@@ -43,6 +43,8 @@
     public const string TILE_RIVER_VERT = "RiverVert";
     public const string TILE_RIVER_SINGLE = "RiverSingle";
 
+    public const string MASK_SPRITE = "Mask";
+
     public const string PLAYER_SORTING_LAYER = "Player";
     public const string TILE_SORTING_LAYER = "Tile";
 

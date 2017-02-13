@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WorldController : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class WorldController : MonoBehaviour
 
     public int RevealedWidth = 5;
     public int RevealedHeight = 5;
+
+    public bool SuspendWorldMouseInteraction = false;
 
     //References
     public World World;
@@ -90,6 +93,28 @@ public class WorldController : MonoBehaviour
         }
 
         tileInfo = GetComponent<TileInfoView>();
+
+        InventoryView iv = new InventoryView(transform.Find("UIOverlay").gameObject, 300, 300, new Inventory(10));
+        var trigger = iv.Window.GetComponent<EventTrigger>();
+        var entry1 = new EventTrigger.Entry();
+        entry1.eventID = EventTriggerType.PointerEnter;
+        entry1.callback.AddListener((data) => { OnPointerEnterWindow((PointerEventData)data); });
+        trigger.triggers.Add(entry1);
+        var entry2 = new EventTrigger.Entry();
+        entry2.eventID = EventTriggerType.PointerExit;
+        entry2.callback.AddListener((data) => { OnPointerExitWindow((PointerEventData)data); });
+        trigger.triggers.Add(entry2);
+    }
+
+    public void OnPointerEnterWindow(PointerEventData ed)
+    {
+        SuspendWorldMouseInteraction = true;
+        Debug.Log(ed.currentInputModule.ToString());
+    }
+    public void OnPointerExitWindow(PointerEventData ed)
+    {
+        SuspendWorldMouseInteraction = false;
+        Debug.Log(ed.currentInputModule.ToString());
     }
 
     void OnGUI()
@@ -158,14 +183,17 @@ public class WorldController : MonoBehaviour
 
     public void OnMouseOverWorldCoordinateChanged(int newX, int newY)
     {
-        //If we have a highlighted tile remove the highlight.
-        if (HighlightedTile != null)
-            HighlightedTile.IsHighlighted = false;
-        //Try to get a tile view at the coordinates and if we find one we highlight it.
-        HighlightedTile = GetTileViewAt(newX, newY);
-        if (HighlightedTile != null)
-            HighlightedTile.IsHighlighted = true;
-       HighlightedTileChanged(HighlightedTile == null ? null : HighlightedTile.BaseTile);
+        if (!SuspendWorldMouseInteraction)
+        {
+            //If we have a highlighted tile remove the highlight.
+            if (HighlightedTile != null)
+                HighlightedTile.IsHighlighted = false;
+            //Try to get a tile view at the coordinates and if we find one we highlight it.
+            HighlightedTile = GetTileViewAt(newX, newY);
+            if (HighlightedTile != null)
+                HighlightedTile.IsHighlighted = true;
+            HighlightedTileChanged(HighlightedTile == null ? null : HighlightedTile.BaseTile);
+        }
     }
 
     private void HighlightedTileChanged(BaseTile tile)
@@ -176,34 +204,37 @@ public class WorldController : MonoBehaviour
 
     public void OnWorldCoordinateDoubleClick(int x, int y)
     {
-        var currentActiveTile = ActivatedTile;
-        //Deactivate the current active tile if there is one.  Either we are clicking on an already active tile or a new active tile.
-        if (ActivatedTile != null)
-            ActivatedTile.IsActivated = false;
-        //Get the new active tile.
-        ActivatedTile = GetTileViewAt(x, y);
-        if (ActivatedTile != null)
+        if (!SuspendWorldMouseInteraction)
         {
-            //If this is not the same tile activate the new one.
-            if (currentActiveTile != ActivatedTile)
+            var currentActiveTile = ActivatedTile;
+            //Deactivate the current active tile if there is one.  Either we are clicking on an already active tile or a new active tile.
+            if (ActivatedTile != null)
+                ActivatedTile.IsActivated = false;
+            //Get the new active tile.
+            ActivatedTile = GetTileViewAt(x, y);
+            if (ActivatedTile != null)
             {
-                ActivatedTile.IsActivated = true;
-            }
-            //If it is the same tile we already deactivated it so now we just need to call highlight on this tile.
-            else
-            {
-                OnMouseOverWorldCoordinateChanged(x, y);
-            }
-            //EntityController.ActiveEntity.QueueJob(
-            //    new Job()
-            //    {
-            //        Position = new Vector3(ActivatedTile.BaseTile.X, ActivatedTile.BaseTile.Y, 0),
-                    
-            //    });
-        }
+                //If this is not the same tile activate the new one.
+                if (currentActiveTile != ActivatedTile)
+                {
+                    ActivatedTile.IsActivated = true;
+                }
+                //If it is the same tile we already deactivated it so now we just need to call highlight on this tile.
+                else
+                {
+                    OnMouseOverWorldCoordinateChanged(x, y);
+                }
+                //EntityController.ActiveEntity.QueueJob(
+                //    new Job()
+                //    {
+                //        Position = new Vector3(ActivatedTile.BaseTile.X, ActivatedTile.BaseTile.Y, 0),
 
-        if (ActivatedTile == null || ActivatedTile.BaseTile != tileContextMenu.Tile)
-            HideTileMenu();
+                //    });
+            }
+
+            if (ActivatedTile == null || ActivatedTile.BaseTile != tileContextMenu.Tile)
+                HideTileMenu();
+        }
     }
 
     public void OnWorldCoordinateActivated(int x, int y)
@@ -215,9 +246,12 @@ public class WorldController : MonoBehaviour
 
     public void OnWorldCoordinateMenuClick(int x, int y)
     {
-        if(HighlightedTile != null && HighlightedTile.BaseTile.X == x && HighlightedTile.BaseTile.Y == y)
+        if (!SuspendWorldMouseInteraction)
         {
-            ShowTileMenu(HighlightedTile.BaseTile);
+            if (HighlightedTile != null && HighlightedTile.BaseTile.X == x && HighlightedTile.BaseTile.Y == y)
+            {
+                ShowTileMenu(HighlightedTile.BaseTile);
+            }
         }
     }
 
@@ -238,8 +272,11 @@ public class WorldController : MonoBehaviour
 
     public void OnMovementKeyPressed(List<TileDirectionEnum> directions)
     {
-        if (directions.Count > 0)
-            EntityController.MoveEntity(directions);
+        if (!SuspendWorldMouseInteraction)
+        {
+            if (directions.Count > 0)
+                EntityController.MoveEntity(directions);
+        }
     }
 
     public TileView GetTileViewAt(int x, int y)

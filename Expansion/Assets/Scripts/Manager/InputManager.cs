@@ -49,58 +49,61 @@ public class InputManager : MonoBehaviour
 
     private void HandleMouseUpdates()
     {
-        if (RectTransformUtility.RectangleContainsScreenPoint(
+        if (!WorldController.Instance.SuspendWorldMouseInteraction)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(
             WorldController.Instance.ContextPanel as RectTransform, Input.mousePosition))
-        {
-            return;
+            {
+                return;
+            }
+
+            var mouseCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x + 0.5f);
+            int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y + 0.5f);
+
+            if (Vector3.Distance(panningMouseStart, mouseCurrentPosition) > panningThreshold * Camera.main.orthographicSize)
+            {
+                isPanning = true;
+            }
+
+            //Handle screen drag.
+            if (Input.GetMouseButton(0) && isPanning)
+            {
+                Vector3 diff = MouseLastPosition - mouseCurrentPosition;
+                Camera.main.transform.Translate(diff);
+            }
+
+            if (!Input.GetMouseButton(0))
+            {
+                isPanning = false;
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                WorldController.Instance.OnWorldCoordinateMenuClick(currentXFloor, currentYFloor);
+            }
+
+            //Handle left click.
+            if (Input.GetMouseButtonUp(0))
+            {
+                //Check for double click.
+                if (Time.time - LastLeftClickTime < 0.25f)
+                    WorldController.Instance.OnWorldCoordinateDoubleClick(currentXFloor, currentYFloor);
+                else
+                    WorldController.Instance.OnWorldCoordinateActivated(currentXFloor, currentYFloor);
+
+                LastLeftClickTime = Time.time;
+            }
+
+            CheckForOverWorldTileChangeAndNotify(currentXFloor, currentYFloor);
+            SetLastMousePosition();
+
+            Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * 2;
+            Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 200f);
+
+            if (isPanning)
+                WorldController.Instance.OnMapPanning();
         }
-
-        var mouseCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        int currentXFloor = Mathf.FloorToInt(mouseCurrentPosition.x + 0.5f);
-        int currentYFloor = Mathf.FloorToInt(mouseCurrentPosition.y + 0.5f);
-        
-        if (Vector3.Distance(panningMouseStart, mouseCurrentPosition) > panningThreshold * Camera.main.orthographicSize)
-        {
-            isPanning = true;
-        }
-
-        //Handle screen drag.
-        if (Input.GetMouseButton(0) && isPanning)
-        {
-            Vector3 diff = MouseLastPosition - mouseCurrentPosition;
-            Camera.main.transform.Translate(diff);
-        }
-
-        if (!Input.GetMouseButton(0))
-        {
-            isPanning = false;
-        }
-
-        if (Input.GetMouseButtonUp(1))
-        {
-            WorldController.Instance.OnWorldCoordinateMenuClick(currentXFloor, currentYFloor);
-        }
-
-        //Handle left click.
-        if (Input.GetMouseButtonUp(0))
-        {
-            //Check for double click.
-            if (Time.time - LastLeftClickTime < 0.25f)
-                WorldController.Instance.OnWorldCoordinateDoubleClick(currentXFloor, currentYFloor);
-            else
-                WorldController.Instance.OnWorldCoordinateActivated(currentXFloor, currentYFloor);
-
-            LastLeftClickTime = Time.time;
-        }
-
-        CheckForOverWorldTileChangeAndNotify(currentXFloor, currentYFloor);
-        SetLastMousePosition();
-
-        Camera.main.orthographicSize -= Camera.main.orthographicSize * Input.GetAxis("Mouse ScrollWheel") * 2;
-        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 3f, 200f);
-
-        if (isPanning)
-            WorldController.Instance.OnMapPanning();
     }
 
     //Check to see if we are over a different tile than we were in the last update.
