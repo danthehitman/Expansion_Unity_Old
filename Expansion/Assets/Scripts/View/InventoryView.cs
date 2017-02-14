@@ -5,10 +5,11 @@ using UnityEngine.UI;
 public class InventoryView
 {
     private GameObject parentGo;
+    private RectTransform contentContainer;
 
     public int Height { get; set; }
     public int Width { get; set; }
-    public GameObject Window { get; set; }
+    public GameObject InventoryWindow { get; set; }
     public Inventory ViewInventory { get; set; }
 
     public InventoryView(GameObject parent, int height, int width, Inventory inventory)
@@ -17,29 +18,83 @@ public class InventoryView
         parentGo = parent;
         Height = height;
         Width = width;
-        Window = BuildInventoryView();
+        InventoryWindow = BuildInventoryView();
     }
 
     public GameObject BuildInventoryView()
     {
-        GameObject window = UIHelper.GetRectImageGameObject(Width, Height, new Color(.25f, .25f, .25f, .95f), "Inventory");
-        var pointerEnter = window.AddComponent<EventTrigger>();
-        window.transform.parent = parentGo.transform;
-        window.transform.position = parentGo.transform.position;
-        var canvas = window.AddComponent<CanvasRenderer>();
+        //Create the main container
+        GameObject inventoryGameObject = UIHelper.GetRectImageGameObject(Width, Height,
+            new Color(.25f, .25f, .25f, .95f), "Inventory", parentGo.transform);
+        var pointerEnter = inventoryGameObject.AddComponent<EventTrigger>();
+        
+        var scrollRect = CreateScrollRect(inventoryGameObject);
+        
+        for (int i = 0; i < 200; i++)
+        {
+            var textObject = GetInventoryObjectContainer("Item " + i.ToString(),
+                SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND), 100, 50);
+            textObject.transform.SetParent(contentContainer.transform);
+            textObject.transform.position = contentContainer.position;
+        }
+        return inventoryGameObject;
+    }
 
+    private GameObject GetInventoryObjectContainer(string text, Sprite sprite, int width, int height)
+    {
+        var container = new GameObject();
+        var rect = container.AddComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(width, height);
+        var vertLayoutGroup = rect.gameObject.AddComponent<VerticalLayoutGroup>();
+        vertLayoutGroup.spacing = 2;
+        vertLayoutGroup.childForceExpandHeight = false;
+        vertLayoutGroup.childForceExpandWidth = false;
+        vertLayoutGroup.childControlHeight = false;
+        vertLayoutGroup.childControlWidth = false;
+
+        if (text != null)
+        {
+            var display = new GameObject().AddComponent<Text>();
+            display.horizontalOverflow = HorizontalWrapMode.Overflow;
+            display.alignment = TextAnchor.UpperLeft;
+            display.text = text;
+            Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+            display.font = ArialFont;
+            display.color = Color.white;
+            display.verticalOverflow = VerticalWrapMode.Overflow;
+            var layoutElement = display.gameObject.AddComponent<LayoutElement>();
+            layoutElement.minHeight = 10;
+            display.gameObject.transform.SetParent(container.transform);
+            display.gameObject.transform.position = container.transform.position;
+            display.GetComponent<RectTransform>().sizeDelta = new Vector2(width, 18);
+        }
+        if (sprite != null)
+        {
+            var image = new GameObject().AddComponent<Image>();
+            image.gameObject.transform.SetParent(container.transform);
+            image.gameObject.transform.position = container.transform.position;
+            var imageRect = image.GetComponent<RectTransform>();
+            imageRect.sizeDelta = new Vector2(32, 32);
+            image.sprite = sprite;
+        }
+        return container;
+    }  
+
+    private ScrollRect CreateScrollRect(GameObject parent)
+    {
         //Create the ScrollRect
-        var scrollRect = window.AddComponent<ScrollRect>();
-
+        var scrollRect = parent.AddComponent<ScrollRect>();
         //Create vertical scrollbar
-        var vertScrollbar = UIHelper.GetRectImageGameObject(Height, 20, new Color(1f, 1f, 1f, 1f), "Scroll Vert");
+        var vertScrollbar = UIHelper.GetRectImageGameObject(Height, 20, new Color(1f, 1f, 1f, 1f), "Scroll Vert", scrollRect.transform);
         var vertScrollbarRect = vertScrollbar.GetComponent<RectTransform>();
-        vertScrollbar.transform.SetParent(scrollRect.transform);
-        vertScrollbar.transform.position = scrollRect.transform.position;
-        vertScrollbarRect.anchorMin = new Vector2(1,0);
-        vertScrollbarRect.anchorMax = new Vector2(1,1);
+        //Attempt to anchor the scrollbar on the right with the correct size.  I dont understand this at all but it works.
+        vertScrollbarRect.anchorMin = new Vector2(1, 0);
+        vertScrollbarRect.anchorMax = new Vector2(1, 1);
         vertScrollbarRect.sizeDelta = new Vector2(1f, 20f);
+
         var scrollbar = vertScrollbar.AddComponent<Scrollbar>();
+
+        //Scrollbar needs a slide area, a slideHandle and some other junk.  This should be easier.
         var slideArea = new GameObject().AddComponent<RectTransform>();
         slideArea.gameObject.name = "Slide Area";
         slideArea.gameObject.transform.SetParent(vertScrollbar.transform);
@@ -52,7 +107,6 @@ public class InventoryView
         var slideHandleRect = slideHandle.GetComponent<RectTransform>();
         slideHandle.transform.SetParent(slideArea.transform);
         slideHandle.transform.position = slideArea.transform.position;
-
         //offsetMin bottom/left
         slideHandleRect.offsetMin = new Vector2(-10, -10);
         //offsetMax top/right
@@ -61,58 +115,33 @@ public class InventoryView
         scrollbar.handleRect = slideHandle.GetComponent<RectTransform>();
         scrollbar.SetDirection(Scrollbar.Direction.BottomToTop, true);
         scrollRect.verticalScrollbar = scrollbar;
-
         scrollRect.scrollSensitivity = 50;
 
-        GameObject viewPort = new GameObject();
-        viewPort.transform.SetParent(scrollRect.transform);
-        viewPort.transform.position = scrollRect.transform.position;
-        var viewPortRect = viewPort.AddComponent<RectTransform>();
-        viewPortRect.sizeDelta = new Vector2(Width, Height);
+        GameObject viewPort = UIHelper.GetRectImageGameObject(Width, Height,
+            null, "Viewport", scrollRect.transform);
+        var viewPortRect = viewPort.GetComponent<RectTransform>();
         var mask = viewPort.AddComponent<Mask>();
         mask.showMaskGraphic = false;
         var maskImage = viewPort.AddComponent<Image>();
         maskImage.sprite = SpriteManager.Instance.GetSpriteByName(Constants.MASK_SPRITE);
 
-        GameObject contentList = new GameObject();
-        contentList.transform.SetParent(viewPortRect.transform);
-        contentList.transform.position = viewPortRect.transform.position;
-        var contentRect = contentList.AddComponent<RectTransform>();
-        var contentHeight = 100 * 25;
-        contentRect.position = new Vector3(0, contentHeight / 2 * -1, 0);
-        contentRect.sizeDelta = new Vector2(Width, contentHeight);
+        var contentList = UIHelper.GetRectImageGameObject(Width, Height,
+            null, "Content", viewPortRect.transform);
+
+        //Set the content container
+        contentContainer = contentList.GetComponent<RectTransform>();
+        var contentHeight = 200 * 11f;
+        contentContainer.position = new Vector3(0, contentHeight / 2 * -1, 0);
+        contentContainer.sizeDelta = new Vector2(Width, contentHeight);
+
         scrollRect.viewport = viewPortRect;
-        scrollRect.content = contentRect;
-        var vertLayoutGroup = contentRect.gameObject.AddComponent<VerticalLayoutGroup>();
-        vertLayoutGroup.spacing = 15;
-        vertLayoutGroup.childForceExpandHeight = false;
-        vertLayoutGroup.childForceExpandWidth = false;
-        vertLayoutGroup.padding.left = 10;
-        vertLayoutGroup.padding.top = 10;
-        
-        for (int i = 0; i < 100; i++)
-        {
-            var textObject = GetTextLine("some text for inventory " + i.ToString());
-            textObject.transform.SetParent(contentRect.transform);
-        }
-        return window;
-    }
+        scrollRect.content = contentContainer;
+        var gridLayoutGroup = contentContainer.gameObject.AddComponent<GridLayoutGroup>();
+        gridLayoutGroup.cellSize = new Vector2(100, 50);
+        gridLayoutGroup.spacing = new Vector2(5, 5);
+        gridLayoutGroup.padding.left = 10;
+        gridLayoutGroup.padding.right = 10;
 
-    private GameObject GetTextLine(string text)
-    {
-        var display = new GameObject().AddComponent<Text>();
-        display.horizontalOverflow = HorizontalWrapMode.Overflow;
-        display.alignment = TextAnchor.MiddleLeft;
-        display.text = text;
-        Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
-        display.font = ArialFont;
-        display.color = Color.white;
-        display.verticalOverflow = VerticalWrapMode.Overflow;
-        var layoutElement = display.gameObject.AddComponent<LayoutElement>();
-        layoutElement.minHeight = 10;
-        //display.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(300, 15);
-        return display.gameObject;
+        return scrollRect;
     }
-
-    
 }

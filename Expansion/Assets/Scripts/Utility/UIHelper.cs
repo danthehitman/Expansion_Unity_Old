@@ -3,13 +3,21 @@ using UnityEngine.UI;
 
 public class UIHelper
 {
-    public static GameObject GetRectImageGameObject(int width, int height, Color color, string name)
+    public static GameObject GetRectImageGameObject(int width, int height, Color? color, string name, Transform parent = null)
     {
         var go = new GameObject();
         go.name = name;
+        if (parent != null)
+        {
+            go.transform.parent = parent;
+            go.transform.position = parent.position;
+        }
         var rect = go.AddComponent<RectTransform>();
         rect.sizeDelta = new Vector2(width, height);
-        AddSolidColorImageToGameObject(go, width, height, color);
+        if (color != null)
+        {
+            AddSolidColorImageToGameObject(go, width, height, color.Value);
+        }
         return go;
     }
 
