@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using UnityEngine;
+using System.Linq;
 
 public class Inventory : INotifyPropertyChanged
 {
@@ -21,6 +20,7 @@ public class Inventory : INotifyPropertyChanged
         {
             items = value;
             OnPropertyChanged(ItemsPropertyName);
+            OnPropertyChanged(InventoryObjectsPropertyName);
         }
     }
 
@@ -36,6 +36,40 @@ public class Inventory : INotifyPropertyChanged
         {
             materials = value;
             OnPropertyChanged(MaterialsPropertyName);
+            OnPropertyChanged(InventoryObjectsPropertyName);
+        }
+    }
+
+    public bool AddItem(Item item)
+    {
+        if (Items.Count + Materials.Count < size)
+        {
+            Items.Add(item);
+            OnPropertyChanged(ItemsPropertyName);
+            OnPropertyChanged(InventoryObjectsPropertyName);
+            return true;
+        }
+        return false;
+    }
+
+    public bool AddMaterial(Material material)
+    {
+        if (Items.Count + Materials.Count < size)
+        {
+            Materials.Add(material);
+            OnPropertyChanged(MaterialsPropertyName);
+            OnPropertyChanged(InventoryObjectsPropertyName);
+            return true;
+        }
+        return false;
+    }
+
+    public const string InventoryObjectsPropertyName = "InventoryObjects";
+    public List<IInventoryObject> InventoryObjects
+    {
+        get
+        {
+            return Items.Cast<IInventoryObject>().Concat(Materials.Cast<IInventoryObject>()).ToList();
         }
     }
 

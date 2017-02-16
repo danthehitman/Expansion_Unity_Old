@@ -1,8 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public class Material
+public class Material : IInventoryObject
 {
+    public string GetDisplayText()
+    {
+        throw new NotImplementedException();
+    }
 
+    public string GetInventorySprite()
+    {
+        throw new NotImplementedException();
+    }
 }

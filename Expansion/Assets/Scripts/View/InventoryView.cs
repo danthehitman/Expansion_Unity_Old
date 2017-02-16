@@ -29,11 +29,11 @@ public class InventoryView
         var pointerEnter = inventoryGameObject.AddComponent<EventTrigger>();
         
         var scrollRect = CreateScrollRect(inventoryGameObject);
-        
-        for (int i = 0; i < 200; i++)
+
+        foreach (var item in ViewInventory.InventoryObjects)
         {
-            var textObject = GetInventoryObjectContainer("Item " + i.ToString(),
-                SpriteManager.Instance.GetSpriteByName(Constants.TILE_GRASSLAND), 100, 50);
+            var textObject = GetInventoryObjectContainer(item.GetDisplayText(),
+                SpriteManager.Instance.GetSpriteByName(item.GetInventorySprite()), 100, 50);
             textObject.transform.SetParent(contentContainer.transform);
             textObject.transform.position = contentContainer.position;
         }

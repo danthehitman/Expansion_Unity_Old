@@ -94,8 +94,14 @@ public class WorldController : MonoBehaviour
 
         tileInfo = GetComponent<TileInfoView>();
 
-        InventoryView iv = new InventoryView(transform.Find("UIOverlay").gameObject, 600, 600, new Inventory(10));
-        var trigger = iv.InventoryWindow.GetComponent<EventTrigger>();
+        var inventory = new Inventory(200);
+        for (int i = 0; i < 200; i++)
+        {
+            inventory.AddItem(new Item("Some item", i));
+        }
+
+        TileCacheView iv = new TileCacheView(transform.Find("UIOverlay").gameObject, 600, 600, inventory);
+        var trigger = iv.Window.GetComponent<EventTrigger>();
         var entry1 = new EventTrigger.Entry();
         entry1.eventID = EventTriggerType.PointerEnter;
         entry1.callback.AddListener((data) => { OnPointerEnterWindow((PointerEventData)data); });
