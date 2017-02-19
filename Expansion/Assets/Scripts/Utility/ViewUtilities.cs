@@ -54,22 +54,22 @@ public static class ViewUtilities
     public static Sprite GetTileSprite(BaseTile tile)
     {
 
-        BiomeType value = tile.BiomeType;
+        BiomeType value = tile.TerrainData.BiomeType;
         Sprite sprite = null;
 
-        if (tile.HeightType == HeightType.DeepWater)
+        if (tile.TerrainData.HeightType == HeightType.DeepWater)
         {
             sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_DEEP_WATER);
         }
-        else if (tile.HeightType == HeightType.ShallowWater)
+        else if (tile.TerrainData.HeightType == HeightType.ShallowWater)
         {
             sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_SHALLOW_WATER);
         }
-        else if (tile.HeightType == HeightType.Rock)
+        else if (tile.TerrainData.HeightType == HeightType.Rock)
         {
             sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_MOUNTAIN);
         }
-        else if (tile.HeightType == HeightType.River)
+        else if (tile.TerrainData.HeightType == HeightType.River)
         {
             sprite = SpriteManager.Instance.GetSpriteByName(Constants.TILE_RIVER);
         }

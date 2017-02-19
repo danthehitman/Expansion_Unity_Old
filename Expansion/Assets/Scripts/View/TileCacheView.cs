@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class TileCacheView
 {
@@ -9,31 +7,35 @@ public class TileCacheView
     public int Height { get; set; }
     public int Width { get; set; }
     public GameObject Window { get; set; }
-    public Inventory CacheInventory { get; set; }
+    public TileCache Cache { get; set; }
 
-    public TileCacheView(GameObject parent, int width, int height, Inventory inventory)
+    public TileCacheView(GameObject parent, int width, int height, TileCache cache)
     {
         Height = height;
         Width = width;
         parentGo = parent;
-        CacheInventory = inventory;
-        Window = BuildWindow();
+        Cache = cache;
+        BuildWindow();
     }
 
-    private GameObject BuildWindow()
+    private void BuildWindow()
     {
-        GameObject windowGameObject = UIHelper.GetRectImageGameObject(Width, Height,
-            new Color(.25f, .25f, .25f, .95f), "CacheView", parentGo.transform);
-        var pointerEnter = windowGameObject.AddComponent<EventTrigger>();
+        //var windowGameObject = UIHelper.GetRectImageGameObject(Width, Height,
+        //    new Color(.25f, .25f, .25f, .95f), "CacheView", parentGo.transform);
+        //var pointerEnter = windowGameObject.AddComponent<EventTrigger>();
 
-        var layoutGroup = windowGameObject.AddComponent<VerticalLayoutGroup>();
+        //var layoutGroup = windowGameObject.AddComponent<VerticalLayoutGroup>();
 
-        //Build window header
-        GameObject headerGo = UIHelper.GetRectImageGameObject(Width, 20,
-            new Color(0f, 0f, 0f, .95f), "Header", windowGameObject.transform);
+        ////Build window header
+        //var headerGo = UIHelper.GetRectImageGameObject(Width, 40,
+        //    new Color(0f, 0f, 0f, .95f), "Header", windowGameObject.transform);
 
-        var inventoryGo = new InventoryView(windowGameObject, Width, Height -20, CacheInventory);
+        //var textGo = UIHelper.GetRectTextGameObject(Width, 40, Color.white, "Tile Cache",
+        //    "HeaderText", headerGo.transform);
 
-        return windowGameObject;
+        //Build the inventory panel
+        var inventoryGo = new InventoryView(parentGo, Width, Height, Cache.CacheInventory);
+
+        //return windowGameObject;
     }
 }

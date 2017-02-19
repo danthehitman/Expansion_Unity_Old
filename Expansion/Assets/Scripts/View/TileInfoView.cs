@@ -28,11 +28,11 @@ public class TileInfoView : MonoBehaviour
         if (tile != null)
         {
             coordValue = tile.X + ", " + tile.Y;
-            heightValue = tile.HeightType.ToString() + " (" + tile.HeightValue +")";
-            heatValue = tile.HeatType.ToString() + " (" + tile.HeatValue + ")";
-            moistureValue = tile.MoistureType.ToString() + "(" + tile.MoistureValue + ")";
-            biomeValue = tile.BiomeType.ToString();
-            collidableValue = tile.Collidable.ToString();
+            heightValue = tile.TerrainData.HeightType.ToString() + " (" + tile.TerrainData.HeightValue +")";
+            heatValue = tile.TerrainData.HeatType.ToString() + " (" + tile.TerrainData.HeatValue + ")";
+            moistureValue = tile.TerrainData.MoistureType.ToString() + "(" + tile.TerrainData.MoistureValue + ")";
+            biomeValue = tile.TerrainData.BiomeType.ToString();
+            collidableValue = tile.TerrainData.Collidable.ToString();
         }
         else
         {

@@ -177,7 +177,7 @@ public class World : INotifyPropertyChanged
             foreach (int y in Enumerable.Range(0, boundsHeight).OrderBy(rr => rng.Next()))
             {
                 var tile = GetTileAt(x, y);
-                if (tile != null && tile.Collidable)
+                if (tile != null && tile.TerrainData.Collidable)
                     return tile;
             }
         }

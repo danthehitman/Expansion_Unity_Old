@@ -28,19 +28,21 @@ public class WorldController : MonoBehaviour
     public World World;
     private TileView[,] tileViews;
 
-    public Transform ContextPanel = null;
-
     //State Stuff
     private TileView HighlightedTile = null;
     private TileView ActivatedTile = null;
 
-    private TileMenuView tileContextMenu = null;
+    private ViewManager viewMan = null;
 
     // Initialize the game world.
     void Start ()
     {
-        tileContextMenu = transform.Find("UIOverlay/ContextPanel").GetComponent<TileMenuView>();
-        ContextPanel = transform.Find("UIOverlay/ContextPanel");
+        viewMan = ViewManager.Instance;
+        viewMan.MainWindowEnter += OnPointerEnterWindow;
+        viewMan.MainWindowExit += OnPointerExitWindow;
+        viewMan.MainMenuClosed += OnMainMenuClosed;
+
+        tileInfo = GetComponent<TileInfoView>();
 
         lastInterval = Time.realtimeSinceStartup;
         frames = 0;
@@ -91,25 +93,6 @@ public class WorldController : MonoBehaviour
                 SetTileViewAsWorldChild(CreateTileView(tileData));
             }
         }
-
-        tileInfo = GetComponent<TileInfoView>();
-
-        var inventory = new Inventory(200);
-        for (int i = 0; i < 200; i++)
-        {
-            inventory.AddItem(new Item("Some item", i));
-        }
-
-        TileCacheView iv = new TileCacheView(transform.Find("UIOverlay").gameObject, 600, 600, inventory);
-        var trigger = iv.Window.GetComponent<EventTrigger>();
-        var entry1 = new EventTrigger.Entry();
-        entry1.eventID = EventTriggerType.PointerEnter;
-        entry1.callback.AddListener((data) => { OnPointerEnterWindow((PointerEventData)data); });
-        trigger.triggers.Add(entry1);
-        var entry2 = new EventTrigger.Entry();
-        entry2.eventID = EventTriggerType.PointerExit;
-        entry2.callback.AddListener((data) => { OnPointerExitWindow((PointerEventData)data); });
-        trigger.triggers.Add(entry2);
     }
 
     public void OnPointerEnterWindow(PointerEventData ed)
@@ -117,10 +100,16 @@ public class WorldController : MonoBehaviour
         SuspendWorldMouseInteraction = true;
         Debug.Log(ed.currentInputModule.ToString());
     }
+
     public void OnPointerExitWindow(PointerEventData ed)
     {
         SuspendWorldMouseInteraction = false;
         Debug.Log(ed.currentInputModule.ToString());
+    }
+
+    public void OnMainMenuClosed()
+    {
+        SuspendWorldMouseInteraction = false;
     }
 
     void OnGUI()
@@ -238,7 +227,8 @@ public class WorldController : MonoBehaviour
                 //    });
             }
 
-            if (ActivatedTile == null || ActivatedTile.BaseTile != tileContextMenu.Tile)
+            //if (ActivatedTile == null || ActivatedTile.BaseTile != tileContextMenu.Tile)
+            if (ActivatedTile == null)
                 HideTileMenu();
         }
     }
@@ -256,7 +246,7 @@ public class WorldController : MonoBehaviour
         {
             if (HighlightedTile != null && HighlightedTile.BaseTile.X == x && HighlightedTile.BaseTile.Y == y)
             {
-                ShowTileMenu(HighlightedTile.BaseTile);
+                ShowTileMenu(HighlightedTile);
             }
         }
     }
@@ -266,14 +256,14 @@ public class WorldController : MonoBehaviour
         HideTileMenu();
     }
 
-    private void ShowTileMenu(BaseTile baseTile)
+    private void ShowTileMenu(TileView tileView)
     {
-        tileContextMenu.ShowMenu(baseTile);
+        viewMan.ShowTileContextMenuForEntity(EntityController.ActiveEntity, tileView);
     }
 
     private void HideTileMenu()
     {
-        tileContextMenu.HideMenu();
+        viewMan.HideContextMenu();
     }
 
     public void OnMovementKeyPressed(List<TileDirectionEnum> directions)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIHelper
@@ -18,6 +19,28 @@ public class UIHelper
         {
             AddSolidColorImageToGameObject(go, width, height, color.Value);
         }
+        return go;
+    }
+
+    public static GameObject GetRectTextGameObject(int width, int height, Color fontColor, string text, string name, Transform parent = null)
+    {
+        var go = new GameObject();
+        go.name = name;
+        if (parent != null)
+        {
+            go.transform.parent = parent;
+            go.transform.position = parent.position;
+        }
+        var rect = go.AddComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(width, height);
+        var display = go.AddComponent<Text>();
+        display.horizontalOverflow = HorizontalWrapMode.Overflow;
+        display.alignment = TextAnchor.MiddleLeft;
+        display.text = text;
+        Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+        display.font = ArialFont;
+        display.color = fontColor;
+        display.resizeTextForBestFit = true;
         return go;
     }
 
@@ -47,5 +70,27 @@ public class UIHelper
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.Apply();
         return texture;
+    }
+
+    public static GameObject CreateButton(string name, Transform parent, string text, Action click, int width, int height)
+    {
+        GameObject button = new GameObject();
+        button.name = name;
+        button.transform.parent = parent;
+        button.AddComponent<RectTransform>();
+        button.AddComponent<Button>();
+        button.transform.position = parent.position;
+        button.GetComponent<Button>().onClick.AddListener(() =>{ click(); });
+        var display = button.AddComponent<Text>();
+        var rect = button.GetComponent<RectTransform>();
+        rect.sizeDelta = new Vector2(width, height);
+        display.horizontalOverflow = HorizontalWrapMode.Overflow;
+        display.alignment = TextAnchor.MiddleLeft;
+        display.text = "  " + text;
+        Font ArialFont = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+        display.font = ArialFont;
+        display.color = Color.white;
+
+        return button;
     }
 }

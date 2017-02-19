@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryView
@@ -12,7 +11,7 @@ public class InventoryView
     public GameObject InventoryWindow { get; set; }
     public Inventory ViewInventory { get; set; }
 
-    public InventoryView(GameObject parent, int height, int width, Inventory inventory)
+    public InventoryView(GameObject parent, int width, int height, Inventory inventory)
     {
         ViewInventory = inventory;
         parentGo = parent;
@@ -26,7 +25,6 @@ public class InventoryView
         //Create the main container
         GameObject inventoryGameObject = UIHelper.GetRectImageGameObject(Width, Height,
             new Color(.25f, .25f, .25f, .95f), "Inventory", parentGo.transform);
-        var pointerEnter = inventoryGameObject.AddComponent<EventTrigger>();
         
         var scrollRect = CreateScrollRect(inventoryGameObject);
 
@@ -103,7 +101,7 @@ public class InventoryView
         slideArea.anchorMin = new Vector2(.5f, .5f);
         slideArea.anchorMax = new Vector2(.5f, .5f);
         slideArea.sizeDelta = new Vector2(Height, 1f);
-        var slideHandle = UIHelper.GetRectImageGameObject(32, 32, new Color(0f, 0f, 0f, .95f), "Slide Handle");
+        var slideHandle = UIHelper.GetRectImageGameObject(32, 32, new Color(.1f, .1f, .1f, .95f), "Slide Handle");
         var slideHandleRect = slideHandle.GetComponent<RectTransform>();
         slideHandle.transform.SetParent(slideArea.transform);
         slideHandle.transform.position = slideArea.transform.position;

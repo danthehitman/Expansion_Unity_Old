@@ -50,9 +50,9 @@ public class TileView
         baseRenderer.sprite = ViewUtilities.GetTileSprite(tile);
         tileGreyscale = GetGreyscaleForTile();
         baseRenderer.name = baseRenderer.sprite.name;
-        if (tile.HeightType != HeightType.River)
+        if (tile.TerrainData.HeightType != HeightType.River)
         {
-            if (tile.HeightType > HeightType.ShallowWater)
+            if (tile.TerrainData.HeightType > HeightType.ShallowWater)
             {
                 var BorderLayer = new GameObject();
                 BorderLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
@@ -60,7 +60,7 @@ public class TileView
                 var borderRenderer = BorderLayer.GetComponent<SpriteRenderer>();
                 borderRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
                 borderRenderer.sortingOrder = 5;
-                var texture = GetBorderTexture(BaseTile.HeightValue);
+                var texture = GetBorderTexture(BaseTile.TerrainData.HeightValue);
                 Sprite borderSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 32f);
                 borderRenderer.sprite = borderSprite;
             }
@@ -89,7 +89,7 @@ public class TileView
     {
         if (!isActivated && HighlightLayer != null)
         {
-            if (BaseTile.HeightType > HeightType.ShallowWater)
+            if (BaseTile.TerrainData.HeightType > HeightType.ShallowWater)
             {
                 HighlightLayer.GetComponent<SpriteRenderer>().color = highlighted ? Color.gray : Color.white;
             }
@@ -128,14 +128,14 @@ public class TileView
     private float GetGreyscaleForTile()
     {
         float result = 1.0f;
-        if (BaseTile.HeightType > HeightType.ShallowWater)
+        if (BaseTile.TerrainData.HeightType > HeightType.ShallowWater)
         { 
-            result = (((float)(BaseTile.HeightValue - Generator.ShallowWater) / (float)(1.0f - Generator.ShallowWater))) * 100.0f;
+            result = (((float)(BaseTile.TerrainData.HeightValue - Generator.ShallowWater) / (float)(1.0f - Generator.ShallowWater))) * 100.0f;
             result = 1.0f - ((float)(0.25f - 1.0f) * result / 100.0f + 0.25f);
         }
         else
         {
-            result = ((float)(BaseTile.HeightValue - 0f) / (float)(Generator.ShallowWater - 0f));
+            result = ((float)(BaseTile.TerrainData.HeightValue - 0f) / (float)(Generator.ShallowWater - 0f));
         }
         return result;
     }

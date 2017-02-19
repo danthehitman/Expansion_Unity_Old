@@ -124,7 +124,7 @@ public static class TextureGenerator {
         {
             for (var y = 0; y < height; y++)
             {
-                switch (tiles[x,y].HeightType)
+                switch (tiles[x,y].TerrainData.HeightType)
                 {
                 case HeightType.DeepWater:
                     pixels[x + y * width] = new Color(0, 0, 0, 1);
@@ -152,9 +152,9 @@ public static class TextureGenerator {
                     break;
                 }
 
-                if (!tiles[x,y].Collidable)
+                if (!tiles[x,y].TerrainData.Collidable)
                 {
-                    pixels[x + y * width] = Color.Lerp(Color.white, Color.black, tiles[x,y].HeightValue * 2);
+                    pixels[x + y * width] = Color.Lerp(Color.white, Color.black, tiles[x,y].TerrainData.HeightValue * 2);
                 }
             }
         }
@@ -174,7 +174,7 @@ public static class TextureGenerator {
         {
             for (var y = 0; y < height; y++)
             {
-                switch (tiles[x,y].HeightType)
+                switch (tiles[x,y].TerrainData.HeightType)
                 {
                 case HeightType.DeepWater:
                     pixels[x + y * width] = new Color(0, 0, 0, 1);
@@ -232,7 +232,7 @@ public static class TextureGenerator {
         {
             for (var y = 0; y < height; y++)
             {
-                switch (tiles[x,y].HeatType)
+                switch (tiles[x,y].TerrainData.HeatType)
                 {
                 case HeatType.Coldest:
                     pixels[x + y * width] = Coldest;
@@ -255,7 +255,7 @@ public static class TextureGenerator {
                 }
                 
                 //darken the color if a edge tile
-                if ((int)tiles[x,y].HeightType > 2 && tiles[x,y].Bitmask != 15)
+                if ((int)tiles[x,y].TerrainData.HeightType > 2 && tiles[x,y].TerrainData.Bitmask != 15)
                     pixels[x + y * width] = Color.Lerp(pixels[x + y * width], Color.black, 0.4f);
             }
         }
@@ -277,15 +277,15 @@ public static class TextureGenerator {
             {
                 BaseTile t = tiles[x,y];
                 
-                if (t.MoistureType == MoistureType.Dryest)           
+                if (t.TerrainData.MoistureType == MoistureType.Dryest)           
                     pixels[x + y * width] = Dryest;
-                else if (t.MoistureType == MoistureType.Dryer)          
+                else if (t.TerrainData.MoistureType == MoistureType.Dryer)          
                     pixels[x + y * width] = Dryer;
-                else if (t.MoistureType == MoistureType.Dry)          
+                else if (t.TerrainData.MoistureType == MoistureType.Dry)          
                     pixels[x + y * width] = Dry;
-                else if (t.MoistureType == MoistureType.Wet)          
+                else if (t.TerrainData.MoistureType == MoistureType.Wet)          
                     pixels[x + y * width] = Wet; 
-                else if (t.MoistureType == MoistureType.Wetter)          
+                else if (t.TerrainData.MoistureType == MoistureType.Wetter)          
                     pixels[x + y * width] = Wetter; 
                 else      
                     pixels[x + y * width] = Wettest; 
@@ -307,7 +307,7 @@ public static class TextureGenerator {
         {
             for (var y = 0; y < height; y++)
             {
-                BiomeType value = tiles[x, y].BiomeType;
+                BiomeType value = tiles[x, y].TerrainData.BiomeType;
                 
                 switch(value){
                 case BiomeType.Ice:
@@ -343,23 +343,23 @@ public static class TextureGenerator {
                 }
                 
                 // Water tiles
-                if (tiles[x,y].HeightType == HeightType.DeepWater) {
+                if (tiles[x,y].TerrainData.HeightType == HeightType.DeepWater) {
                     pixels[x + y * width] = DeepColor;
                 }
-                else if (tiles[x,y].HeightType == HeightType.ShallowWater) {
+                else if (tiles[x,y].TerrainData.HeightType == HeightType.ShallowWater) {
                     pixels[x + y * width] = ShallowColor;
                 }
 
                 // draw rivers
-                if (tiles[x,y].HeightType ==  HeightType.River)
+                if (tiles[x,y].TerrainData.HeightType ==  HeightType.River)
                 {
-                    float heatValue = tiles[x,y].HeatValue;		
+                    float heatValue = tiles[x,y].TerrainData.HeatValue;		
 
-                    if (tiles[x,y].HeatType == HeatType.Coldest)
+                    if (tiles[x,y].TerrainData.HeatType == HeatType.Coldest)
                         pixels[x + y * width] = Color.Lerp (IceWater, ColdWater, (heatValue) / (coldest));
-                    else if (tiles[x,y].HeatType == HeatType.Colder)
+                    else if (tiles[x,y].TerrainData.HeatType == HeatType.Colder)
                         pixels[x + y * width] = Color.Lerp (ColdWater, RiverWater, (heatValue - coldest) / (colder - coldest));
-                    else if (tiles[x,y].HeatType == HeatType.Cold)
+                    else if (tiles[x,y].TerrainData.HeatType == HeatType.Cold)
                         pixels[x + y * width] = Color.Lerp (RiverWater, ShallowColor, (heatValue - colder) / (cold - colder));
                     else
                         pixels[x + y * width] = ShallowColor;
@@ -367,9 +367,9 @@ public static class TextureGenerator {
 
 
                 // add a outline
-                if (tiles[x,y].HeightType >= HeightType.Shore && tiles[x,y].HeightType != HeightType.River)
+                if (tiles[x,y].TerrainData.HeightType >= HeightType.Shore && tiles[x,y].TerrainData.HeightType != HeightType.River)
                 {
-                    if (tiles[x,y].BiomeBitmask != 15)
+                    if (tiles[x,y].TerrainData.BiomeBitmask != 15)
                         pixels[x + y * width] = Color.Lerp (pixels[x + y * width], Color.black, 0.35f);
                 }
             }

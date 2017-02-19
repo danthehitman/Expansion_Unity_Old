@@ -185,7 +185,7 @@ public abstract class Generator
 
     public BiomeType GetBiomeType(BaseTile tile)
     {
-        return BiomeTable [(int)tile.MoistureType, (int)tile.HeatType];
+        return BiomeTable [(int)tile.TerrainData.MoistureType, (int)tile.TerrainData.HeatType];
     }
     
     private void GenerateBiomeMap()
@@ -193,10 +193,10 @@ public abstract class Generator
         for (var x = 0; x < width; x++) {
             for (var y = 0; y < height; y++) {
                 
-                if (!Tiles[x, y].Collidable) continue;
+                if (!Tiles[x, y].TerrainData.Collidable) continue;
 
                 BaseTile t = Tiles[x,y];
-                t.BiomeType = GetBiomeType(t);
+                t.TerrainData.BiomeType = GetBiomeType(t);
             }
         }
     }
@@ -231,17 +231,17 @@ public abstract class Generator
     private void AddMoisture(BaseTile t, float amount)
     {
         MoistureData.Data[t.X, t.Y] += amount;
-        t.MoistureValue += amount;
-        if (t.MoistureValue > 1)
-            t.MoistureValue = 1;
+        t.TerrainData.MoistureValue += amount;
+        if (t.TerrainData.MoistureValue > 1)
+            t.TerrainData.MoistureValue = 1;
                 
         //set moisture type
-        if (t.MoistureValue < DryerValue) t.MoistureType = MoistureType.Dryest;
-        else if (t.MoistureValue < DryValue) t.MoistureType = MoistureType.Dryer;
-        else if (t.MoistureValue < WetValue) t.MoistureType = MoistureType.Dry;
-        else if (t.MoistureValue < WetterValue) t.MoistureType = MoistureType.Wet;
-        else if (t.MoistureValue < WettestValue) t.MoistureType = MoistureType.Wetter;
-        else t.MoistureType = MoistureType.Wettest;
+        if (t.TerrainData.MoistureValue < DryerValue) t.TerrainData.MoistureType = MoistureType.Dryest;
+        else if (t.TerrainData.MoistureValue < DryValue) t.TerrainData.MoistureType = MoistureType.Dryer;
+        else if (t.TerrainData.MoistureValue < WetValue) t.TerrainData.MoistureType = MoistureType.Dry;
+        else if (t.TerrainData.MoistureValue < WetterValue) t.TerrainData.MoistureType = MoistureType.Wet;
+        else if (t.TerrainData.MoistureValue < WettestValue) t.TerrainData.MoistureType = MoistureType.Wetter;
+        else t.TerrainData.MoistureType = MoistureType.Wettest;
     }
 
     private void AdjustMoistureMap()
@@ -250,7 +250,7 @@ public abstract class Generator
             for (var y = 0; y < height; y++) {
 
                 BaseTile t = Tiles[x,y];
-                if (t.HeightType == HeightType.River)
+                if (t.TerrainData.HeightType == HeightType.River)
                 {
                     AddMoisture (t, (int)60);
                 }
@@ -299,15 +299,15 @@ public abstract class Generator
             for (var y = 0; y < height; y++) {
                 BaseTile t = Tiles[x,y];
 
-                if (t.Rivers.Count > 1)
+                if (t.TerrainData.Rivers.Count > 1)
                 {
                     // multiple rivers == intersection
                     RiverGroup group = null;
 
                     // Does a rivergroup already exist for this group?
-                    for (int n=0; n < t.Rivers.Count; n++)
+                    for (int n=0; n < t.TerrainData.Rivers.Count; n++)
                     {
-                        River tileriver = t.Rivers[n];
+                        River tileriver = t.TerrainData.Rivers[n];
                         for (int i = 0; i < RiverGroups.Count; i++)
                         {
                             for (int j = 0; j < RiverGroups[i].Rivers.Count; j++)
@@ -327,18 +327,18 @@ public abstract class Generator
                     // existing group found -- add to it
                     if (group != null)
                     {
-                        for (int n=0; n < t.Rivers.Count; n++)
+                        for (int n=0; n < t.TerrainData.Rivers.Count; n++)
                         {
-                            if (!group.Rivers.Contains(t.Rivers[n]))
-                                group.Rivers.Add(t.Rivers[n]);
+                            if (!group.Rivers.Contains(t.TerrainData.Rivers[n]))
+                                group.Rivers.Add(t.TerrainData.Rivers[n]);
                         }
                     }
                     else   //No existing group found - create a new one
                     {
                         group = new RiverGroup();
-                        for (int n=0; n < t.Rivers.Count; n++)
+                        for (int n=0; n < t.TerrainData.Rivers.Count; n++)
                         {
-                            group.Rivers.Add(t.Rivers[n]);
+                            group.Rivers.Add(t.TerrainData.Rivers[n]);
                         }
                         RiverGroups.Add (group);
                     }
@@ -352,7 +352,7 @@ public abstract class Generator
         if (tile == null)
             return int.MaxValue;
         else
-            return tile.HeightValue;
+            return tile.TerrainData.HeightValue;
     }
 
     private void GenerateRivers()
@@ -368,10 +368,10 @@ public abstract class Generator
                 BaseTile tile = Tiles[x, y];
                 attempts++;
                 // validate the tile
-                if (!tile.Collidable) continue;
-                if (tile.Rivers.Count > 0) continue;
+                if (!tile.TerrainData.Collidable) continue;
+                if (tile.TerrainData.Rivers.Count > 0) continue;
 
-                if (tile.HeightValue > MinRiverHeight)
+                if (tile.TerrainData.HeightValue > MinRiverHeight)
                 {
                     // Tile is good to start river from
                     River river = new River(rivercount);
@@ -389,14 +389,14 @@ public abstract class Generator
                         for (int iii = 0; iii < river.Tiles.Count; iii++)
                         {
                             BaseTile t = river.Tiles[iii];
-                            t.Rivers.Remove(river);
+                            t.TerrainData.Rivers.Remove(river);
                         }
                     }
                     else if (river.Tiles.Count >= MinRiverLength)
                     {
                         //Validation passed - Add river to list
                         Rivers.Add(river);
-                        tile.Rivers.Add(river);
+                        tile.TerrainData.Rivers.Add(river);
                         rivercount--;
                     }
                     if (rivercount == 0)
@@ -422,7 +422,7 @@ public abstract class Generator
                 if (t1 == t2)
                 {
                     intersectionID = i;
-                    intersectionSize = t2.RiverSize;
+                    intersectionSize = t2.TerrainData.RiverSize;
                 }
             }
         }
@@ -602,11 +602,11 @@ public abstract class Generator
     
     private void FindPathToWater(BaseTile tile, Direction direction, ref River river)
     {
-        if (tile.Rivers.Contains(river))
+        if (tile.TerrainData.Rivers.Contains(river))
             return;
 
         // check if there is already a river on this tile
-        if (tile.Rivers.Count > 0)
+        if (tile.TerrainData.Rivers.Count > 0)
             river.Intersections++;
 
         river.AddTile (tile);
@@ -624,22 +624,22 @@ public abstract class Generator
         
         // query height values of neighbors
         if (left != null && left.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(left)) 
-            leftValue = left.HeightValue;
+            leftValue = left.TerrainData.HeightValue;
         if (right != null && right.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(right)) 
-            rightValue = right.HeightValue;
+            rightValue = right.TerrainData.HeightValue;
         if (top != null && top.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(top)) 
-            topValue = top.HeightValue;
+            topValue = top.TerrainData.HeightValue;
         if (bottom != null && bottom.GetRiverNeighborCount(river) < 2 && !river.Tiles.Contains(bottom)) 
-            bottomValue = bottom.HeightValue;
+            bottomValue = bottom.TerrainData.HeightValue;
         
         // if neighbor is existing river that is not this one, flow into it
-        if (bottom != null && bottom.Rivers.Count == 0 && !bottom.Collidable)
+        if (bottom != null && bottom.TerrainData.Rivers.Count == 0 && !bottom.TerrainData.Collidable)
             bottomValue = 0;
-        if (top != null && top.Rivers.Count == 0 && !top.Collidable)
+        if (top != null && top.TerrainData.Rivers.Count == 0 && !top.TerrainData.Collidable)
             topValue = 0;
-        if (left != null && left.Rivers.Count == 0 && !left.Collidable)
+        if (left != null && left.TerrainData.Rivers.Count == 0 && !left.TerrainData.Collidable)
             leftValue = 0;
-        if (right != null && right.Rivers.Count == 0 && !right.Collidable)
+        if (right != null && right.TerrainData.Rivers.Count == 0 && !right.TerrainData.Collidable)
             rightValue = 0;
         
         // override flow direction if a tile is significantly lower
@@ -665,7 +665,7 @@ public abstract class Generator
         
         //Move to next neighbor
         if (min == leftValue) {
-            if (left != null && left.Collidable)
+            if (left != null && left.TerrainData.Collidable)
             {
                 if (river.CurrentDirection != Direction.Left){
                     river.TurnCount++;
@@ -674,7 +674,7 @@ public abstract class Generator
                 FindPathToWater (left, direction, ref river);
             }
         } else if (min == rightValue) {
-            if (right != null && right.Collidable)
+            if (right != null && right.TerrainData.Collidable)
             {
                 if (river.CurrentDirection != Direction.Right){
                     river.TurnCount++;
@@ -683,7 +683,7 @@ public abstract class Generator
                 FindPathToWater (right, direction, ref river);
             }
         } else if (min == bottomValue) {
-            if (bottom != null && bottom.Collidable)
+            if (bottom != null && bottom.TerrainData.Collidable)
             {
                 if (river.CurrentDirection != Direction.Bottom){
                     river.TurnCount++;
@@ -692,7 +692,7 @@ public abstract class Generator
                 FindPathToWater (bottom, direction, ref river);
             }
         } else if (min == topValue) {
-            if (top != null && top.Collidable)
+            if (top != null && top.TerrainData.Collidable)
             {
                 if (river.CurrentDirection != Direction.Top){
                     river.TurnCount++;
@@ -719,93 +719,93 @@ public abstract class Generator
                 //set heightmap value
                 float heightValue = HeightData.Data[x, y];
                 heightValue = (heightValue - HeightData.Min) / (HeightData.Max - HeightData.Min);
-                t.HeightValue = heightValue;
+                t.TerrainData.HeightValue = heightValue;
                     
 
                 if (heightValue < DeepWater)  {
-                    t.HeightType = HeightType.DeepWater;
-                    t.Collidable = false;
+                    t.TerrainData.HeightType = HeightType.DeepWater;
+                    t.TerrainData.Collidable = false;
                 }
                 else if (heightValue < ShallowWater)  {
-                    t.HeightType = HeightType.ShallowWater;
-                    t.Collidable = false;
+                    t.TerrainData.HeightType = HeightType.ShallowWater;
+                    t.TerrainData.Collidable = false;
                 }
                 else if (heightValue < Sand) {
-                    t.HeightType = HeightType.Sand;
-                    t.Collidable = true;
+                    t.TerrainData.HeightType = HeightType.Sand;
+                    t.TerrainData.Collidable = true;
                 }
                 else if (heightValue < Grass) {
-                    t.HeightType = HeightType.Grass;
-                    t.Collidable = true;
+                    t.TerrainData.HeightType = HeightType.Grass;
+                    t.TerrainData.Collidable = true;
                 }
                 else if (heightValue < Forest) {
-                    t.HeightType = HeightType.Forest;
-                    t.Collidable = true;
+                    t.TerrainData.HeightType = HeightType.Forest;
+                    t.TerrainData.Collidable = true;
                 }
                 else if (heightValue < Rock) {
-                    t.HeightType = HeightType.Rock;
-                    t.Collidable = true;
+                    t.TerrainData.HeightType = HeightType.Rock;
+                    t.TerrainData.Collidable = true;
                 }
                 else  {
-                    t.HeightType = HeightType.Snow;
-                    t.Collidable = true;
+                    t.TerrainData.HeightType = HeightType.Snow;
+                    t.TerrainData.Collidable = true;
                 }
 
 
                 //adjust moisture based on height
-                if (t.HeightType == HeightType.DeepWater) {
-                    MoistureData.Data[t.X, t.Y] += 8f * t.HeightValue;
+                if (t.TerrainData.HeightType == HeightType.DeepWater) {
+                    MoistureData.Data[t.X, t.Y] += 8f * t.TerrainData.HeightValue;
                 }
-                else if (t.HeightType == HeightType.ShallowWater) {
-                    MoistureData.Data[t.X, t.Y] += 3f * t.HeightValue;
+                else if (t.TerrainData.HeightType == HeightType.ShallowWater) {
+                    MoistureData.Data[t.X, t.Y] += 3f * t.TerrainData.HeightValue;
                 }
-                else if (t.HeightType == HeightType.Shore) {
-                    MoistureData.Data[t.X, t.Y] += 1f * t.HeightValue;
+                else if (t.TerrainData.HeightType == HeightType.Shore) {
+                    MoistureData.Data[t.X, t.Y] += 1f * t.TerrainData.HeightValue;
                 }
-                else if (t.HeightType == HeightType.Sand) {
-                    MoistureData.Data[t.X, t.Y] += 0.2f * t.HeightValue;
+                else if (t.TerrainData.HeightType == HeightType.Sand) {
+                    MoistureData.Data[t.X, t.Y] += 0.2f * t.TerrainData.HeightValue;
                 }				
                 
                 //Moisture Map Analyze	
                 float moistureValue = MoistureData.Data[x,y];
                 moistureValue = (moistureValue - MoistureData.Min) / (MoistureData.Max - MoistureData.Min);
-                t.MoistureValue = moistureValue;
+                t.TerrainData.MoistureValue = moistureValue;
                 
                 //set moisture type
-                if (moistureValue < DryerValue) t.MoistureType = MoistureType.Dryest;
-                else if (moistureValue < DryValue) t.MoistureType = MoistureType.Dryer;
-                else if (moistureValue < WetValue) t.MoistureType = MoistureType.Dry;
-                else if (moistureValue < WetterValue) t.MoistureType = MoistureType.Wet;
-                else if (moistureValue < WettestValue) t.MoistureType = MoistureType.Wetter;
-                else t.MoistureType = MoistureType.Wettest;
+                if (moistureValue < DryerValue) t.TerrainData.MoistureType = MoistureType.Dryest;
+                else if (moistureValue < DryValue) t.TerrainData.MoistureType = MoistureType.Dryer;
+                else if (moistureValue < WetValue) t.TerrainData.MoistureType = MoistureType.Dry;
+                else if (moistureValue < WetterValue) t.TerrainData.MoistureType = MoistureType.Wet;
+                else if (moistureValue < WettestValue) t.TerrainData.MoistureType = MoistureType.Wetter;
+                else t.TerrainData.MoistureType = MoistureType.Wettest;
 
 
                 // Adjust Heat Map based on Height - Higher == colder
-                if (t.HeightType == HeightType.Forest) {
-                    HeatData.Data[t.X, t.Y] -= 0.1f * t.HeightValue;
+                if (t.TerrainData.HeightType == HeightType.Forest) {
+                    HeatData.Data[t.X, t.Y] -= 0.1f * t.TerrainData.HeightValue;
                 }
-                else if (t.HeightType == HeightType.Rock) {
-                    HeatData.Data[t.X, t.Y] -= 0.25f * t.HeightValue;
+                else if (t.TerrainData.HeightType == HeightType.Rock) {
+                    HeatData.Data[t.X, t.Y] -= 0.25f * t.TerrainData.HeightValue;
                 }
-                else if (t.HeightType == HeightType.Snow) {
-                    HeatData.Data[t.X, t.Y] -= 0.4f * t.HeightValue;
+                else if (t.TerrainData.HeightType == HeightType.Snow) {
+                    HeatData.Data[t.X, t.Y] -= 0.4f * t.TerrainData.HeightValue;
                 }
                 else {
-                    HeatData.Data[t.X, t.Y] += 0.01f * t.HeightValue;
+                    HeatData.Data[t.X, t.Y] += 0.01f * t.TerrainData.HeightValue;
                 }
 
                 // Set heat value
                 float heatValue = HeatData.Data[x,y];
                 heatValue = (heatValue - HeatData.Min) / (HeatData.Max - HeatData.Min);
-                t.HeatValue = heatValue;
+                t.TerrainData.HeatValue = heatValue;
 
                 // set heat type
-                if (heatValue < ColdestValue) t.HeatType = HeatType.Coldest;
-                else if (heatValue < ColderValue) t.HeatType = HeatType.Colder;
-                else if (heatValue < ColdValue) t.HeatType = HeatType.Cold;
-                else if (heatValue < WarmValue) t.HeatType = HeatType.Warm;
-                else if (heatValue < WarmerValue) t.HeatType = HeatType.Warmer;
-                else t.HeatType = HeatType.Warmest;
+                if (heatValue < ColdestValue) t.TerrainData.HeatType = HeatType.Coldest;
+                else if (heatValue < ColderValue) t.TerrainData.HeatType = HeatType.Colder;
+                else if (heatValue < ColdValue) t.TerrainData.HeatType = HeatType.Cold;
+                else if (heatValue < WarmValue) t.TerrainData.HeatType = HeatType.Warm;
+                else if (heatValue < WarmerValue) t.TerrainData.HeatType = HeatType.Warmer;
+                else t.TerrainData.HeatType = HeatType.Warmest;
 
                 Tiles[x,y] = t;
             }
@@ -848,10 +848,10 @@ public abstract class Generator
                 BaseTile t = Tiles[x,y];
 
                 //Tile already flood filled, skip
-                if (t.FloodFilled) continue;
+                if (t.TerrainData.FloodFilled) continue;
 
                 // Land
-                if (t.Collidable)   
+                if (t.TerrainData.Collidable)   
                 {
                     TileGroup group = new TileGroup();
                     group.Type = TileGroupType.Land;
@@ -886,29 +886,29 @@ public abstract class Generator
         // Validate
         if (tile == null)
             return;
-        if (tile.FloodFilled) 
+        if (tile.TerrainData.FloodFilled) 
             return;
-        if (tiles.Type == TileGroupType.Land && !tile.Collidable)
+        if (tiles.Type == TileGroupType.Land && !tile.TerrainData.Collidable)
             return;
-        if (tiles.Type == TileGroupType.Water && tile.Collidable)
+        if (tiles.Type == TileGroupType.Water && tile.TerrainData.Collidable)
             return;
 
         // Add to TileGroup
         tiles.Tiles.Add (tile);
-        tile.FloodFilled = true;
+        tile.TerrainData.FloodFilled = true;
 
         // floodfill into neighbors
         BaseTile t = GetTop (tile);
-        if (t != null && !t.FloodFilled && tile.Collidable == t.Collidable)
+        if (t != null && !t.TerrainData.FloodFilled && tile.TerrainData.Collidable == t.TerrainData.Collidable)
             stack.Push (t);
         t = GetBottom (tile);
-        if (t != null && !t.FloodFilled && tile.Collidable == t.Collidable)
+        if (t != null && !t.TerrainData.FloodFilled && tile.TerrainData.Collidable == t.TerrainData.Collidable)
             stack.Push (t);
         t = GetLeft (tile);
-        if (t != null && !t.FloodFilled && tile.Collidable == t.Collidable)
+        if (t != null && !t.TerrainData.FloodFilled && tile.TerrainData.Collidable == t.TerrainData.Collidable)
             stack.Push (t);
         t = GetRight (tile);
-        if (t != null && !t.FloodFilled && tile.Collidable == t.Collidable)
+        if (t != null && !t.TerrainData.FloodFilled && tile.TerrainData.Collidable == t.TerrainData.Collidable)
             stack.Push (t);
     }
 

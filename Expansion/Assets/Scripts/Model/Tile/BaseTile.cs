@@ -3,33 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-public class BaseTile : INotifyPropertyChanged, IHasContext
+public class BaseTile : INotifyPropertyChanged
 {
-    #region Terrain Information
-    public HeightType HeightType { get; set; }
-    public HeatType HeatType { get; set; }
-    public MoistureType MoistureType { get; set; }
-    public BiomeType BiomeType { get; set; }
-
-    public float HeightValue { get; set; }
-    public float HeatValue { get; set; }
-    public float MoistureValue { get; set; }
-
-    public int Bitmask { get; set; }
-    public int BiomeBitmask { get; set; }
+    public TerrainInfo TerrainData  { get; set; }
 
     public BaseTile Left { get; set; }
     public BaseTile Right { get; set; }
     public BaseTile Top { get; set; }
     public BaseTile Bottom { get; set; }
 
-    public bool Collidable { get; set; }
-    public bool FloodFilled { get; set; }
-
-    public List<River> Rivers { get; set; }
-
-    public int RiverSize { get; set; }
-    #endregion
+    public TileCache Cache { get; set; }
 
     public bool Explored { get; set; }
 
@@ -46,21 +29,8 @@ public class BaseTile : INotifyPropertyChanged, IHasContext
         World = world;
         X = x;
         Y = y;
-        Rivers = new List<River>();
-    }
-
-    public void CreateExploreTileJob(object arg = null)
-    {
-        var entity = arg as BaseEntity;
-        if (entity != null)
-        {
-            Explored = true;
-            entity.QueueJob(new Job()
-            {
-                Position = new Vector3(X, Y, 0),
-                JobAction = ExploreTile
-            });
-        }
+        TerrainData = new TerrainInfo();
+        TerrainData.Rivers = new List<River>();
     }
 
     public void ExploreTile(object arg = null)
@@ -85,72 +55,72 @@ public class BaseTile : INotifyPropertyChanged, IHasContext
     {
         int count = 0;
 
-        if (Collidable && Top != null && Top.BiomeType == BiomeType)
+        if (TerrainData.Collidable && Top != null && Top.TerrainData.BiomeType == TerrainData.BiomeType)
             count += 1;
-        if (Collidable && Bottom != null && Bottom.BiomeType == BiomeType)
+        if (TerrainData.Collidable && Bottom != null && Bottom.TerrainData.BiomeType == TerrainData.BiomeType)
             count += 4;
-        if (Collidable && Left != null && Left.BiomeType == BiomeType)
+        if (TerrainData.Collidable && Left != null && Left.TerrainData.BiomeType == TerrainData.BiomeType)
             count += 8;
-        if (Collidable && Right != null && Right.BiomeType == BiomeType)
+        if (TerrainData.Collidable && Right != null && Right.TerrainData.BiomeType == TerrainData.BiomeType)
             count += 2;
 
-        BiomeBitmask = count;
+        TerrainData.BiomeBitmask = count;
     }
 
     public void UpdateBitmask()
     {
         int count = 0;
 
-        if (Collidable && Top != null && Top.HeightType == HeightType)
+        if (TerrainData.Collidable && Top != null && Top.TerrainData.HeightType == TerrainData.HeightType)
             count += 1;
-        if (Collidable && Right != null && Right.HeightType == HeightType)
+        if (TerrainData.Collidable && Right != null && Right.TerrainData.HeightType == TerrainData.HeightType)
             count += 2;
-        if (Collidable && Bottom != null && Bottom.HeightType == HeightType)
+        if (TerrainData.Collidable && Bottom != null && Bottom.TerrainData.HeightType == TerrainData.HeightType)
             count += 4;
-        if (Collidable && Left != null && Left.HeightType == HeightType)
+        if (TerrainData.Collidable && Left != null && Left.TerrainData.HeightType == TerrainData.HeightType)
             count += 8;
 
-        Bitmask = count;
+        TerrainData.Bitmask = count;
     }
 
     public int GetRiverNeighborCount(River river)
     {
         int count = 0;
-        if (Left != null && Left.Rivers.Count > 0 && Left.Rivers.Contains(river))
+        if (Left != null && Left.TerrainData.Rivers.Count > 0 && Left.TerrainData.Rivers.Contains(river))
             count++;
-        if (Right != null && Right.Rivers.Count > 0 && Right.Rivers.Contains(river))
+        if (Right != null && Right.TerrainData.Rivers.Count > 0 && Right.TerrainData.Rivers.Contains(river))
             count++;
-        if (Top != null && Top.Rivers.Count > 0 && Top.Rivers.Contains(river))
+        if (Top != null && Top.TerrainData.Rivers.Count > 0 && Top.TerrainData.Rivers.Contains(river))
             count++;
-        if (Bottom != null && Bottom.Rivers.Count > 0 && Bottom.Rivers.Contains(river))
+        if (Bottom != null && Bottom.TerrainData.Rivers.Count > 0 && Bottom.TerrainData.Rivers.Contains(river))
             count++;
         return count;
     }    
 
     public void SetRiverPath(River river)
     {
-        if (!Collidable)
+        if (!TerrainData.Collidable)
             return;
 
-        if (!Rivers.Contains(river))
+        if (!TerrainData.Rivers.Contains(river))
         {
-            Rivers.Add(river);
+            TerrainData.Rivers.Add(river);
         }
     }
 
     private void SetRiverTile(River river)
     {
         SetRiverPath(river);
-        HeightType = HeightType.River;
-        HeightValue = 0;
-        Collidable = false;
+        TerrainData.HeightType = HeightType.River;
+        TerrainData.HeightValue = 0;
+        TerrainData.Collidable = false;
     }
 
     // This function got messy.  Sorry.
     public void DigRiver(River river, int size)
     {
         SetRiverTile(river);
-        RiverSize = size;
+        TerrainData.RiverSize = size;
 
         if (size == 1)
         {
@@ -279,25 +249,5 @@ public class BaseTile : INotifyPropertyChanged, IHasContext
                 }
             }
         }
-    }
-
-    //private IEnumerable<ContextAction> actions;
-    public IEnumerable<ContextAction> GetActions(BaseEntity entity)
-    {
-        IEnumerable<ContextAction> result = null;
-        if (entity is PlayerEntity)
-            result = GetActionsForEntity(entity);
-        return result;
-    }
-
-    public List<ContextAction> GetActionsForEntity(BaseEntity entity)
-    {
-        var actions = new List<ContextAction>()
-        {
-            new ContextAction("Explore", () => { CreateExploreTileJob(entity); }),
-            new ContextAction("Do something else", () => { CreateExploreTileJob(entity); })
-        };
-
-        return actions;
-    }
+    } 
 }

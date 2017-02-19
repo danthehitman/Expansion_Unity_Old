@@ -52,7 +52,7 @@ public class InputManager : MonoBehaviour
         if (!WorldController.Instance.SuspendWorldMouseInteraction)
         {
             if (RectTransformUtility.RectangleContainsScreenPoint(
-            WorldController.Instance.ContextPanel as RectTransform, Input.mousePosition))
+            ViewManager.Instance.ContextView.GameObject.GetComponent<RectTransform>(), Input.mousePosition))
             {
                 return;
             }
