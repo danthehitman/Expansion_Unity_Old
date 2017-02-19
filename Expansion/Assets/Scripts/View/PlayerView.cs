@@ -6,10 +6,10 @@ public class PlayerView
     private GameObject PlayerObject;
     private GameObject ShadowObject;
     private SpriteRenderer ShadowRenderer;
-    private PlayerEntity Player;
+    private HumanEntity Player;
 
     // Use this for initialization
-    public PlayerView(PlayerEntity player)
+    public PlayerView(HumanEntity player)
     {
         PlayerObject = ViewUtilities.GenerateContainerViewObject("Player", Mathf.FloorToInt(player.X), Mathf.FloorToInt(player.Y), Constants.PLAYER_SORTING_LAYER);
         ViewUtilities.GenerateViewObject(Constants.PLAYER_TORSO_1, Constants.PLAYER_TORSO_1, PlayerObject,
@@ -38,7 +38,7 @@ public class PlayerView
 
     public void OnEntityModelDataChanged(object sender, PropertyChangedEventArgs e)
     {
-        var player = sender as PlayerEntity;
+        var player = sender as HumanEntity;
         if (player != null)
         {
             PlayerObject.transform.position = new Vector3(player.X, player.Y);

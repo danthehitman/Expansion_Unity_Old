@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class TileStore : IHasInventory
+﻿public class TileStore : IHasInventory
 {
     private Inventory inventory;
 

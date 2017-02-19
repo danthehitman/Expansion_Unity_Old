@@ -1,4 +1,4 @@
-﻿public class PlayerEntity : BaseEntity
+﻿public class HumanEntity : BaseEntity
 {
     //Stats
     private int health;
@@ -18,6 +18,16 @@
     private float husbandrySkill;
     private float survivalSkill;
     private float camoSkill;
+
+    private float adjustedAgricultureSkill;
+    private float adjustedForagingSkill;
+    private float adjustedHuntingSkill;
+    private float adjustedFishingSkill;
+    private float adjustedFightingSkill;
+    private float adjustedMininSkill;
+    private float adjustedHusbandrySkill;
+    private float adjustedSurvivalSkill;
+    private float adjustedCamoSkill;
 
     //Traits
     private float constitutionTrait;  
@@ -262,7 +272,142 @@
         }
     }
 
-    public PlayerEntity()
+    public const string AAdjustedAgricultureSkillPropertyName = "AdjustedAgricultureSkill";
+    public float AdjustedAgricultureSkill
+    {
+        get
+        {
+            return adjustedAgricultureSkill;
+        }
+
+        set
+        {
+            adjustedAgricultureSkill = value;
+            OnPropertyChanged(AAdjustedAgricultureSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedForagingSkillPropertyName = "AdjustedForagingSkill";
+    public float AdjustedForagingSkill
+    {
+        get
+        {
+            return adjustedForagingSkill;
+        }
+
+        set
+        {
+            adjustedForagingSkill = value;
+            OnPropertyChanged(AdjustedForagingSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedHuntingSkillPropertyName = "AdjustedHuntingSkill";
+    public float AdjustedHuntingSkill
+    {
+        get
+        {
+            return adjustedHuntingSkill;
+        }
+
+        set
+        {
+            adjustedHuntingSkill = value;
+            OnPropertyChanged(AdjustedHuntingSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedFishingSkillPropertyName = "AdjustedFishingSkill";
+    public float AdjustedFishingSkill
+    {
+        get
+        {
+            return adjustedFishingSkill;
+        }
+
+        set
+        {
+            adjustedFishingSkill = value;
+            OnPropertyChanged(AdjustedFishingSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedFightingSkillPropertyName = "AdjustedFightingSkill";
+    public float AdjustedFightingSkill
+    {
+        get
+        {
+            return adjustedFightingSkill;
+        }
+
+        set
+        {
+            adjustedFightingSkill = value;
+            OnPropertyChanged(AdjustedFightingSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedMininSkillPropertyName = "AdjustedMininSkill";
+    public float AdjustedMininSkill
+    {
+        get
+        {
+            return adjustedMininSkill;
+        }
+
+        set
+        {
+            adjustedMininSkill = value;
+            OnPropertyChanged(AdjustedMininSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedHusbandrySkillPropertyName = "AdjustedHusbandrySkill";
+    public float AdjustedHusbandrySkill
+    {
+        get
+        {
+            return adjustedHusbandrySkill;
+        }
+
+        set
+        {
+            adjustedHusbandrySkill = value;
+            OnPropertyChanged(AdjustedHusbandrySkillPropertyName);
+        }
+    }
+
+    public const string AdjustedSurvivalSkillPropertyName = "AdjustedSurvivalSkill";
+    public float AdjustedSurvivalSkill
+    {
+        get
+        {
+            return adjustedSurvivalSkill;
+        }
+
+        set
+        {
+            adjustedSurvivalSkill = value;
+            OnPropertyChanged(AdjustedSurvivalSkillPropertyName);
+        }
+    }
+
+    public const string AdjustedCamoSkillPropertyName = "AdjustedCamoSkill";
+    public float AdjustedCamoSkill
+    {
+        get
+        {
+            return adjustedCamoSkill;
+        }
+
+        set
+        {
+            adjustedCamoSkill = value;
+            OnPropertyChanged(AdjustedCamoSkillPropertyName);
+        }
+    }
+
+    public HumanEntity()
     {
         X = 1;
         Y = 1;

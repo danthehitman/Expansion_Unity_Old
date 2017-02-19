@@ -28,7 +28,7 @@ public class Job
 
     public bool CanBeWorkedByEntity(BaseEntity entity)
     {
-        if (entity is PlayerEntity)
+        if (entity is HumanEntity)
             return true;
         return false;
     }

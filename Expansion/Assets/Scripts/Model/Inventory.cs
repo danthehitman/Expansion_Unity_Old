@@ -6,7 +6,6 @@ public class Inventory : INotifyPropertyChanged
 {
     private List<Item> items;
     private List<Material> materials;
-    private int size;
 
     public const string ItemsPropertyName = "Items";
     public List<Item> Items
@@ -40,28 +39,18 @@ public class Inventory : INotifyPropertyChanged
         }
     }
 
-    public bool AddItem(Item item)
+    public void AddItem(Item item)
     {
-        if (Items.Count + Materials.Count < size)
-        {
-            Items.Add(item);
-            OnPropertyChanged(ItemsPropertyName);
-            OnPropertyChanged(InventoryObjectsPropertyName);
-            return true;
-        }
-        return false;
+        Items.Add(item);
+        OnPropertyChanged(ItemsPropertyName);
+        OnPropertyChanged(InventoryObjectsPropertyName);
     }
 
-    public bool AddMaterial(Material material)
+    public void AddMaterial(Material material)
     {
-        if (Items.Count + Materials.Count < size)
-        {
-            Materials.Add(material);
-            OnPropertyChanged(MaterialsPropertyName);
-            OnPropertyChanged(InventoryObjectsPropertyName);
-            return true;
-        }
-        return false;
+        Materials.Add(material);
+        OnPropertyChanged(MaterialsPropertyName);
+        OnPropertyChanged(InventoryObjectsPropertyName);
     }
 
     public const string InventoryObjectsPropertyName = "InventoryObjects";
@@ -73,11 +62,10 @@ public class Inventory : INotifyPropertyChanged
         }
     }
 
-    public Inventory(int sizeArg)
+    public Inventory()
     {
         items = new List<Item>();
         materials = new List<Material>();
-        size = sizeArg;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

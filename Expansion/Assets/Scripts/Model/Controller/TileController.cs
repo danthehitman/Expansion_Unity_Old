@@ -11,7 +11,7 @@ public class TileController
 
     public void ExploreTile(BaseEntity entity, BaseTile tile)
     {
-        PlayerEntity player = entity as PlayerEntity;
+        HumanEntity player = entity as HumanEntity;
         if (player != null)
         {
 

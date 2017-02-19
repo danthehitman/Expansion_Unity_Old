@@ -31,12 +31,23 @@ public class BaseTile : INotifyPropertyChanged
         Y = y;
         TerrainData = new TerrainInfo();
         TerrainData.Rivers = new List<River>();
+        Cache = new TileCache();
     }
 
-    public void ExploreTile(object arg = null)
+    public void ExploreTile(object entity = null)
     {
+        var baseEntity = entity as BaseEntity;
+        if (baseEntity != null)
+        {
+            AddInventoryToCache(TileExplorer.ExploreTile(baseEntity, this));
+        }
         this.Explored = true;
         Debug.Log("Explored tile.");
+    }
+
+    public void AddInventoryToCache(Inventory inventory)
+    {
+
     }
 
     protected void OnPropertyChanged(PropertyChangedEventArgs e)

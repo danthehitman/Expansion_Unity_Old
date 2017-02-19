@@ -9,7 +9,7 @@ public class EntityController
     private PlayerView PlayerV;
     private World world;
 
-    public EntityController(PlayerEntity player, World world)
+    public EntityController(HumanEntity player, World world)
     {
         ActiveEntity = player;
         entities = new Dictionary<string, BaseEntity>();

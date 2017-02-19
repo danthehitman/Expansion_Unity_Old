@@ -15,9 +15,9 @@ public class ViewManager
     public GameObject MainWindow = null;
     private GameObject WindowContent = null;
 
-    public Action<PointerEventData> MainWindowEnter;
-    public Action<PointerEventData> MainWindowExit;
-    public Action MainMenuClosed;
+    public Action<PointerEventData> MainDialogEnter;
+    public Action<PointerEventData> MainDialogExit;
+    public Action MainDialogClosed;
 
     private ViewManager()
     {
@@ -37,27 +37,27 @@ public class ViewManager
         }
     }
 
-    protected virtual void OnMainWindowEnter(PointerEventData e)
+    protected virtual void OnMainDialogEnter(PointerEventData e)
     {
-        var handler = MainWindowEnter;
+        var handler = MainDialogEnter;
         if (handler != null)
         {
             handler(e);
         }
     }
 
-    protected virtual void OnMainWindowExit(PointerEventData e)
+    protected virtual void OnMainDialogExit(PointerEventData e)
     {
-        var handler = MainWindowExit;
+        var handler = MainDialogExit;
         if (handler != null)
         {
             handler(e);
         }
     }
 
-    protected virtual void OnMainMenuClose()
+    protected virtual void OnMainDialogClose()
     {
-        MainMenuClosed();
+        MainDialogClosed();
     }
 
     public void ShowTileContextMenuForEntity(BaseEntity entity, TileView tile)
@@ -69,7 +69,7 @@ public class ViewManager
     public IEnumerable<ContextAction> GetTileActions(BaseEntity entity, BaseTile tile)
     {
         IEnumerable<ContextAction> result = null;
-        if (entity is PlayerEntity)
+        if (entity is HumanEntity)
             result = GetActionsForEntity(entity, tile);
         return result;
     }
@@ -141,17 +141,17 @@ public class ViewManager
         var trigger = MainWindow.AddComponent<EventTrigger>();
         var entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((data) => { OnMainWindowEnter((PointerEventData)data); });
+        entry.callback.AddListener((data) => { OnMainDialogEnter((PointerEventData)data); });
         trigger.triggers.Add(entry);
         var exit = new EventTrigger.Entry();
         exit.eventID = EventTriggerType.PointerExit;
-        exit.callback.AddListener((data) => { OnMainWindowExit((PointerEventData)data); });
+        exit.callback.AddListener((data) => { OnMainDialogExit((PointerEventData)data); });
         trigger.triggers.Add(exit);
     }
 
     public void ShowTileCacheView(BaseTile tile)
     {
-        var inventory = new Inventory(200);
+        var inventory = new Inventory();
         for (int i = 0; i < 200; i++)
         {
             inventory.AddItem(new Item("Some item", i));
@@ -175,6 +175,6 @@ public class ViewManager
         foreach (Transform child in WindowContent.transform)
             GameObject.Destroy(child.gameObject);
         MainWindow.SetActive(false);
-        OnMainMenuClose();
+        OnMainDialogClose();
     }
 }

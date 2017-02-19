@@ -7,6 +7,7 @@ public abstract class BaseEntity : INotifyPropertyChanged
 {
     private float x;
     private float y;
+    private Inventory entityInventory;
 
     public const string XPropertyName = "X";
     public float X
@@ -38,12 +39,30 @@ public abstract class BaseEntity : INotifyPropertyChanged
         }
     }
 
+
+
     public float GetMaxSpeed()
     {
         return 1.5f;
     }
 
     public Job ActiveJob { get; set; }
+
+    public const string EntityInventoryPropertyName = "EntityInventory";
+    public Inventory EntityInventory
+    {
+        get
+        {
+            return entityInventory;
+        }
+
+        set
+        {
+            entityInventory = value;
+            OnPropertyChanged(EntityInventoryPropertyName);
+        }
+    }
+
     protected Queue<Job> JobQueue = new Queue<Job>();
 
     public EventHandler EntityDataChanged;

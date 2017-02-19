@@ -38,9 +38,9 @@ public class WorldController : MonoBehaviour
     void Start ()
     {
         viewMan = ViewManager.Instance;
-        viewMan.MainWindowEnter += OnPointerEnterWindow;
-        viewMan.MainWindowExit += OnPointerExitWindow;
-        viewMan.MainMenuClosed += OnMainMenuClosed;
+        viewMan.MainDialogEnter += OnPointerEnterWindow;
+        viewMan.MainDialogExit += OnPointerExitWindow;
+        viewMan.MainDialogClosed += OnMainMenuClosed;
 
         tileInfo = GetComponent<TileInfoView>();
 
@@ -77,7 +77,7 @@ public class WorldController : MonoBehaviour
 
         Debug.Log("StartX: " + startX + " StartY: " + startY + "startTile: " + startTile.X + "," + startTile.Y);
         
-        var playerEntity = new PlayerEntity();
+        var playerEntity = new HumanEntity();
         playerEntity.MoveEntityToTile(startTile);
 
         CenterCameraOnTile(startTile);
