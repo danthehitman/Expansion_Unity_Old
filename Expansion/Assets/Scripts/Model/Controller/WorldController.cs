@@ -55,7 +55,7 @@ public class WorldController : MonoBehaviour
         World.RevealedWidth = RevealedWidth;
 
         World.InitializeWorldComplex();
-        
+
         //Find a random start tile.
         var startTile = World.GetRandomLandTile();
 
