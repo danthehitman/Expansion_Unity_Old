@@ -46,45 +46,71 @@ public class TileExplorer
     private static ForageResults ExploreDesert(Random rand, HumanEntity entity)
     {
         var results = new ForageResults();
-        var roll = rand.Next(0, 70);
+        var roll = 0;
 
-        //Foraging Skills
+        //Skills stuff
         roll = rand.Next(0, 100);
-        if (roll + 10 <= entity.AdjustedForagingSkill)
-            results.LoseFur = rand.Next(1, 1);
+        if (roll + 10 <= entity.AdjustedSurvivalSkill)
+            results.LoseFur = 1;
 
         roll = rand.Next(0, 100);
-        var smallCarcasses = rand.Next(0,1);
-        if (roll <= entity.AdjustedForagingSkill)
+        if (roll + 10 <= entity.AdjustedSurvivalSkill)
+            results.Wood = rand.Next(2, 2);
+
+        roll = rand.Next(0, 100);
+        if (roll - 20 <= entity.AdjustedForagingSkill)
+            results.SmallBirdEggs = rand.Next(1, 2);
+
+        roll = rand.Next(0, 100);
+        if (roll - 30 <= entity.AdjustedForagingSkill)
+            results.MediumBirdEggs = 1;
+
+        roll = rand.Next(0, 100);
+        if (roll - 40 <= entity.AdjustedForagingSkill)
+            results.LargeBirdEggs = 1;
+
+        roll = rand.Next(0, 100);
+        if (roll - 20 <= entity.AdjustedForagingSkill)
+            results.Wood = rand.Next(12, 24);
+
+        // Chance there  are one or more small carcasses
+        if (rand.NextDouble() > .6f)
         {
-            var carcasses = rand.Next(1, 3);
-            results.SmallHide = rand.Next(1, 1) * carcasses;
-            results.SmallAnimalBones = rand.Next(1, 2) * carcasses;
-            results.SmallAnimalTeeth = rand.Next(1, 2) * carcasses;
-            results.SmallAnimalMeat = rand.Next(1, 2) * carcasses;
+            if (roll <= entity.AdjustedForagingSkill)
+            {
+                var carcasses = rand.Next(1, 2);
+                results.SmallHide = 1 * carcasses;
+                results.SmallAnimalBones = rand.Next(1, 2) * carcasses;
+                results.SmallAnimalTeeth = rand.Next(1, 2) * carcasses;
+                results.SmallAnimalMeat = rand.Next(1, 2) * carcasses;
+            }
         }
 
-        roll = rand.Next(0, 100);
-        if (roll <= entity.AdjustedForagingSkill)
+        // Chance there  are one or more large carcasses
+        if (rand.NextDouble() > .8f)
         {
-            var carcasses = rand.Next(1, 3);
-            results.SmallHide = rand.Next(1, 1) * carcasses;
-            results.SmallAnimalBones = rand.Next(1, 2) * carcasses;
-            results.SmallAnimalTeeth = rand.Next(1, 2) * carcasses;
-            results.SmallAnimalMeat = rand.Next(1, 2) * carcasses;
+            if (roll <= entity.AdjustedForagingSkill)
+            {
+                var carcasses = rand.Next(1, 3);
+                results.LargeHide = 1 * carcasses;
+                results.LargeAnimalBones = rand.Next(1, 2) * carcasses;
+                results.LargeAnimalTeeth = rand.Next(1, 2) * carcasses;
+                results.LargeAnimalMeat = rand.Next(1, 2) * carcasses;
+            }
         }
 
-        //Guaranteeds
-        if (roll <= entity.AdjustedForagingSkill)
+        //Guarantees
+        roll = rand.Next(0, 100);
+        if (roll -10 <= entity.AdjustedForagingSkill)
             results.Sticks = rand.Next(2, 3);
         else
             results.Sticks = 1;
 
-        roll = rand.Next(0, 70);
-        if (roll + 10 <= entity.AdjustedForagingSkill)
-            results.Wood = rand.Next(2, 2);
+        roll = rand.Next(0, 100);
+        if (roll <= entity.AdjustedSurvivalSkill)
+            results.Fruit = rand.Next(12, 24);
         else
-            results.Wood = 1;
+            results.Fruit = rand.Next(6, 10);
 
         results.LargeRocks = rand.Next(1, 1);
         results.SmallRocks = rand.Next(2, 10);
@@ -114,9 +140,12 @@ public class TileExplorer
 
         public int Nuts { get; set; }
         public int Berries { get; set; }
+        public int Fruit { get; set; }
         public int Cattails { get; set; }
         public int Seeds { get; set; }
 
-        public int BirdEggs { get; set; }
+        public int SmallBirdEggs { get; set; }
+        public int MediumBirdEggs { get; set; }
+        public int LargeBirdEggs { get; set; }
     }
 }

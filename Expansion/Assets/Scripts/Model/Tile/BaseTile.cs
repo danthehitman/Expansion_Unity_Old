@@ -36,10 +36,10 @@ public class BaseTile : INotifyPropertyChanged
 
     public void ExploreTile(object entity = null)
     {
-        var baseEntity = entity as BaseEntity;
-        if (baseEntity != null)
+        var human = entity as HumanEntity;
+        if (human != null)
         {
-            AddInventoryToCache(TileExplorer.ExploreTile(baseEntity, this));
+            AddInventoryToCache(TileExplorer.ExploreTile(human, this));
         }
         this.Explored = true;
         Debug.Log("Explored tile.");
