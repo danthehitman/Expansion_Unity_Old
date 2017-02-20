@@ -55,8 +55,7 @@ public class WorldController : MonoBehaviour
         World.RevealedWidth = RevealedWidth;
 
         World.InitializeWorldComplex();
-
-
+        
         //Find a random start tile.
         var startTile = World.GetRandomLandTile();
 
@@ -65,15 +64,15 @@ public class WorldController : MonoBehaviour
         //Make sure we can draw a revealed width/height from the start tile or go the other direction.
         var startX = startTile.X;
         var startY = startTile.Y;
-        if (startX + RevealedWidth > Width || startY + RevealedHeight > Height)
-        {
-            if (startX + RevealedWidth > Width)
-                startX = startX - RevealedWidth;
-            if (startY + RevealedHeight > Height)
-                startY = startY - RevealedHeight;
-            //If we had to change the start coords change the start tile.
-            startTile = World.GetTileAt(startX, startY);
-        }
+        //if (startX + RevealedWidth > Width || startY + RevealedHeight > Height)
+        //{
+        //    if (startX + RevealedWidth > Width)
+        //        startX = startX - RevealedWidth;
+        //    if (startY + RevealedHeight > Height)
+        //        startY = startY - RevealedHeight;
+        //    //If we had to change the start coords change the start tile.
+        //    startTile = World.GetTileAt(startX, startY);
+        //}
 
         Debug.Log("StartX: " + startX + " StartY: " + startY + "startTile: " + startTile.X + "," + startTile.Y);
         
@@ -85,9 +84,17 @@ public class WorldController : MonoBehaviour
         EntityController = new EntityController(playerEntity, World);
 
         //Loop through all of the tiles in the world and create view tiles for them.
-        for (int x = startX; x < startX + RevealedWidth; x++)
+        //for (int x = startX; x < startX + RevealedWidth; x++)
+        //{
+        //    for (int y = startY; y < startY + RevealedHeight; y++)
+        //    {
+        //        var tileData = World.GetTileAt(x, y);
+        //        SetTileViewAsWorldChild(CreateTileView(tileData));
+        //    }
+        //}
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = startY; y < startY + RevealedHeight; y++)
+            for (int y = 0; y < Height; y++)
             {
                 var tileData = World.GetTileAt(x, y);
                 SetTileViewAsWorldChild(CreateTileView(tileData));
