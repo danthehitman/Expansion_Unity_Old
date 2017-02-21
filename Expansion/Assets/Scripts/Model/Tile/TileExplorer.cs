@@ -4,25 +4,93 @@ public class TileExplorer
 {
     public static Inventory ExploreTile(HumanEntity entity, BaseTile tile)
     {
+        var rand = new Random();
         //Determine tile properties
+        RevealTile(entity, tile, rand);
         //Determine foraging haul
+        var inventory = ForageTile(entity, tile, rand);
         //Determine events (lost, special, etc...)
         //Determine effects of events
-        var inventory = RevealTile(entity, tile);
         return inventory;
     }
 
-    private static Inventory RevealTile(HumanEntity entity, BaseTile tile)
+    private static Inventory ForageTile(HumanEntity entity, BaseTile tile, Random rand)
     {
         var inventory = new Inventory();
-        var rand = new Random();
-        var biomeType = tile.TerrainData.BiomeType;
+        var resourceHaul = 0;
+        //Bark
+        resourceHaul = CalculateResourceHaul(2f, tile.TileResourceData.Bark, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Bark());
+        }
+        //Berries
+        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.Berries, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Berries());
+        }
+        //Bone
+        resourceHaul = CalculateResourceHaul(4f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < CalculateResourceHaul(4f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill); i++)
+        {
+            inventory.AddMaterial(new Bone() {Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(4f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < CalculateResourceHaul(4f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill); i++)
+        {
+            inventory.AddMaterial(new Bone() { Size = Resource.ResourceSize.Large });
+        }
+        //Teeth
+        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Large });
+        }
+        //Hide
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Hide() { Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Hide() { Size = Resource.ResourceSize.Large });
+        }
+        //Meat
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Meat() { Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(2f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Meat() { Size = Resource.ResourceSize.Large });
+        }
 
-        ForageResults forageResults = null;
+        return inventory;
+    }
+
+    private static int CalculateResourceHaul(float resourceBase, float tileMultiplier, float entityMultiplier)
+    {
+        var resourceFinal = (int)Math.Round((resourceBase * tileMultiplier) * entityMultiplier);
+        return resourceFinal;
+    }
+
+    private static void RevealTile(HumanEntity entity, BaseTile tile, Random rand)
+    {
+        var biomeType = tile.TerrainData.BiomeType;
         switch (biomeType)
         {
             case BiomeType.Desert:
-                forageResults = RevealDesert(rand, tile, entity);
+                RevealDesert(rand, tile, entity);
                 break;
             case BiomeType.Savanna:
                 break;
@@ -43,48 +111,24 @@ public class TileExplorer
             case BiomeType.Ice:
                 break;
         }
-
-        return inventory;
     }
 
-    private static ForageResults RevealDesert(Random rand, BaseTile tile,  HumanEntity entity)
+    private static void RevealDesert(Random rand, BaseTile tile, HumanEntity entity)
     {
-        var results = new ForageResults();
-        
-
-        return results;
+        tile.TileResourceData.Bark = CalculateResourceAvailabilityMultiplier(2f,
+            entity.AdjustedSurvivalSkill, rand);
+        tile.TileResourceData.Berries = CalculateResourceAvailabilityMultiplier(12f,
+            entity.AdjustedSurvivalSkill, rand);
+        tile.TileResourceData.SmallAnimals = CalculateResourceAvailabilityMultiplier(2f,
+            entity.AdjustedExplorationSkill, rand);
+        tile.TileResourceData.LargeAnimals = CalculateResourceAvailabilityMultiplier(1f,
+            entity.AdjustedExplorationSkill, rand);
     }
 
-    internal class ForageResults
+    private static float CalculateResourceAvailabilityMultiplier(float resourceBase, float entityMultiplier, Random rand)
     {
-        public int Sticks { get; set; }
-        public int Wood { get; set; }
-        public int Bark { get; set; }
-        public int Roots { get; set; }
-        public int LoseFur { get; set; }
-        public int LargeRocks { get; set; }
-        public int SmallRocks { get; set; }
-        public int BroadLeaf { get; set; }
-        public int ThinLeaf { get; set; }
-        public int Moss { get; set; }
-        public int Weeds { get; set; }
-        public int Grass { get; set; }
-
-        public int SmallHide { get; set; }
-        public int SmallAnimalBones { get; set; }
-        public int SmallAnimalTeeth { get; set; }
-        public int SmallAnimalMeat { get; set; }
-        public int LargeHide { get; set; }
-        public int LargeAnimalBones { get; set; }
-        public int LargeAnimalTeeth { get; set; }
-        public int LargeAnimalMeat { get; set; }
-
-        public int Nuts { get; set; }
-        public int Berries { get; set; }
-        public int Fruit { get; set; }
-        public int Cactus { get; set; }
-        public int Seeds { get; set; }
-
-        public int BirdEggs { get; set; }
+        var roll = rand.NextDouble();
+        var resourceFinal = (float)(resourceBase * roll) * entityMultiplier;
+        return resourceFinal;
     }
 }

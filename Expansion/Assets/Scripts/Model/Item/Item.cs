@@ -1,21 +1,19 @@
 ﻿public class Item : IInventoryObject
 {
     public string Name { get; set; }
-    public int Id { get; set; }
+    public string DisplayText { get; set; }
+    public string InventorySpriteName { get; set; }
 
-    public Item(string name, int id)
+    public Item(string name)
     {
         Name = name;
-        Id = id;
-    }
-    enum ItemType
-    {
-
     }
 
     public string GetDisplayText()
     {
-        return string.Format("Name:{0}", Id);
+        if (DisplayText == null)
+            return Name;
+        return DisplayText;
     }
 
     public string GetInventorySprite()

@@ -10,6 +10,7 @@ public class WorldController : MonoBehaviour
     private int frames = 0;
     private float fps;
     private TileInfoView tileInfo;
+    private PlayerInfoView playerInfo;
 
     public static WorldController Instance;
     public EntityController EntityController;
@@ -43,6 +44,7 @@ public class WorldController : MonoBehaviour
         viewMan.MainDialogClosed += OnMainMenuClosed;
 
         tileInfo = GetComponent<TileInfoView>();
+        playerInfo = GetComponent<PlayerInfoView>();
 
         lastInterval = Time.realtimeSinceStartup;
         frames = 0;
@@ -78,6 +80,8 @@ public class WorldController : MonoBehaviour
         
         var playerEntity = new HumanEntity();
         playerEntity.MoveEntityToTile(startTile);
+
+        playerInfo.UpdateInfo(playerEntity);
 
         CenterCameraOnTile(startTile);
 

@@ -1,4 +1,6 @@
-﻿public class HumanEntity : BaseEntity
+﻿using UnityEngine;
+
+public class HumanEntity : BaseEntity
 {
     //Stats
     private int health;
@@ -6,31 +8,6 @@
     private int thirst;
     private int fatigue;
     private int morale;
-
-    //Skills
-    private float agricultureSkill;
-    private float foragingSkill;
-    private float huntingSkill;
-    private float buildingSkill;
-    private float fishingSkill;
-    private float fightingSkill;
-    private float miningSkill;
-    private float husbandrySkill;
-    private float survivalSkill;
-    private float camoSkill;
-
-    private float adjustedAgricultureSkill;
-    private float adjustedForagingSkill;
-    private float adjustedHuntingSkill;
-    private float adjustedFishingSkill;
-    private float adjustedFightingSkill;
-    private float adjustedMininSkill;
-    private float adjustedHusbandrySkill;
-    private float adjustedSurvivalSkill;
-    private float adjustedCamoSkill;
-
-    //Traits
-    private float constitutionTrait;  
 
     public const string HealthPropertyName = "Health";
     public int Health
@@ -107,308 +84,56 @@
         }
     }
 
-    public const string AgricultureSkillPropertyName = "AgricultureSkill";
-    public float AgricultureSkill
-    {
-        get
-        {
-            return agricultureSkill;
-        }
 
-        set
-        {
-            agricultureSkill = value;
-            OnPropertyChanged(AgricultureSkillPropertyName);
-        }
-    }
 
-    public const string ForagingSkillPropertyName = "ForagingSkill";
-    public float ForagingSkill
-    {
-        get
-        {
-            return foragingSkill;
-        }
+    //Skills
+    public float AgricultureSkill { get; set; }
+    public float ArchiologicalSkill { get; set; }
+    public float ResearchSkill { get; set; }
+    public float ExplorationSkill { get; set; }
+    public float ForagingSkill { get; set; }
+    public float HuntingSkill { get; set; }
+    public float BuildingSkill { get; set; }
+    public float FishingSkill { get; set; }
+    public float FightingSkill { get; set; }
+    public float MiningSkill { get; set; }
+    public float HusbandrySkill { get; set; }
+    public float SurvivalSkill { get; set; }
+    public float CamoSkill { get; set; }
 
-        set
-        {
-            foragingSkill = value;
-            OnPropertyChanged(ForagingSkillPropertyName);
-        }
-    }
+    public float AdjustedAgricultureSkill { get; set; }
+    public float AdjustedArchiologicalSkill { get; set; }
+    public float AdjustedResearchSkill { get; set; }
+    public float AdjustedExplorationSkill { get; set; }
+    public float AdjustedForagingSkill { get; set; }
+    public float AdjustedHuntingSkill { get; set; }
+    public float AdjustedBuildingSkill { get; set; }
+    public float AdjustedFishingSkill { get; set; }
+    public float AdjustedFightingSkill { get; set; }
+    public float AdjustedMiningSkill { get; set; }
+    public float AdjustedHusbandrySkill { get; set; }
+    public float AdjustedSurvivalSkill { get; set; }
+    public float AdjustedCamoSkill { get; set; }
 
-    public const string HuntingSkillPropertyName = "HuntingSkill";
-    public float HuntingSkill
-    {
-        get
-        {
-            return huntingSkill;
-        }
-
-        set
-        {
-            huntingSkill = value;
-            OnPropertyChanged(HuntingSkillPropertyName);
-        }
-    }
-
-    public const string BuildingSkillPropertyName = "BuildingSkill";
-    public float BuildingSkill
-    {
-        get
-        {
-            return buildingSkill;
-        }
-
-        set
-        {
-            buildingSkill = value;
-            OnPropertyChanged(BuildingSkillPropertyName);
-        }
-    }
-
-    public const string FishingSkilllPropertyName = "FishingSkill";
-    public float FishingSkill
-    {
-        get
-        {
-            return fishingSkill;
-        }
-
-        set
-        {
-            fishingSkill = value;
-            OnPropertyChanged(FishingSkilllPropertyName);
-        }
-    }
-
-    public const string FightingSkillPropertyName = "FightingSkill";
-    public float FightingSkill
-    {
-        get
-        {
-            return fightingSkill;
-        }
-
-        set
-        {
-            fightingSkill = value;
-            OnPropertyChanged(FightingSkillPropertyName);
-        }
-    }
-
-    public const string MiningSkillPropertyName = "MiningSkill";
-    public float MiningSkill
-    {
-        get
-        {
-            return miningSkill;
-        }
-
-        set
-        {
-            miningSkill = value;
-            OnPropertyChanged(MiningSkillPropertyName);
-        }
-    }
-
-    public const string HusbandrySkillPropertyName = "HusbandrySkill";
-    public float HusbandrySkill
-    {
-        get
-        {
-            return husbandrySkill;
-        }
-
-        set
-        {
-            husbandrySkill = value;
-            OnPropertyChanged(HusbandrySkillPropertyName);
-        }
-    }
-
-    public const string SurvivalSkillPropertyName = "SurvivalSkill";
-    public float SurvivalSkill
-    {
-        get
-        {
-            return survivalSkill;
-        }
-
-        set
-        {
-            survivalSkill = value;
-            OnPropertyChanged(SurvivalSkillPropertyName);
-        }
-    }
-
-    public const string CamoSkillPropertyName = "CamoSkill";
-    public float CamoSkill
-    {
-        get
-        {
-            return camoSkill;
-        }
-
-        set
-        {
-            camoSkill = value;
-            OnPropertyChanged(CamoSkillPropertyName);
-        }
-    }
-
-    public const string ConstitutionTraitPropertyName = "ConstitutionTrait";
-    public float ConstitutionTrait
-    {
-        get
-        {
-            return constitutionTrait;
-        }
-
-        set
-        {
-            constitutionTrait = value;
-            OnPropertyChanged(ConstitutionTraitPropertyName);
-        }
-    }
-
-    public const string AAdjustedAgricultureSkillPropertyName = "AdjustedAgricultureSkill";
-    public float AdjustedAgricultureSkill
-    {
-        get
-        {
-            return adjustedAgricultureSkill;
-        }
-
-        set
-        {
-            adjustedAgricultureSkill = value;
-            OnPropertyChanged(AAdjustedAgricultureSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedForagingSkillPropertyName = "AdjustedForagingSkill";
-    public float AdjustedForagingSkill
-    {
-        get
-        {
-            return adjustedForagingSkill;
-        }
-
-        set
-        {
-            adjustedForagingSkill = value;
-            OnPropertyChanged(AdjustedForagingSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedHuntingSkillPropertyName = "AdjustedHuntingSkill";
-    public float AdjustedHuntingSkill
-    {
-        get
-        {
-            return adjustedHuntingSkill;
-        }
-
-        set
-        {
-            adjustedHuntingSkill = value;
-            OnPropertyChanged(AdjustedHuntingSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedFishingSkillPropertyName = "AdjustedFishingSkill";
-    public float AdjustedFishingSkill
-    {
-        get
-        {
-            return adjustedFishingSkill;
-        }
-
-        set
-        {
-            adjustedFishingSkill = value;
-            OnPropertyChanged(AdjustedFishingSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedFightingSkillPropertyName = "AdjustedFightingSkill";
-    public float AdjustedFightingSkill
-    {
-        get
-        {
-            return adjustedFightingSkill;
-        }
-
-        set
-        {
-            adjustedFightingSkill = value;
-            OnPropertyChanged(AdjustedFightingSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedMininSkillPropertyName = "AdjustedMininSkill";
-    public float AdjustedMininSkill
-    {
-        get
-        {
-            return adjustedMininSkill;
-        }
-
-        set
-        {
-            adjustedMininSkill = value;
-            OnPropertyChanged(AdjustedMininSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedHusbandrySkillPropertyName = "AdjustedHusbandrySkill";
-    public float AdjustedHusbandrySkill
-    {
-        get
-        {
-            return adjustedHusbandrySkill;
-        }
-
-        set
-        {
-            adjustedHusbandrySkill = value;
-            OnPropertyChanged(AdjustedHusbandrySkillPropertyName);
-        }
-    }
-
-    public const string AdjustedSurvivalSkillPropertyName = "AdjustedSurvivalSkill";
-    public float AdjustedSurvivalSkill
-    {
-        get
-        {
-            return adjustedSurvivalSkill;
-        }
-
-        set
-        {
-            adjustedSurvivalSkill = value;
-            OnPropertyChanged(AdjustedSurvivalSkillPropertyName);
-        }
-    }
-
-    public const string AdjustedCamoSkillPropertyName = "AdjustedCamoSkill";
-    public float AdjustedCamoSkill
-    {
-        get
-        {
-            return adjustedCamoSkill;
-        }
-
-        set
-        {
-            adjustedCamoSkill = value;
-            OnPropertyChanged(AdjustedCamoSkillPropertyName);
-        }
-    }
+    //Traits
+    public float ConstitutionTrait { get; set; }
 
     public HumanEntity()
     {
+        AdjustedAgricultureSkill = Random.Range(0.1f, 2f);
+        AdjustedArchiologicalSkill = Random.Range(0.1f, 2f);
+        AdjustedResearchSkill = Random.Range(0.1f, 2f);
+        AdjustedExplorationSkill = Random.Range(0.1f, 2f);
+        AdjustedForagingSkill = Random.Range(0.1f, 2f);
+        AdjustedHuntingSkill = Random.Range(0.1f, 2f);
+        AdjustedBuildingSkill = Random.Range(0.1f, 2f);
+        AdjustedFishingSkill = Random.Range(0.1f, 2f);
+        AdjustedFightingSkill = Random.Range(0.1f, 2f);
+        AdjustedMiningSkill = Random.Range(0.1f, 2f);
+        AdjustedHusbandrySkill = Random.Range(0.1f, 2f);
+        AdjustedSurvivalSkill = Random.Range(0.1f, 2f);
+        AdjustedCamoSkill = Random.Range(0.1f, 2f);
+
         X = 1;
         Y = 1;
         Health = 100;

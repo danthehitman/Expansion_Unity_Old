@@ -1,6 +1,8 @@
 ﻿public class TileResourceInfo
 {
-    public float WoodStuffs { get; set; }
+    public float Bark { get; set; }
+    public float Wood { get; set; }
+    public float Sticks { get; set; }
     public float LargeAnimals { get; set; }
     public float SmallAnimals { get; set; }
     public float Insects { get; set; }

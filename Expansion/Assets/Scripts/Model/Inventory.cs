@@ -5,7 +5,7 @@ using System.Linq;
 public class Inventory : INotifyPropertyChanged
 {
     private List<Item> items;
-    private List<Material> materials;
+    private List<Resource> materials;
 
     public const string ItemsPropertyName = "Items";
     public List<Item> Items
@@ -24,7 +24,7 @@ public class Inventory : INotifyPropertyChanged
     }
 
     public const string MaterialsPropertyName = "Materials";
-    public List<Material> Materials
+    public List<Resource> Materials
     {
         get
         {
@@ -46,7 +46,7 @@ public class Inventory : INotifyPropertyChanged
         OnPropertyChanged(InventoryObjectsPropertyName);
     }
 
-    public void AddMaterial(Material material)
+    public void AddMaterial(Resource material)
     {
         Materials.Add(material);
         OnPropertyChanged(MaterialsPropertyName);
@@ -65,7 +65,7 @@ public class Inventory : INotifyPropertyChanged
     public Inventory()
     {
         items = new List<Item>();
-        materials = new List<Material>();
+        materials = new List<Resource>();
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

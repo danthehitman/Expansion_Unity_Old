@@ -154,9 +154,9 @@ public class ViewManager
         var inventory = new Inventory();
         for (int i = 0; i < 200; i++)
         {
-            inventory.AddItem(new Item("Some item", i));
+            inventory.AddItem(new Item("Some item " + i));
         }
-        tile.Cache = new TileCache() { CacheInventory = inventory };
+        //tile.Cache = new TileCache() { CacheInventory = inventory };
         
         TileCacheView iv = new TileCacheView(WindowContent, 600, 560, tile.Cache);
         ShowMainWindow(600, 600, "Tile Cache");

@@ -15,7 +15,8 @@ public class BaseTile : INotifyPropertyChanged
 
     public TileCache Cache { get; set; }
 
-    public bool Explored { get; set; }
+    public int TimesExplored { get; set; }
+    public int TimesSurveyed { get; set; }
 
     public EventHandler TileDataChanged;
 
@@ -43,13 +44,13 @@ public class BaseTile : INotifyPropertyChanged
         {
             AddInventoryToCache(TileExplorer.ExploreTile(human, this));
         }
-        this.Explored = true;
+        TimesExplored++;
         Debug.Log("Explored tile.");
     }
 
     public void AddInventoryToCache(Inventory inventory)
     {
-
+        Cache.CacheInventory = inventory;
     }
 
     protected void OnPropertyChanged(PropertyChangedEventArgs e)

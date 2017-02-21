@@ -7,7 +7,7 @@
         inventory.Items.Add(item);
     }
 
-    public void AddMaterialToInventory(Material material)
+    public void AddMaterialToInventory(Resource material)
     {
         inventory.Materials.Add(material);
     }
