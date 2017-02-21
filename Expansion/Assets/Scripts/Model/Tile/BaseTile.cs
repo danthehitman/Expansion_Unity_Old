@@ -6,6 +6,7 @@ using UnityEngine;
 public class BaseTile : INotifyPropertyChanged
 {
     public TerrainInfo TerrainData  { get; set; }
+    public TileResourceInfo TileResourceData { get; set; }
 
     public BaseTile Left { get; set; }
     public BaseTile Right { get; set; }
@@ -30,6 +31,7 @@ public class BaseTile : INotifyPropertyChanged
         X = x;
         Y = y;
         TerrainData = new TerrainInfo();
+        TileResourceData = new TileResourceInfo();
         TerrainData.Rivers = new List<River>();
         Cache = new TileCache();
     }
