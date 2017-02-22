@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryView
@@ -28,10 +29,11 @@ public class InventoryView
         
         var scrollRect = CreateScrollRect(inventoryGameObject);
 
-        foreach (var item in ViewInventory.InventoryObjects)
+        foreach (var item in ViewInventory.InventoryObjects.GroupBy(i => i.GetDisplayText())
+        .ToDictionary(gdc => gdc.Key, gdc => gdc.ToList()))
         {
-            var textObject = GetInventoryObjectContainer(item.GetDisplayText(),
-                SpriteManager.Instance.GetSpriteByName(item.GetInventorySprite()), 100, 50);
+            var textObject = GetInventoryObjectContainer(item.Key + " (" + item.Value.Count + ")",
+                SpriteManager.Instance.GetSpriteByName(item.Value.First().GetInventorySprite()), 100, 50);
             textObject.transform.SetParent(contentContainer.transform);
             textObject.transform.position = contentContainer.position;
         }
