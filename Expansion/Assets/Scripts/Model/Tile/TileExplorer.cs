@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using UnityEngine;
 
 public class TileExplorer
 {
@@ -6,15 +8,15 @@ public class TileExplorer
     {
         var rand = new Random();
         //Determine tile properties
-        RevealTile(entity, tile, rand);
+        RevealTile(entity, tile);
         //Determine foraging haul
-        var inventory = ForageTile(entity, tile, rand);
+        var inventory = ForageTile(entity, tile);
         //Determine events (lost, special, etc...)
         //Determine effects of events
         return inventory;
     }
 
-    private static Inventory ForageTile(HumanEntity entity, BaseTile tile, Random rand)
+    private static Inventory ForageTile(HumanEntity entity, BaseTile tile)
     {
         var inventory = new Inventory();
         var resourceHaul = 0;
@@ -25,7 +27,7 @@ public class TileExplorer
             inventory.AddMaterial(new Bark());
         }
         //Berries
-        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.Berries, entity.AdjustedForagingSkill);
+        resourceHaul = CalculateResourceHaul(6f, tile.TileResourceData.Berries, entity.AdjustedForagingSkill);
         for (int i = 0; i < resourceHaul; i++)
         {
             inventory.AddMaterial(new Berries());
@@ -41,16 +43,29 @@ public class TileExplorer
         {
             inventory.AddMaterial(new Bone() { Size = Resource.ResourceSize.Large });
         }
-        //Teeth
-        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        //Cactus
+        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.CactusStuffs, entity.AdjustedForagingSkill);
         for (int i = 0; i < resourceHaul; i++)
         {
-            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Small });
+            inventory.AddMaterial(new Cactus());
         }
-        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        //Egg
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.Birds, entity.AdjustedForagingSkill);
         for (int i = 0; i < resourceHaul; i++)
         {
-            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Large });
+            inventory.AddMaterial(new Egg());
+        }
+        //Fruit
+        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.Fruit, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Fruit());
+        }
+        //Grass
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.Grasses, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Grass());
         }
         //Hide
         resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
@@ -63,6 +78,30 @@ public class TileExplorer
         {
             inventory.AddMaterial(new Hide() { Size = Resource.ResourceSize.Large });
         }
+        //Broad Leaf
+        resourceHaul = CalculateResourceHaul(2f, tile.TileResourceData.BroadLeaf, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new BroadLeaf());
+        }
+        //Long Leaf
+        resourceHaul = CalculateResourceHaul(2f, tile.TileResourceData.LongLeaf, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new LongLeaf());
+        }
+        //Small Leaf
+        resourceHaul = CalculateResourceHaul(6f, tile.TileResourceData.SmallLeaf, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new SmallLeaf());
+        }
+        //Lose Fur
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new LoseFur());
+        }
         //Meat
         resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
         for (int i = 0; i < resourceHaul; i++)
@@ -74,23 +113,46 @@ public class TileExplorer
         {
             inventory.AddMaterial(new Meat() { Size = Resource.ResourceSize.Large });
         }
+        //Teeth
+        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Large });
+        }
+        //Moss
+        resourceHaul = CalculateResourceHaul(2f, tile.TileResourceData.Mosses, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Moss());
+        }
+        //Nuts
+        resourceHaul = CalculateResourceHaul(1f, tile.TileResourceData.Nuts, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Nuts());
+        }
 
         return inventory;
     }
 
     private static int CalculateResourceHaul(float resourceBase, float tileMultiplier, float entityMultiplier)
     {
-        var resourceFinal = (int)Math.Round((resourceBase * tileMultiplier) * entityMultiplier);
+        var resourceFinal = (int)System.Math.Round((resourceBase * tileMultiplier) * entityMultiplier);
         return resourceFinal;
     }
 
-    private static void RevealTile(HumanEntity entity, BaseTile tile, Random rand)
+    private static void RevealTile(HumanEntity entity, BaseTile tile)
     {
         var biomeType = tile.TerrainData.BiomeType;
         switch (biomeType)
         {
             case BiomeType.Desert:
-                RevealDesert(rand, tile, entity);
+                RevealDesert(tile, entity);
                 break;
             case BiomeType.Savanna:
                 break;
@@ -113,21 +175,21 @@ public class TileExplorer
         }
     }
 
-    private static void RevealDesert(Random rand, BaseTile tile, HumanEntity entity)
+    private static void RevealDesert(BaseTile tile, HumanEntity entity)
     {
         tile.TileResourceData.Bark = CalculateResourceAvailabilityMultiplier(2f,
-            entity.AdjustedSurvivalSkill, rand);
+            entity.AdjustedSurvivalSkill);
         tile.TileResourceData.Berries = CalculateResourceAvailabilityMultiplier(12f,
-            entity.AdjustedSurvivalSkill, rand);
+            entity.AdjustedSurvivalSkill);
         tile.TileResourceData.SmallAnimals = CalculateResourceAvailabilityMultiplier(2f,
-            entity.AdjustedExplorationSkill, rand);
+            entity.AdjustedExplorationSkill);
         tile.TileResourceData.LargeAnimals = CalculateResourceAvailabilityMultiplier(1f,
-            entity.AdjustedExplorationSkill, rand);
+            entity.AdjustedExplorationSkill);
     }
 
-    private static float CalculateResourceAvailabilityMultiplier(float resourceBase, float entityMultiplier, Random rand)
+    private static float CalculateResourceAvailabilityMultiplier(float resourceBase, float entityMultiplier)
     {
-        var roll = rand.NextDouble();
+        var roll = Random.Range(0.5f, 2f);
         var resourceFinal = (float)(resourceBase * roll) * entityMultiplier;
         return resourceFinal;
     }

@@ -23,7 +23,7 @@
         InventorySpriteName = inventorySprite;
     }
 
-    public string GetDisplayText()
+    public virtual string GetDisplayText()
     {
         if (DisplayText == null)
             return Name;

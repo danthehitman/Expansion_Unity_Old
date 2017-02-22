@@ -3,6 +3,9 @@
     public float Bark { get; set; }
     public float Wood { get; set; }
     public float Sticks { get; set; }
+    public float SmallLeaf { get; set; }
+    public float BroadLeaf { get; set; }
+    public float LongLeaf { get; set; }
     public float LargeAnimals { get; set; }
     public float SmallAnimals { get; set; }
     public float Insects { get; set; }
@@ -14,6 +17,7 @@
     public float CactusStuffs { get; set; }
     public float Nuts { get; set; }
     public float Berries { get; set; }
+    public float Fruit { get; set; }
     public float Seeds { get; set; }
     public float Birds { get; set; }
 }

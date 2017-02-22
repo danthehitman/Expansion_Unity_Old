@@ -120,19 +120,33 @@ public class HumanEntity : BaseEntity
 
     public HumanEntity()
     {
-        AdjustedAgricultureSkill = Random.Range(0.1f, 2f);
-        AdjustedArchiologicalSkill = Random.Range(0.1f, 2f);
-        AdjustedResearchSkill = Random.Range(0.1f, 2f);
-        AdjustedExplorationSkill = Random.Range(0.1f, 2f);
-        AdjustedForagingSkill = Random.Range(0.1f, 2f);
-        AdjustedHuntingSkill = Random.Range(0.1f, 2f);
-        AdjustedBuildingSkill = Random.Range(0.1f, 2f);
-        AdjustedFishingSkill = Random.Range(0.1f, 2f);
-        AdjustedFightingSkill = Random.Range(0.1f, 2f);
-        AdjustedMiningSkill = Random.Range(0.1f, 2f);
-        AdjustedHusbandrySkill = Random.Range(0.1f, 2f);
-        AdjustedSurvivalSkill = Random.Range(0.1f, 2f);
-        AdjustedCamoSkill = Random.Range(0.1f, 2f);
+        AdjustedAgricultureSkill = Random.Range(0.1f, 0.5f);
+        AdjustedArchiologicalSkill = Random.Range(0.1f, 0.5f);
+        AdjustedResearchSkill = Random.Range(0.1f, 0.5f);
+        AdjustedExplorationSkill = Random.Range(0.1f, 0.5f);
+        AdjustedForagingSkill = Random.Range(0.1f, 0.5f);
+        AdjustedHuntingSkill = Random.Range(0.1f, 0.5f);
+        AdjustedBuildingSkill = Random.Range(0.1f, 0.5f);
+        AdjustedFishingSkill = Random.Range(0.1f, 0.5f);
+        AdjustedFightingSkill = Random.Range(0.1f, 0.5f);
+        AdjustedMiningSkill = Random.Range(0.1f, 0.5f);
+        AdjustedHusbandrySkill = Random.Range(0.1f, 0.5f);
+        AdjustedSurvivalSkill = Random.Range(0.1f, 0.5f);
+        AdjustedCamoSkill = Random.Range(0.1f, 0.5f);
+
+        //AdjustedAgricultureSkill = Random.Range(1f, 2f);
+        //AdjustedArchiologicalSkill = Random.Range(1f, 2f);
+        //AdjustedResearchSkill = Random.Range(1f, 2f);
+        //AdjustedExplorationSkill = Random.Range(1f, 2f);
+        //AdjustedForagingSkill = Random.Range(1f, 2f);
+        //AdjustedHuntingSkill = Random.Range(1f, 2f);
+        //AdjustedBuildingSkill = Random.Range(1f, 2f);
+        //AdjustedFishingSkill = Random.Range(1f, 2f);
+        //AdjustedFightingSkill = Random.Range(1f, 2f);
+        //AdjustedMiningSkill = Random.Range(1f, 2f);
+        //AdjustedHusbandrySkill = Random.Range(1f, 2f);
+        //AdjustedSurvivalSkill = Random.Range(1f, 2f);
+        //AdjustedCamoSkill = Random.Range(1f, 2f);
 
         X = 1;
         Y = 1;

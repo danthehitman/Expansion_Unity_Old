@@ -128,7 +128,7 @@ public class InventoryView
 
         //Set the content container
         contentContainer = contentList.GetComponent<RectTransform>();
-        var contentHeight = 200 * 11f;
+        var contentHeight = ViewInventory.InventoryObjects.Count * 11.5f;
         contentContainer.position = new Vector3(0, contentHeight / 2 * -1, 0);
         contentContainer.sizeDelta = new Vector2(Width, contentHeight);
 

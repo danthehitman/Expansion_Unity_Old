@@ -4,6 +4,10 @@
 
     public SizedResource(string name) : base(name)
     {
+    }
 
+    public override string GetDisplayText()
+    {        
+        return base.GetDisplayText() + " - " + Size.ToString();
     }
 }
