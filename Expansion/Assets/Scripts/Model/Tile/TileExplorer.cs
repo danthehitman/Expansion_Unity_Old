@@ -113,17 +113,6 @@ public class TileExplorer
         {
             inventory.AddMaterial(new Meat() { Size = Resource.ResourceSize.Large });
         }
-        //Teeth
-        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
-        for (int i = 0; i < resourceHaul; i++)
-        {
-            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Small });
-        }
-        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
-        for (int i = 0; i < resourceHaul; i++)
-        {
-            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Large });
-        }
         //Moss
         resourceHaul = CalculateResourceHaul(2f, tile.TileResourceData.Mosses, entity.AdjustedForagingSkill);
         for (int i = 0; i < resourceHaul; i++)
@@ -135,6 +124,58 @@ public class TileExplorer
         for (int i = 0; i < resourceHaul; i++)
         {
             inventory.AddMaterial(new Nuts());
+        }
+        //Rocks
+        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.SmallRocks, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Rock() { Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(6f, tile.TileResourceData.LargeRocks, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Rock() { Size = Resource.ResourceSize.Large });
+        }
+        //Roots
+        resourceHaul = CalculateResourceHaul(4f, tile.TileResourceData.Roots, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Roots());
+        }
+        //Seeds
+        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.Seeds, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Seeds());
+        }
+        //Sticks
+        resourceHaul = CalculateResourceHaul(12f, tile.TileResourceData.Sticks, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Stick());
+        }
+        //Teeth
+        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.SmallAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Small });
+        }
+        resourceHaul = CalculateResourceHaul(8f, tile.TileResourceData.LargeAnimals, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Teeth() { Size = Resource.ResourceSize.Large });
+        }
+        //Weeds
+        resourceHaul = CalculateResourceHaul(6f, tile.TileResourceData.Weeds, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Weed());
+        }
+        //Wood
+        resourceHaul = CalculateResourceHaul(4f, tile.TileResourceData.Wood, entity.AdjustedForagingSkill);
+        for (int i = 0; i < resourceHaul; i++)
+        {
+            inventory.AddMaterial(new Wood());
         }
 
         return inventory;
@@ -185,6 +226,14 @@ public class TileExplorer
             entity.AdjustedExplorationSkill);
         tile.TileResourceData.LargeAnimals = CalculateResourceAvailabilityMultiplier(1f,
             entity.AdjustedExplorationSkill);
+        tile.TileResourceData.BroadLeaf = CalculateResourceAvailabilityMultiplier(0f,
+            entity.AdjustedExplorationSkill);
+        tile.TileResourceData.CactusStuffs = CalculateResourceAvailabilityMultiplier(0f,
+            entity.AdjustedExplorationSkill);
+        tile.TileResourceData.Birds = CalculateResourceAvailabilityMultiplier(.75f,
+            entity.AdjustedSurvivalSkill);
+        tile.TileResourceData.Fruit = CalculateResourceAvailabilityMultiplier(.75f,
+            entity.AdjustedSurvivalSkill);
     }
 
     private static float CalculateResourceAvailabilityMultiplier(float resourceBase, float entityMultiplier)

@@ -6,6 +6,7 @@
     public float SmallLeaf { get; set; }
     public float BroadLeaf { get; set; }
     public float LongLeaf { get; set; }
+    public float Roots { get; set; }
     public float LargeAnimals { get; set; }
     public float SmallAnimals { get; set; }
     public float Insects { get; set; }
@@ -20,4 +21,6 @@
     public float Fruit { get; set; }
     public float Seeds { get; set; }
     public float Birds { get; set; }
+    public float LargeRocks { get; set; }
+    public float SmallRocks { get; set; }
 }

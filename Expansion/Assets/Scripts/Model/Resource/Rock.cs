@@ -1,4 +1,4 @@
-﻿public class Rock : Resource
+﻿public class Rock : SizedResource
 {
     public Rock() : base("Rock")
     {
