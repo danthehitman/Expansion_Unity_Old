@@ -5,18 +5,13 @@ using UnityEngine.UI;
 public class ContextMenuView {
 
     private List<ContextAction> actions { get; set; }
+    private GameObject Parent;
     public GameObject GameObject = null;
 
     // Use this for initialization
     public ContextMenuView(GameObject parent)
     {
-        GameObject = UIHelper.GetRectImageGameObject(100, 100, new Color(.2f, .2f, .2f, .95f),
-            "ContextMenu", parent.transform);
-        var vertGroup = GameObject.AddComponent<VerticalLayoutGroup>();
-        vertGroup.childForceExpandHeight = true;
-        vertGroup.childForceExpandWidth = true;
-        vertGroup.childAlignment = TextAnchor.UpperLeft;
-        GameObject.SetActive(false);
+        Parent = parent;
     }
 
     public void ShowMenu(List<ContextAction> actionsArg, Vector3 position)
@@ -30,19 +25,31 @@ public class ContextMenuView {
     {
         ClearInterface();
         actions = null;
-        GameObject.SetActive(false);
     }
 
     private void ClearInterface()
     {
-        foreach(Transform child in GameObject.transform)
+        if (GameObject != null)
         {
-            GameObject.Destroy(child.gameObject);
+            foreach (Transform child in GameObject.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+            GameObject.Destroy(GameObject);
         }
     }
 
     private void BuildInterface(Vector3 position)
-    {        
+    {
+
+        GameObject = UIHelper.GetRectImageGameObject(1, 1, new Color(.2f, .2f, .2f, .95f),
+            "ContextMenu", Parent.transform);
+        var vertGroup = GameObject.AddComponent<VerticalLayoutGroup>();
+        vertGroup.childForceExpandHeight = true;
+        vertGroup.childForceExpandWidth = true;
+        vertGroup.childAlignment = TextAnchor.UpperLeft;
+        GameObject.SetActive(false);
+
         //If we dont have any actions to perform dont show the interface.
         if (actions == null || actions.Count == 0)
             return;

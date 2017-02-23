@@ -100,6 +100,7 @@ public class HumanEntity : BaseEntity
     public float HusbandrySkill { get; set; }
     public float SurvivalSkill { get; set; }
     public float CamoSkill { get; set; }
+    public float NaviationSkill { get; set; }
 
     public float AdjustedAgricultureSkill { get; set; }
     public float AdjustedArchiologicalSkill { get; set; }
@@ -114,6 +115,7 @@ public class HumanEntity : BaseEntity
     public float AdjustedHusbandrySkill { get; set; }
     public float AdjustedSurvivalSkill { get; set; }
     public float AdjustedCamoSkill { get; set; }
+    public float AdjustedNaviationSkill { get; set; }
 
     //Traits
     public float ConstitutionTrait { get; set; }
@@ -133,6 +135,7 @@ public class HumanEntity : BaseEntity
         AdjustedHusbandrySkill = Random.Range(0.1f, 0.5f);
         AdjustedSurvivalSkill = Random.Range(0.1f, 0.5f);
         AdjustedCamoSkill = Random.Range(0.1f, 0.5f);
+        AdjustedNaviationSkill = Random.Range(0.1f, 0.5f);
 
         //AdjustedAgricultureSkill = Random.Range(1f, 2f);
         //AdjustedArchiologicalSkill = Random.Range(1f, 2f);
@@ -147,6 +150,7 @@ public class HumanEntity : BaseEntity
         //AdjustedHusbandrySkill = Random.Range(1f, 2f);
         //AdjustedSurvivalSkill = Random.Range(1f, 2f);
         //AdjustedCamoSkill = Random.Range(1f, 2f);
+        //AdjustedNaviationSkill = Random.Random.Range(1f, 2f);
 
         X = 1;
         Y = 1;

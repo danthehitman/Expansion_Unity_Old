@@ -16,6 +16,55 @@ public class TileExplorer
         return inventory;
     }
 
+    private static void DetermineExplorationEvents(HumanEntity entity, BaseTile tile)
+    {
+        var roll = 0f;
+        //Do we get lost?
+        roll = Random.Range(0f, .5f);
+        roll = roll + DetermineTileLostAndSpecialDiscoveryModifier(tile);
+        if (roll > entity.AdjustedNaviationSkill)
+        {
+            //Lost, what happened to us based on our survival skill?
+        }
+        roll = Random.Range(0f, .5f);
+        roll = roll + DetermineTileLostAndSpecialDiscoveryModifier(tile);
+        if (roll < entity.ExplorationSkill)
+        {
+            //We made a special discovery
+        }
+        //Do we suffer a catastrophe?
+        //
+    }
+
+    private static float DetermineTileLostAndSpecialDiscoveryModifier(BaseTile tile)
+    {
+        var biomeType = tile.TerrainData.BiomeType;
+        switch (biomeType)
+        {
+            case BiomeType.Desert:
+                return .3f;
+            case BiomeType.Savanna:
+                return .1f;
+            case BiomeType.TropicalRainforest:
+                return .5f;
+            case BiomeType.Grassland:
+                return .1f;
+            case BiomeType.Woodland:
+                return .2f;
+            case BiomeType.SeasonalForest:
+                return .4f;
+            case BiomeType.TemperateRainforest:
+                return .5f;
+            case BiomeType.BorealForest:
+                return .7f;
+            case BiomeType.Tundra:
+                return .4f;
+            case BiomeType.Ice:
+                return .5f;
+        }
+        return 0f;
+    }
+
     private static Inventory ForageTile(HumanEntity entity, BaseTile tile)
     {
         var inventory = new Inventory();
@@ -220,91 +269,91 @@ public class TileExplorer
     private static void RevealDesert(BaseTile tile, HumanEntity entity)
     {
         tile.TileResourceData.Bark = CalculateResourceAvailabilityMultiplier(
-            0.5f, entity.AdjustedSurvivalSkill);
+            0.5f);
         tile.TileResourceData.Berries = CalculateResourceAvailabilityMultiplier(
-            1f,entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.SmallAnimals = CalculateResourceAvailabilityMultiplier(
-            1.25f,entity.AdjustedExplorationSkill);
+            1.25f);
         tile.TileResourceData.LargeAnimals = CalculateResourceAvailabilityMultiplier(
-            .75f,entity.AdjustedExplorationSkill);
+            0.75f);
         tile.TileResourceData.CactusStuffs = CalculateResourceAvailabilityMultiplier(
-            2f,entity.AdjustedExplorationSkill);
+            2f);
         tile.TileResourceData.Birds = CalculateResourceAvailabilityMultiplier(
-            0.75f,entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.Fruit = CalculateResourceAvailabilityMultiplier(
-            0.75f,entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.Grasses = CalculateResourceAvailabilityMultiplier(
-            0.75f, entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.LongLeaf = CalculateResourceAvailabilityMultiplier(
-            0.5f, entity.AdjustedSurvivalSkill);
+            0.5f);
         tile.TileResourceData.SmallLeaf = CalculateResourceAvailabilityMultiplier(
-            0.75f, entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.BroadLeaf = CalculateResourceAvailabilityMultiplier(
-            0f, entity.AdjustedExplorationSkill);
+            0f);
         tile.TileResourceData.Mosses = CalculateResourceAvailabilityMultiplier(
-            0f, entity.AdjustedSurvivalSkill);
+            0f);
         tile.TileResourceData.Nuts = CalculateResourceAvailabilityMultiplier(
-            0.1f, entity.AdjustedSurvivalSkill);
+            0.1f);
         tile.TileResourceData.LargeRocks = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.SmallRocks = CalculateResourceAvailabilityMultiplier(
-            0.5f, entity.AdjustedSurvivalSkill);
+            0.5f);
         tile.TileResourceData.Seeds = CalculateResourceAvailabilityMultiplier(
-            0f, entity.AdjustedSurvivalSkill);
+            0f);
         tile.TileResourceData.Sticks = CalculateResourceAvailabilityMultiplier(
-            0.75f, entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.Weeds = CalculateResourceAvailabilityMultiplier(
-            0.5f, entity.AdjustedSurvivalSkill);
+            0.5f);
         tile.TileResourceData.Wood = CalculateResourceAvailabilityMultiplier(
-            0.25f, entity.AdjustedSurvivalSkill);
+            0.25f);
     }
 
     private static void RevealSavanna(BaseTile tile, HumanEntity entity)
     {
         tile.TileResourceData.Bark = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.Berries = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.SmallAnimals = CalculateResourceAvailabilityMultiplier(
-            1.5f, entity.AdjustedExplorationSkill);
+            1.5f);
         tile.TileResourceData.LargeAnimals = CalculateResourceAvailabilityMultiplier(
-            1.5f, entity.AdjustedExplorationSkill);
+            1.5f);
         tile.TileResourceData.CactusStuffs = CalculateResourceAvailabilityMultiplier(
-            1.5f, entity.AdjustedExplorationSkill);
+            1.5f);
         tile.TileResourceData.Birds = CalculateResourceAvailabilityMultiplier(
-            1.25f, entity.AdjustedSurvivalSkill);
+            1.25f);
         tile.TileResourceData.Fruit = CalculateResourceAvailabilityMultiplier(
-            0.75f, entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.Grasses = CalculateResourceAvailabilityMultiplier(
-            1.5f, entity.AdjustedSurvivalSkill);
+            1.5f);
         tile.TileResourceData.LongLeaf = CalculateResourceAvailabilityMultiplier(
-            0.75f, entity.AdjustedSurvivalSkill);
+            0.75f);
         tile.TileResourceData.SmallLeaf = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.BroadLeaf = CalculateResourceAvailabilityMultiplier(
-            0.25f, entity.AdjustedExplorationSkill);
+            0.25f);
         tile.TileResourceData.Mosses = CalculateResourceAvailabilityMultiplier(
-            0.25f, entity.AdjustedSurvivalSkill);
+            0.25f);
         tile.TileResourceData.Nuts = CalculateResourceAvailabilityMultiplier(
-            .75f, entity.AdjustedSurvivalSkill);
+            .75f);
         tile.TileResourceData.LargeRocks = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.SmallRocks = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.Seeds = CalculateResourceAvailabilityMultiplier(
-            .2f, entity.AdjustedSurvivalSkill);
+            .2f);
         tile.TileResourceData.Sticks = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.Weeds = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
         tile.TileResourceData.Wood = CalculateResourceAvailabilityMultiplier(
-            1f, entity.AdjustedSurvivalSkill);
+            1f);
     }
 
-    private static float CalculateResourceAvailabilityMultiplier(float resourceBase, float entityMultiplier)
+    private static float CalculateResourceAvailabilityMultiplier(float resourceBase)
     {
         var roll = Random.Range(0.5f, 2f);
-        var resourceFinal = (float)(resourceBase * roll) * entityMultiplier;
+        var resourceFinal = (float)(resourceBase * roll);
         return resourceFinal;
     }
 }

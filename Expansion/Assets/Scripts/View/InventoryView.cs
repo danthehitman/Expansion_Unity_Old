@@ -6,6 +6,7 @@ public class InventoryView
 {
     private GameObject parentGo;
     private RectTransform contentContainer;
+    private int inventoryItemTypeCount = 0;
 
     public int Height { get; set; }
     public int Width { get; set; }
@@ -23,6 +24,7 @@ public class InventoryView
 
     public GameObject BuildInventoryView()
     {
+        inventoryItemTypeCount = 0;
         //Create the main container
         GameObject inventoryGameObject = UIHelper.GetRectImageGameObject(Width, Height,
             new Color(.25f, .25f, .25f, .95f), "Inventory", parentGo.transform);
@@ -36,6 +38,7 @@ public class InventoryView
                 SpriteManager.Instance.GetSpriteByName(item.Value.First().GetInventorySprite()), 100, 50);
             textObject.transform.SetParent(contentContainer.transform);
             textObject.transform.position = contentContainer.position;
+            inventoryItemTypeCount++;
         }
         return inventoryGameObject;
     }
@@ -130,7 +133,7 @@ public class InventoryView
 
         //Set the content container
         contentContainer = contentList.GetComponent<RectTransform>();
-        var contentHeight = ViewInventory.InventoryObjects.Count * 11.5f;
+        var contentHeight = inventoryItemTypeCount * 11.5f;
         contentContainer.position = new Vector3(0, contentHeight / 2 * -1, 0);
         contentContainer.sizeDelta = new Vector2(Width, contentHeight);
 

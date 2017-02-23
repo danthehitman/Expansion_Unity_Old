@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class BaseTile : INotifyPropertyChanged
 {
+    public enum TileType
+    {
+        Base,
+        Shore,
+        Mountain
+    }
+
     public TerrainInfo TerrainData  { get; set; }
     public TileResourceInfo TileResourceData { get; set; }
 
