@@ -1,16 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class TileExplorationResults : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+﻿public class TileExplorationResults
+{
+    public Inventory ExplorationInventory { get; set; }
+    public float ElapsedTimeHours { get; set; }
+    
 }
