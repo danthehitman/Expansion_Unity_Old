@@ -19,6 +19,7 @@ public abstract class Generator
     public static double TerrainFrequency = 1.25;
     public static float DeepWater = 0.2f;
     public static float ShallowWater = 0.4f;
+    public static float Shore = 0.43f;
     public static float Sand = 0.5f;
     public static float Grass = 0.7f;
     public static float Forest = 0.8f;
@@ -729,6 +730,11 @@ public abstract class Generator
                 else if (heightValue < ShallowWater)  {
                     t.TerrainData.HeightType = HeightType.ShallowWater;
                     t.TerrainData.Collidable = false;
+                }
+                else if (heightValue < Shore)
+                {
+                    t.TerrainData.HeightType = HeightType.Shore;
+                    t.TerrainData.Collidable = true;
                 }
                 else if (heightValue < Sand) {
                     t.TerrainData.HeightType = HeightType.Sand;

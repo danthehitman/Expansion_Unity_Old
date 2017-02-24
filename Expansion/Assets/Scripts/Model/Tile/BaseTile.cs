@@ -5,12 +5,6 @@ using UnityEngine;
 
 public class BaseTile : INotifyPropertyChanged
 {
-    public enum TileType
-    {
-        Base,
-        Shore,
-        Mountain
-    }
 
     public TerrainInfo TerrainData  { get; set; }
     public TileResourceInfo TileResourceData { get; set; }
@@ -49,7 +43,7 @@ public class BaseTile : INotifyPropertyChanged
         var human = entity as HumanEntity;
         if (human != null)
         {
-            AddInventoryToCache(TileExplorer.ExploreTile(human, this));
+            AddInventoryToCache(TileExplorer.ExploreTile(human, this).ExplorationInventory);
         }
         TimesExplored++;
         Debug.Log("Explored tile.");
@@ -102,6 +96,19 @@ public class BaseTile : INotifyPropertyChanged
             count += 8;
 
         TerrainData.Bitmask = count;
+    }
+
+    public bool HasRiverNeighbor()
+    {
+        if (Left != null && Left.TerrainData.Rivers.Count > 0)
+            return true;
+        if (Right != null && Right.TerrainData.Rivers.Count > 0)
+            return true;
+        if (Top != null && Top.TerrainData.Rivers.Count > 0)
+            return true;
+        if (Bottom != null && Bottom.TerrainData.Rivers.Count > 0)
+            return true;
+        return false;
     }
 
     public int GetRiverNeighborCount(River river)

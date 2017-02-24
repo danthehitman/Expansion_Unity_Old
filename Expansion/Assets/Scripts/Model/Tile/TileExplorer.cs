@@ -1,22 +1,24 @@
 ﻿
-
 using UnityEngine;
 
 public class TileExplorer
 {
-    public static Inventory ExploreTile(HumanEntity entity, BaseTile tile)
+    public static TileExplorationResults ExploreTile(HumanEntity entity, BaseTile tile)
     {
-        var rand = new Random();
+        var results = new TileExplorationResults();
+        results.ElapsedTimeHours = GetBaseExplorationTime(tile);
         //Determine tile properties
         RevealTile(entity, tile);
         //Determine foraging haul
         var inventory = ForageTile(entity, tile);
         //Determine events (lost, special, etc...)
+
         //Determine effects of events
-        return inventory;
+        return results;
     }
 
-    private static void DetermineExplorationEvents(HumanEntity entity, BaseTile tile)
+    private static void DetermineExplorationEvents(HumanEntity entity, BaseTile tile,
+        TileExplorationResults explorationResults)
     {
         var roll = 0f;
         //Do we get lost?
@@ -27,7 +29,7 @@ public class TileExplorer
             //Lost, what happened to us based on our survival skill?
         }
         roll = Random.Range(0f, .5f);
-        roll = roll + DetermineTileLostAndSpecialDiscoveryModifier(tile);
+        roll = roll + DetermineTileLostAndSpecialDiscoveryModifier(tile, true);
         if (roll < entity.ExplorationSkill)
         {
             //We made a special discovery
@@ -36,33 +38,88 @@ public class TileExplorer
         //
     }
 
-    private static float DetermineTileLostAndSpecialDiscoveryModifier(BaseTile tile)
+    private static float DetermineTileLostAndSpecialDiscoveryModifier(BaseTile tile, bool ignoreNeighborModifiers = false)
     {
         var biomeType = tile.TerrainData.BiomeType;
+        var result = 0f;
         switch (biomeType)
         {
             case BiomeType.Desert:
-                return .3f;
+                result = .3f;
+                break;
             case BiomeType.Savanna:
-                return .1f;
+                result = .1f;
+                break;
             case BiomeType.TropicalRainforest:
-                return .5f;
+                result = .5f;
+                break;
             case BiomeType.Grassland:
-                return .1f;
+                result = .1f;
+                break;
             case BiomeType.Woodland:
-                return .2f;
+                result = .2f;
+                break;
             case BiomeType.SeasonalForest:
-                return .4f;
+                result = .4f;
+                break;
             case BiomeType.TemperateRainforest:
-                return .5f;
+                result = .5f;
+                break;
             case BiomeType.BorealForest:
-                return .7f;
+                result = .7f;
+                break;
             case BiomeType.Tundra:
-                return .4f;
+                result = .4f;
+                break;
             case BiomeType.Ice:
-                return .5f;
+                result = .5f;
+                break;
         }
-        return 0f;
+        if (!ignoreNeighborModifiers && (tile.HasRiverNeighbor() || tile.TerrainData.HeightType == HeightType.Shore))
+            result = result - 0.3f;
+        
+        return result;
+    }
+
+    private static float GetBaseExplorationTime(BaseTile tile)
+    {
+        var biomeType = tile.TerrainData.BiomeType;
+        var result = 0f;
+        switch (biomeType)
+        {
+            case BiomeType.Desert:
+                result = 8f;
+                break;
+            case BiomeType.Savanna:
+                result = 12f;
+                break;
+            case BiomeType.TropicalRainforest:
+                result = 24f;
+                break;
+            case BiomeType.Grassland:
+                result = 10f;
+                break;
+            case BiomeType.Woodland:
+                result = 10f;
+                break;
+            case BiomeType.SeasonalForest:
+                result = 24f;
+                break;
+            case BiomeType.TemperateRainforest:
+                result = 30f;
+                break;
+            case BiomeType.BorealForest:
+                result = 20f;
+                break;
+            case BiomeType.Tundra:
+                result = 12f;
+                break;
+            case BiomeType.Ice:
+                result = 12f;
+                break;
+        }
+
+        return result;
     }
 
     private static Inventory ForageTile(HumanEntity entity, BaseTile tile)
