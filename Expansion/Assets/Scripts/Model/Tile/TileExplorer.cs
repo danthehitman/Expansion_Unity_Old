@@ -10,7 +10,7 @@ public class TileExplorer
         //Determine tile properties
         RevealTile(entity, tile);
         //Determine foraging haul
-        var inventory = ForageTile(entity, tile);
+        results.ExplorationInventory = ForageTile(entity, tile);
         //Determine events (lost, special, etc...)
 
         //Determine effects of events
