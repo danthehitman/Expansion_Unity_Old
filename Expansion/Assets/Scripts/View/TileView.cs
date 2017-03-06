@@ -7,6 +7,7 @@ public class TileView
     private bool isHighlighted;
     private bool isActivated;
     private float tileGreyscale;
+    private System.Random rng;
 
     public BaseTile BaseTile { get; set; }
 
@@ -38,8 +39,9 @@ public class TileView
         }
     }
 
-    public TileView(BaseTile tile)
+    public TileView(BaseTile tile, System.Random rand)
     {
+        rng = rand;
         BaseTile = tile;
         HighlightLayer = new GameObject();
         HighlightLayer.transform.position = new Vector3(tile.X, tile.Y, 0);
@@ -47,7 +49,7 @@ public class TileView
         var baseRenderer = HighlightLayer.GetComponent<SpriteRenderer>();
         baseRenderer.sortingLayerName = Constants.TILE_SORTING_LAYER;
         baseRenderer.sortingOrder = 1;
-        baseRenderer.sprite = ViewUtilities.GetTileSprite(tile);
+        baseRenderer.sprite = ViewUtilities.GetTileSprite(tile, rng);
         tileGreyscale = GetGreyscaleForTile();
         baseRenderer.name = baseRenderer.sprite.name;
         if (tile.TerrainData.HeightType != HeightType.River)

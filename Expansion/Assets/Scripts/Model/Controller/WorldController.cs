@@ -20,6 +20,7 @@ public class WorldController : MonoBehaviour
     public int Height = 100;
     public int Key = 1;
 
+
     public int RevealedWidth = 5;
     public int RevealedHeight = 5;
 
@@ -35,9 +36,12 @@ public class WorldController : MonoBehaviour
 
     private ViewManager viewMan = null;
 
+    private System.Random rng;
+
     // Initialize the game world.
     void Start ()
     {
+        rng = new System.Random(Key);
         viewMan = ViewManager.Instance;
         viewMan.MainDialogEnter += OnPointerEnterWindow;
         viewMan.MainDialogExit += OnPointerExitWindow;
@@ -149,7 +153,7 @@ public class WorldController : MonoBehaviour
 
     private TileView CreateTileView(BaseTile tileArg)
     {
-        TileView tileView = new TileView(tileArg);        
+        TileView tileView = new TileView(tileArg, rng);        
 
         tileViews[tileArg.X, tileArg.Y] = tileView;
         return tileView;

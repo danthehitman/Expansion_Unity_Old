@@ -37,7 +37,7 @@ public class WorldGenerationManager
             IsAnimated = false,
             Name = "Desert",
             Navigable = true,
-            Tiles = new Sprite[] { SpriteManager.Instance.GetSpriteByName(Constants.TILE_DESERT) }
+            Tiles = new Sprite[] { SpriteManager.Instance.GetSpriteByName(Constants.TILE_KEY_DESERT) }
         };
 
         TerrainTypes[2] = new TerrainType()

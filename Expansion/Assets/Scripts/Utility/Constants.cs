@@ -20,7 +20,7 @@
     public const string PLAYER_SHADOW = "PlayerShadow";
 
     public const string TILE_GRASSLAND = "Grassland";
-    public const string TILE_DESERT = "Desert1";
+    public const string TILE_KEY_DESERT = "T_Desert";
     public const string TILE_MOUNTAIN = "Mountain";
     public const string TILE_SAVANNA = "Savanna";
     public const string TILE_ICE = "Ice";
