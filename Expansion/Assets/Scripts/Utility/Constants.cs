@@ -53,5 +53,7 @@
     //Items
     public const string ITEM_ROPE = "Rope";
     public const string ITEM_ICE_PICK = "Ice Pick";
-
+    public const string ITEM_CRAMPONS = "Crampons";
+    public const string ITEM_MACHETTE = "Machette";
+    public const string ITEM_BOOTS = "Boots";
 }

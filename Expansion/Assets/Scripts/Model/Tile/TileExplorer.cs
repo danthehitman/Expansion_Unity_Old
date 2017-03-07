@@ -41,7 +41,7 @@ public class TileExplorer
         // to account for things like rope when in the mountains, or a machette when in the jungle etc...
         if (roll < entity.AdjustedNaviationSkill)
         {
-            //We made a special discovery
+            //We had a catastrophe
         }
     }
 
