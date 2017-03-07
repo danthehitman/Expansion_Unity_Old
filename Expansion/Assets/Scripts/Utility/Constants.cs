@@ -49,4 +49,9 @@
     public const string TILE_SORTING_LAYER = "Tile";
 
     public const string ALL_PROPERTIES_PROPERTY_NAME = "All";
+
+    //Items
+    public const string ITEM_ROPE = "Rope";
+    public const string ITEM_ICE_PICK = "Ice Pick";
+
 }

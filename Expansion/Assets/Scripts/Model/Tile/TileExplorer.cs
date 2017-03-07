@@ -30,50 +30,122 @@ public class TileExplorer
         }
         roll = Random.Range(0f, .5f);
         roll = roll + DetermineTileLostAndSpecialDiscoveryModifier(tile, true);
-        if (roll < entity.ExplorationSkill)
+        if (roll < entity.AdjustedExplorationSkill)
         {
             //We made a special discovery
         }
-        //Do we suffer a catastrophe?
-        //
+        roll = Random.Range(0f,.5f);
+        roll = roll + DetermineCatastropheModifier(tile, entity);
+        //TODO: What are we goign to do for this skill test?  Need things like crampons or rope or whatever
+        // to help with this kind of thing.  Maybe this needs to be more specific within the catastrophe method
+        // to account for things like rope when in the mountains, or a machette when in the jungle etc...
+        if (roll < entity.AdjustedNaviationSkill)
+        {
+            //We made a special discovery
+        }
+    }
+
+    private static float DetermineCatastropheModifier(BaseTile tile, HumanEntity entity)
+    {
+        var biomeType = tile.TerrainData.BiomeType;
+        var heightType = tile.TerrainData.HeightType;
+        var result = 0f;
+        if (heightType == HeightType.River)
+        {
+            //TODO: Account for river.
+        }
+        else if (heightType >= HeightType.Rock)
+        {
+            if (heightType > HeightType.Rock)
+                result = .5f;
+            else
+                result = .45f;
+        }
+        else
+        {
+            switch (biomeType)
+            {
+                case BiomeType.Desert:
+                    result = .1f;
+                    break;
+                case BiomeType.Savanna:
+                    result = .15f;
+                    break;
+                case BiomeType.TropicalRainforest:
+                    result = .2f;
+                    break;
+                case BiomeType.Grassland:
+                    result = .1f;
+                    break;
+                case BiomeType.Woodland:
+                    result = .15f;
+                    break;
+                case BiomeType.SeasonalForest:
+                    result = .2f;
+                    break;
+                case BiomeType.TemperateRainforest:
+                    result = .25f;
+                    break;
+                case BiomeType.BorealForest:
+                    result = .2f;
+                    break;
+                case BiomeType.Tundra:
+                    result = .2f;
+                    break;
+                case BiomeType.Ice:
+                    result = .15f;
+                    break;
+            }
+        }
+
+        return result;
     }
 
     private static float DetermineTileLostAndSpecialDiscoveryModifier(BaseTile tile, bool ignoreNeighborModifiers = false)
     {
         var biomeType = tile.TerrainData.BiomeType;
+        var heightType = tile.TerrainData.HeightType;
         var result = 0f;
-        switch (biomeType)
+
+        if (heightType == HeightType.River)
         {
-            case BiomeType.Desert:
-                result = .3f;
-                break;
-            case BiomeType.Savanna:
-                result = .1f;
-                break;
-            case BiomeType.TropicalRainforest:
-                result = .5f;
-                break;
-            case BiomeType.Grassland:
-                result = .1f;
-                break;
-            case BiomeType.Woodland:
-                result = .2f;
-                break;
-            case BiomeType.SeasonalForest:
-                result = .4f;
-                break;
-            case BiomeType.TemperateRainforest:
-                result = .5f;
-                break;
-            case BiomeType.BorealForest:
-                result = .7f;
-                break;
-            case BiomeType.Tundra:
-                result = .4f;
-                break;
-            case BiomeType.Ice:
-                result = .5f;
-                break;
+            //TODO: Account for river.
+        }
+        else
+        {
+            switch (biomeType)
+            {
+                case BiomeType.Desert:
+                    result = .3f;
+                    break;
+                case BiomeType.Savanna:
+                    result = .1f;
+                    break;
+                case BiomeType.TropicalRainforest:
+                    result = .5f;
+                    break;
+                case BiomeType.Grassland:
+                    result = .1f;
+                    break;
+                case BiomeType.Woodland:
+                    result = .2f;
+                    break;
+                case BiomeType.SeasonalForest:
+                    result = .4f;
+                    break;
+                case BiomeType.TemperateRainforest:
+                    result = .5f;
+                    break;
+                case BiomeType.BorealForest:
+                    result = .7f;
+                    break;
+                case BiomeType.Tundra:
+                    result = .4f;
+                    break;
+                case BiomeType.Ice:
+                    result = .5f;
+                    break;
+            }
         }
         if (!ignoreNeighborModifiers && (tile.HasRiverNeighbor() || tile.TerrainData.HeightType == HeightType.Shore))
             result = result - 0.3f;
