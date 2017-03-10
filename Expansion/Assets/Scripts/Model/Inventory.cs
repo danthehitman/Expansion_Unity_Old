@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
@@ -80,5 +81,10 @@ public class Inventory : INotifyPropertyChanged
     protected void OnPropertyChanged(string propertyName)
     {
         OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+    }
+
+    public IInventoryObject GetInventoryObjectOfType(Type type)
+    {
+        return InventoryObjects.FirstOrDefault(e => e.GetType() == type);
     }
 }

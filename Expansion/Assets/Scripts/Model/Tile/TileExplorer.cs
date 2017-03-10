@@ -6,7 +6,6 @@ public class TileExplorer
     public static TileExplorationResults ExploreTile(HumanEntity entity, BaseTile tile)
     {
         var results = new TileExplorationResults();
-        results.ElapsedTimeHours = GetBaseExplorationTime(tile);
         //Determine tile properties
         RevealTile(entity, tile);
         //Determine foraging haul
@@ -21,10 +20,12 @@ public class TileExplorer
         TileExplorationResults explorationResults)
     {
         var roll = 0f;
+        var baseExplorationTime = GetExplorationTime(tile, entity);
+
         //Do we get lost?
         roll = Random.Range(0f, .5f);
         roll = roll + DetermineTileLostAndSpecialDiscoveryModifier(tile);
-        if (roll > entity.AdjustedNaviationSkill)
+        if (roll > entity.AdjustedNavigationSkill)
         {
             //Lost, what happened to us based on our survival skill?
         }
@@ -34,32 +35,48 @@ public class TileExplorer
         {
             //We made a special discovery
         }
-        roll = Random.Range(0f,.5f);
-        roll = roll + DetermineCatastropheModifier(tile, entity);
-        //TODO: What are we goign to do for this skill test?  Need things like crampons or rope or whatever
-        // to help with this kind of thing.  Maybe this needs to be more specific within the catastrophe method
-        // to account for things like rope when in the mountains, or a machette when in the jungle etc...
-        if (roll < entity.AdjustedNaviationSkill)
-        {
-            //We had a catastrophe
-        }
+
+        DetermineCatastrophe(tile, entity, explorationResults);
     }
 
-    private static float DetermineCatastropheModifier(BaseTile tile, HumanEntity entity)
+    private static void DetermineCatastrophe(BaseTile tile, HumanEntity entity,
+        TileExplorationResults explorationResults)
     {
+        var severityPercent = Random.Range(0f, 1f);
+        var roll = Random.Range(0f, .5f);
         var biomeType = tile.TerrainData.BiomeType;
         var heightType = tile.TerrainData.HeightType;
-        var result = 0f;
         if (heightType == HeightType.River)
         {
             //TODO: Account for river.
         }
         else if (heightType >= HeightType.Rock)
         {
+            var mountainCatastrophe = false;
             if (heightType > HeightType.Rock)
-                result = .5f;
+            {
+                if (roll + .5f < entity.AdjustedMountaineeringSkill)
+                    mountainCatastrophe = true;
+            }
             else
-                result = .45f;
+            {
+                if (roll + .45f < entity.AdjustedMountaineeringSkill)
+                    mountainCatastrophe = true;
+            }
+            if (mountainCatastrophe)
+            {
+                explorationResults.ExplorationEntries.Add(
+                    new ExplorationStoryEntry()
+                    {
+                        Title = "The mountains were not kind.",
+                        Description = "During your exploration in the mountains you suffered a fall were injured."
+                    });
+
+                explorationResults.ElapsedTimeHours += MathUtilities.GetFloatAtPercentBetween(3f, 24f, severityPercent);
+                entity.Health -= MathUtilities.GetFloatAtPercentBetween(1f, 3f, severityPercent);
+                entity.Fatigue -= MathUtilities.GetFloatAtPercentBetween(1f, 3f, severityPercent);
+                entity.Morale -= MathUtilities.GetFloatAtPercentBetween(2f, 4f, severityPercent);
+            }
         }
         else
         {
@@ -97,8 +114,6 @@ public class TileExplorer
                     break;
             }
         }
-
-        return result;
     }
 
     private static float DetermineTileLostAndSpecialDiscoveryModifier(BaseTile tile, bool ignoreNeighborModifiers = false)
@@ -153,45 +168,69 @@ public class TileExplorer
         return result;
     }
 
-    private static float GetBaseExplorationTime(BaseTile tile)
+    private static float GetExplorationTime(BaseTile tile, HumanEntity entity)
     {
         var biomeType = tile.TerrainData.BiomeType;
-        var result = 0f;
-        switch (biomeType)
+        var heightType = tile.TerrainData.HeightType;
+        //Adjustment will be either posative or negative based on various conditions.  Negative will lessen the time
+        //spent exploring this tile.
+        var adjustment = 0f;
+
+        var compass = (ItemCompass)entity.EntityInventory.GetInventoryObjectOfType(typeof(ItemCompass));
+        if (compass != null)
         {
-            case BiomeType.Desert:
-                result = 8f;
-                break;
-            case BiomeType.Savanna:
-                result = 12f;
-                break;
-            case BiomeType.TropicalRainforest:
-                result = 24f;
-                break;
-            case BiomeType.Grassland:
-                result = 10f;
-                break;
-            case BiomeType.Woodland:
-                result = 10f;
-                break;
-            case BiomeType.SeasonalForest:
-                result = 24f;
-                break;
-            case BiomeType.TemperateRainforest:
-                result = 30f;
-                break;
-            case BiomeType.BorealForest:
-                result = 20f;
-                break;
-            case BiomeType.Tundra:
-                result = 12f;
-                break;
-            case BiomeType.Ice:
-                result = 12f;
-                break;
+            adjustment -= compass.Quality;
         }
 
-        return result;
+        var result = 0f;
+
+        if (heightType == HeightType.River)
+        {
+            result = 5f;
+            result -= (entity.AdjustedSwimmingSkill - 1) * 2;
+        }
+        else if (heightType >= HeightType.Rock)
+        {
+
+        }
+        else
+        {
+            switch (biomeType)
+            {
+                case BiomeType.Desert:
+                    result = 8f;
+                    break;
+                case BiomeType.Savanna:
+                    result = 12f;
+                    break;
+                case BiomeType.TropicalRainforest:
+                    result = 24f;
+                    break;
+                case BiomeType.Grassland:
+                    result = 10f;
+                    break;
+                case BiomeType.Woodland:
+                    result = 10f;
+                    break;
+                case BiomeType.SeasonalForest:
+                    result = 24f;
+                    break;
+                case BiomeType.TemperateRainforest:
+                    result = 30f;
+                    break;
+                case BiomeType.BorealForest:
+                    result = 20f;
+                    break;
+                case BiomeType.Tundra:
+                    result = 12f;
+                    break;
+                case BiomeType.Ice:
+                    result = 12f;
+                    break;
+            }
+        }
+
+        return result + adjustment;
     }
 
     private static Inventory ForageTile(HumanEntity entity, BaseTile tile)

@@ -3,14 +3,14 @@
 public class HumanEntity : BaseEntity
 {
     //Stats
-    private int health;
-    private int hunger;
-    private int thirst;
-    private int fatigue;
-    private int morale;
+    private float health;
+    private float hunger;
+    private float thirst;
+    private float fatigue;
+    private float morale;
 
     public const string HealthPropertyName = "Health";
-    public int Health
+    public float Health
     {
         get
         {
@@ -25,7 +25,7 @@ public class HumanEntity : BaseEntity
     }
 
     public const string HungerPropertyName = "Hunger";
-    public int Hunger
+    public float Hunger
     {
         get
         {
@@ -40,7 +40,7 @@ public class HumanEntity : BaseEntity
     }
 
     public const string ThirstPropertyName = "Thirst";
-    public int Thirst
+    public float Thirst
     {
         get
         {
@@ -55,7 +55,7 @@ public class HumanEntity : BaseEntity
     }
 
     public const string MoralePropertyName = "Morale";
-    public int Morale
+    public float Morale
     {
         get
         {
@@ -70,7 +70,7 @@ public class HumanEntity : BaseEntity
     }
 
     public const string FatiguePropertyName = "Fatigue";
-    public int Fatigue
+    public float Fatigue
     {
         get
         {
@@ -100,7 +100,9 @@ public class HumanEntity : BaseEntity
     public float HusbandrySkill { get; set; }
     public float SurvivalSkill { get; set; }
     public float CamoSkill { get; set; }
-    public float NaviationSkill { get; set; }
+    public float NavigationSkill { get; set; }
+    public float MountaineeringSkill { get; set; }
+    public float SwimmingSkill { get; set; }
 
     public float AdjustedAgricultureSkill { get; set; }
     public float AdjustedArchiologicalSkill { get; set; }
@@ -115,7 +117,9 @@ public class HumanEntity : BaseEntity
     public float AdjustedHusbandrySkill { get; set; }
     public float AdjustedSurvivalSkill { get; set; }
     public float AdjustedCamoSkill { get; set; }
-    public float AdjustedNaviationSkill { get; set; }
+    public float AdjustedNavigationSkill { get; set; }
+    public float AdjustedMountaineeringSkill { get; set; }
+    public float AdjustedSwimmingSkill { get; set; }
 
     //Traits
     public float ConstitutionTrait { get; set; }
@@ -135,7 +139,9 @@ public class HumanEntity : BaseEntity
         AdjustedHusbandrySkill = Random.Range(0.1f, 0.5f);
         AdjustedSurvivalSkill = Random.Range(0.1f, 0.5f);
         AdjustedCamoSkill = Random.Range(0.1f, 0.5f);
-        AdjustedNaviationSkill = Random.Range(0.1f, 0.5f);
+        AdjustedNavigationSkill = Random.Range(0.1f, 0.5f);
+        AdjustedMountaineeringSkill = Random.Range(0.1f, 0.5f);
+        AdjustedSwimmingSkill = Random.Range(0.1f, 0.5f);
 
         //AdjustedAgricultureSkill = Random.Range(1f, 2f);
         //AdjustedArchiologicalSkill = Random.Range(1f, 2f);
@@ -155,9 +161,10 @@ public class HumanEntity : BaseEntity
         X = 1;
         Y = 1;
         Health = 100;
-        Hunger = 0;
-        Thirst = 0;
-        Fatigue = 0;
+        Hunger = 100;
+        Thirst = 100;
+        Fatigue = 100;
+        Morale = 100;
     }
 
     public void MoveEntityToTile(BaseTile tile)

@@ -3,6 +3,7 @@
     public string Name { get; set; }
     public string DisplayText { get; set; }
     public string InventorySpriteName { get; set; }
+    public float Quality { get; set; }
 
     public Item(string name)
     {
