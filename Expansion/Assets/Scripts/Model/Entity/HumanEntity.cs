@@ -126,6 +126,8 @@ public class HumanEntity : BaseEntity
 
     public HumanEntity()
     {
+        EntityInventory = new Inventory();
+
         AdjustedAgricultureSkill = Random.Range(0.1f, 0.5f);
         AdjustedArchiologicalSkill = Random.Range(0.1f, 0.5f);
         AdjustedResearchSkill = Random.Range(0.1f, 0.5f);
@@ -160,11 +162,11 @@ public class HumanEntity : BaseEntity
 
         X = 1;
         Y = 1;
-        Health = 100;
-        Hunger = 100;
-        Thirst = 100;
-        Fatigue = 100;
-        Morale = 100;
+        Health = 100f;
+        Hunger = 100f;
+        Thirst = 100f;
+        Fatigue = 100f;
+        Morale = 100f;
     }
 
     public void MoveEntityToTile(BaseTile tile)

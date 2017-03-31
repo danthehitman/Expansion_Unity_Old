@@ -11,7 +11,7 @@ public class TileExplorer
         //Determine foraging haul
         results.ExplorationInventory = ForageTile(entity, tile);
         //Determine events (lost, special, etc...)
-
+        DetermineExplorationEvents(entity, tile, results);
         //Determine effects of events
         return results;
     }
@@ -43,24 +43,31 @@ public class TileExplorer
         TileExplorationResults explorationResults)
     {
         var severityPercent = Random.Range(0f, 1f);
-        var roll = Random.Range(0f, .5f);
+        var roll = 0f;
         var biomeType = tile.TerrainData.BiomeType;
         var heightType = tile.TerrainData.HeightType;
+
+        var elapsedTime = 0f;
+        var healthLost = 0f;
+        var fatigueLost = 0f;
+        var moraleLost = 0f;
+
         if (heightType == HeightType.River)
         {
             //TODO: Account for river.
         }
         else if (heightType >= HeightType.Rock)
         {
+            roll = Random.Range(0f, .5f);
             var mountainCatastrophe = false;
             if (heightType > HeightType.Rock)
             {
-                if (roll + .5f < entity.AdjustedMountaineeringSkill)
+                if (roll + .5f > entity.AdjustedMountaineeringSkill)
                     mountainCatastrophe = true;
             }
             else
             {
-                if (roll + .45f < entity.AdjustedMountaineeringSkill)
+                if (roll + .45f > entity.AdjustedMountaineeringSkill)
                     mountainCatastrophe = true;
             }
             if (mountainCatastrophe)
@@ -69,51 +76,65 @@ public class TileExplorer
                     new ExplorationStoryEntry()
                     {
                         Title = "The mountains were not kind.",
-                        Description = "During your exploration in the mountains you suffered a fall were injured."
+                        Description = "During your exploration in the mountains you suffered a fall and were injured."
                     });
 
-                explorationResults.ElapsedTimeHours += MathUtilities.GetFloatAtPercentBetween(3f, 24f, severityPercent);
-                entity.Health -= MathUtilities.GetFloatAtPercentBetween(1f, 3f, severityPercent);
-                entity.Fatigue -= MathUtilities.GetFloatAtPercentBetween(1f, 3f, severityPercent);
-                entity.Morale -= MathUtilities.GetFloatAtPercentBetween(2f, 4f, severityPercent);
+                elapsedTime =  MathUtilities.GetFloatAtPercentBetween(3f, 24f, severityPercent);
+                healthLost = MathUtilities.GetFloatAtPercentBetween(1f, 3f, severityPercent);
+                fatigueLost = MathUtilities.GetFloatAtPercentBetween(1f, 3f, severityPercent);
+                moraleLost = MathUtilities.GetFloatAtPercentBetween(2f, 4f, severityPercent);
             }
         }
         else
         {
+            roll = Random.Range(0f, 1f);
             switch (biomeType)
             {
                 case BiomeType.Desert:
-                    result = .1f;
+                    if (roll > .9f)
+                    {
+                        explorationResults.ExplorationEntries.Add(
+                            new ExplorationStoryEntry()
+                            {
+                                Title = "The desert was not kind.",
+                                Description = "During your exploration in the desert you were stung by an extremely poisonous snake and grew ill."
+                            });
+
+                        elapsedTime = MathUtilities.GetFloatAtPercentBetween(1f, 6f, severityPercent);
+                        healthLost = MathUtilities.GetFloatAtPercentBetween(.5f, 1f, severityPercent);
+                        fatigueLost = MathUtilities.GetFloatAtPercentBetween(1f, 2f, severityPercent);
+                        moraleLost = MathUtilities.GetFloatAtPercentBetween(1f, 2f, severityPercent);
+                    }
                     break;
                 case BiomeType.Savanna:
-                    result = .15f;
+                    if (roll > .9f)
+                    {
+
+                    }
                     break;
                 case BiomeType.TropicalRainforest:
-                    result = .2f;
                     break;
                 case BiomeType.Grassland:
-                    result = .1f;
                     break;
                 case BiomeType.Woodland:
-                    result = .15f;
                     break;
                 case BiomeType.SeasonalForest:
-                    result = .2f;
                     break;
                 case BiomeType.TemperateRainforest:
-                    result = .25f;
                     break;
                 case BiomeType.BorealForest:
-                    result = .2f;
                     break;
                 case BiomeType.Tundra:
-                    result = .2f;
                     break;
                 case BiomeType.Ice:
-                    result = .15f;
                     break;
             }
         }
+        explorationResults.ElapsedTimeHours += elapsedTime;
+        entity.Health -= healthLost;
+        entity.Fatigue -= fatigueLost;
+        entity.Morale -= moraleLost;
+
     }
 
     private static float DetermineTileLostAndSpecialDiscoveryModifier(BaseTile tile, bool ignoreNeighborModifiers = false)

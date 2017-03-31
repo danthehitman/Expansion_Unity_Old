@@ -17,6 +17,12 @@ public class PlayerInfoView : MonoBehaviour {
     public Text Survival;
     public Text Camo;
 
+    public Text Health;
+    public Text Fatigue;
+    public Text Hunger;
+    public Text Thirst;
+    public Text Morale;
+
 
     private string agText = "Ag: ";
     private string agValue = "";
@@ -45,6 +51,17 @@ public class PlayerInfoView : MonoBehaviour {
     private string camoText = "Camo: ";
     private string camoValue = "";
 
+    private string healthText = "Health: ";
+    private string healthValue = "";
+    private string fatigueText = "Fatigue: ";
+    private string fatigueValue = "";
+    private string hungerText = "Hunger: ";
+    private string hungerValue = "";
+    private string thirstText = "Thirst: ";
+    private string thirstValue = "";
+    private string moraleText = "Morale: ";
+    private string moraleValue = "";
+
     public void UpdateInfo(HumanEntity entity)
     {
         if (entity != null)
@@ -62,6 +79,12 @@ public class PlayerInfoView : MonoBehaviour {
             husbandryValue = entity.AdjustedHusbandrySkill.ToString();
             survivalValue = entity.AdjustedSurvivalSkill.ToString();
             camoValue = entity.AdjustedCamoSkill.ToString();
+
+            healthValue = entity.Health.ToString();
+            fatigueValue = entity.Fatigue.ToString();
+            hungerValue = entity.Hunger.ToString();
+            thirstValue = entity.Thirst.ToString();
+            moraleValue = entity.Morale.ToString();
         }
         else
         {
@@ -83,5 +106,11 @@ public class PlayerInfoView : MonoBehaviour {
         Husbandry.text = husbandryText + husbandryValue;
         Survival.text = survivalText + survivalValue;
         Camo.text = camoText + camoValue;
+
+        Health.text = healthText + healthValue;
+        Fatigue.text = fatigueText + fatigueValue;
+        Hunger.text = hungerText + hungerValue;
+        Thirst.text = thirstText + thirstValue;
+        Morale.text = moraleText + moraleValue;
     }
 }
